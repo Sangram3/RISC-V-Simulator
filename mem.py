@@ -2,7 +2,7 @@
 
 #create memory class
 #create dictionary~CPU Memory
-#dictionary <int,int> ~ address,value>
+#dictionary <int,int/Byte> ~ <address,value>
 
 #create following class variables:
 #code_start ~ text segment
