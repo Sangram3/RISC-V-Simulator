@@ -14,6 +14,10 @@
 #create following methods/functions
 #load_data,load_word,load_byte etc.
 #store_data,store_word,store_byte etc.
+#get_next_instruction
+#get_data_at
+#add_data_at
+#show_memory
 
 #create PC class
 #create following methods
@@ -30,3 +34,4 @@
 #print_register_value
 
 #create ... 
+
