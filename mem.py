@@ -16,5 +16,17 @@
 #store_data,store_word,store_byte etc.
 
 #create PC class
-#create Registers class
+#create following methods
+#add_PC
+#get_PC
+
+
+
+#create Registers class:
+#create 32 registers
+#create following methods
+#load_from_register
+#store_to_register
+#print_register_value
+
 #create ... 
