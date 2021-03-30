@@ -8,6 +8,7 @@
 #method to increment PC (PC+4) by calling add_PC in PC class
 
 #code starts here
+import sys
 from collections import defaultdict
 class IR():
     f = "file is empty" # .mc file will be opened in this variable
