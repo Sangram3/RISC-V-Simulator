@@ -5,7 +5,7 @@ class memory:
     
     __code_start=0x00000000
     __data_start=0x10000000
-    __data_stop=0
+    # __data_stop=0
     __stack_start=0x7FFFFFFC
     __heap_start=0x10007FE8
  
@@ -15,17 +15,24 @@ class memory:
         for line in lines:
             line = line.split()
             self.__mem_dict[int(line[0],16)] = int(line[1],16)
+        # print(self.__mem_dict)    
     
-    def dict():
-        return __mem_dict
+    def dic(self):
+        # print(__mem_dict)
+        return self.__mem_dict
     
-    def load_data(add):
-        return __mem_dict[add]
+    def load_data(self, add):
+        return self.__mem_dict[add]
     
-    def store_data(add, data):
-        __mem_dict[add] = data
+    def store_data(self, add, data):
+        self.__mem_dict[add] = data
     
- 
+    def code_ends(self, mc_output):    #When swi is intercepted, then this is called to make the output file.
+        file = open(mc_output,"w")
+        for item in self.__mem_dict:
+            file.write(hex(item).upper() + " " + hex(self.__mem_dict[item]).upper() + "\n")
+
+
 
 
 class registers:
