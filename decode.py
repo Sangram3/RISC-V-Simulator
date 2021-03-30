@@ -1,35 +1,34 @@
 #decode
 #dic having all types of instructions with their pneumonics, FMT, opcodes, func3 and func7 (map)
 
-#get IR
+#get IR from fetch stage
 
-#all the below classes have getter method
+#define follwing global varibales
+#OPcode 
+#-extract opcode 
 
-#OPcode class
-#-extract opcode method
+#func3 
+#-extract func3 
 
-#func3 class
-#-extract func3 method
+#func7 
+#-extract func7 
 
-#func7 class
-#-extract func7 method
-
-#pneumonic class
+#pneumonic 
 #-decode pneumonic
 
-#fMT class
+#fMT 
 #-decode fmt 
 
-#rs1 class
+#rs1 
 #-extract rs1
 
-#rs2 class
+#rs2 
 #-extract rs2
 
-#rd class
+#rd 
 #-extract rd
 
-#imm class
+#imm
 #-extract imm
 
 #driver func used to call all the above methods accordingly when needed.
