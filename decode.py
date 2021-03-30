@@ -1,34 +1,63 @@
-#decode
-#dic having all types of instructions with their pneumonics, FMT, opcodes, func3 and func7 (map)
+#decode function
+#all extractions and decode done in string format and at the end converted everything to decimal, example rs1 = '00110' then rs1 becomes 6 at the end.
+from collections import defaultdict
 
-#get IR from fetch stage
+def decode(ins):
+    d = defaultdict(lambda: None)
+    d = {'0110011': ['R', '000', '0000000', 'add']}
 
-#define follwing global varibales
-#OPcode 
-#-extract opcode 
+    inst = None
+    op = None
+    func3 = None
+    func7 = None
+    rd = None
+    rs1 = None
+    rs2 = None
+    imm = None
+    fmt = None
+    pne = None
 
-#func3 
-#-extract func3 
+    inst = ins
+    op = inst[25:]
+    fmt = (d[op])[0]
 
-#func7 
-#-extract func7 
+    if (fmt != 'U' and fmt != 'UJ'):
+        func3 = inst[17:20]
 
-#pneumonic 
-#-decode pneumonic
+    if(fmt == 'R'):
+        func7 = inst[0:7]
 
-#fMT 
-#-decode fmt 
+    if(fmt == 'R' or fmt == 'I' or 'S' or 'SB'):
+        rs1 = inst[12:17]
 
-#rs1 
-#-extract rs1
+    if(fmt == 'R' or fmt == 'S' or fmt == 'SB'):
+        rs2 = inst[7:12]
 
-#rs2 
-#-extract rs2
+    if(fmt == 'R' or fmt == 'I' or fmt == 'U' or fmt =='UJ'):
+        rd = inst[20:25]
 
-#rd 
-#-extract rd
+    op = int(op, base=2)
+    if func3:
+        func3 = int(func3, base=2)
+    if func7:
+        func7 = int(func7, base=2)
+    if rd:
+        rd = int(rd, base=2)
+    if rs1:
+        rs1 = int(rs1, base=2)
+    if rs2:
+        rs2 = int(rs2, base=2)
+        
+    #below code is for checking code    
 
-#imm
-#-extract imm
+    print(op)
+    print(fmt)
+    print(func3)
+    print(func7)
+    print(rd)
+    print(rs1)
+    print(rs2)
 
-#driver func used to call all the above methods accordingly when needed.
+
+
+decode('00000001010110100000010010110011')
