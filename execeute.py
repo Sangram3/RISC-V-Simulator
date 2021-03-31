@@ -16,6 +16,7 @@ def bin_to_dec(s): # input in two's compliment form
         return -1 * (int(''.join('1' if x == '0' else '0' for x in s), 2) + 1)
     else:
         return int(s, 2)
+    
 def execute(fmt,inst,args):
     PC = 0 #just for sake of convinience
     rs1 = None
@@ -142,6 +143,7 @@ def execute(fmt,inst,args):
         
         
     output_message(fmt,inst,*args)
+    
     return "I got no return type"
     
 print(execute(3, 'sw', [20, 12, None, '000000000000']))
