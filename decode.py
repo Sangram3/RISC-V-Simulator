@@ -104,6 +104,12 @@ def decode(ins):
             mneumonic = 'or'
         if(func3 == '111' and func7 == '0000000'):
             mneumonic = 'and' 
+        if(func3 == '000' and func7 == '0000001'):
+            mneumonic = 'mul'
+        if(func3 == '100' and func7 == '0000001'):
+            mneumonic = 'div'
+        if(func3 == '110' and func7 == '0000001'):
+            mneumonic = 'rem'
 
     op = int(op, base=2)
     if func3:
