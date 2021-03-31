@@ -116,6 +116,21 @@ def decode(ins):
         rs1 = int(rs1, base=2)
     if rs2:
         rs2 = int(rs2, base=2)
+        
+    if(fmt==2): #I
+        imm=inst[0:12]
+    
+    elif(fmt==3): #S
+        imm=(inst[0:7]+inst[20:25])
+    
+    elif(fmt==4): #SB
+        imm=(inst[0]+inst[24]+inst[1:7]+inst[20:24])
+        
+    elif(fmt==5): #U
+        imm=inst[0:20]
+        
+    elif(fmt==6): #UJ
+        imm=(inst[0]+inst[12:20]+inst[11]+inst[1:11])
 
     list = [rs1, rs2, rd, imm]
    
