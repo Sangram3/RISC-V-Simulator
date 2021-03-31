@@ -2,9 +2,12 @@
 #all extractions and decode done in string format and at the end converted everything to decimal, example rs1 = '00110' then rs1 becomes 6 at the end.
 from collections import defaultdict
 
+def bin32(num):
+    return '{0:032b}'.format(num)
+
 def decode(ins):
     d = defaultdict(lambda: None)
-    d = {'0110011': ['R', '000', '0000000', 'add']}
+    d = {'0110011': ['R', '000', '0000000', 'add']  ,'0000011' : ['I', " for lb,lw,lh,ld "],'0010011' : ['I',"for addi andi ori "] ,'0100011':['S'],'1100111' : ['I',"for jalr"] ,'1101111' : ['UJ'] ,'1100011' : ['SB']}
 
     inst = None
     op = None
@@ -50,14 +53,16 @@ def decode(ins):
         
     #below code is for checking code    
 
-    print(op)
-    print(fmt)
-    print(func3)
-    print(func7)
-    print(rd)
-    print(rs1)
-    print(rs2)
+    print("op: ",op)
+    print("fmt: ",fmt)
+    print("func3: ",func3)
+    print("func7: ",func7)
+    print("rd: ",rd)
+    print("rs1: ",rs1)
+    print("rs2: ",rs2)
+    
+    
+    
 
 
-
-decode('00000001010110100000010010110011')
+decode(bin32(0x00A37293))
