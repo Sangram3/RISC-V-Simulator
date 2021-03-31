@@ -1,4 +1,4 @@
-def write_back(write_control, reg_no, data):      #reg_no is found using get_rd() function
+def write_back(write_control, reg_no, data):      #reg_no is found using reg_obj.get_rd() function
     if(write_control):
         reg_obj.store_reg(reg_no, data)               #reg_obj is the object of the registers class
 
