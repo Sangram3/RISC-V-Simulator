@@ -125,16 +125,16 @@ def execute(fmt,inst,args):
             return 
         if inst =='beq':
             if rs1 == rs2:
-                PC = PC+imm
+                PC = PC+imm-4
         if inst == 'bne':
             if rs1 != rs2:
-                PC = PC+imm
+                PC = PC+imm-4
         if inst =='bge':
             if rs1 >= rs2:
-                PC = PC+imm
+                PC = PC+imm-4
         if inst == 'blt':
             if rs1 < rs2:
-                PC = PC+imm
+                PC = PC+imm-4
         
     elif fmt == 5: # U : auipc, lui
     #Memory access not necessary
