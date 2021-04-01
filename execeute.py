@@ -150,8 +150,15 @@ def execute(fmt,inst,args):
         return ry
     
     elif fmt == 6: #UJ : jal
-    #rd update necessary rd = PC+4
-        PC = PC+imm
+    
+        imm = bin_to_dec(imm)
+        imm=imm*2   #omit imm[0]
+        if imm<-1048576  or imm>1048574: 
+            raise ValueError("Immidiate {} out of range immidiate should be between -1048576-1048574".format(imm))
+            return
+        ry=PC
+        PC=PC-4+imm 
+        return ry
         
         
     output_message(fmt,inst,*args)
