@@ -138,7 +138,18 @@ def execute(fmt,inst,args):
         
     elif fmt == 5: # U : auipc, lui
     #Memory access not necessary
-        return "This part not done"
+        imm = bin_to_dec(imm)
+        if imm<-524288  or imm>524287: 
+            raise ValueError("Immidiate {} out of range immidiate should be between -524288-524287".format(imm))
+            return
+        if(inst == 'lui'):
+            imm = imm*4096
+            ry = imm
+        if(inst == 'auipc'):
+            imm = imm*4096
+            imm = PC+imm
+            ry = imm
+        return ry
     
     elif fmt == 6: #UJ : jal
     #rd update necessary rd = PC+4
