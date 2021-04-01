@@ -16,7 +16,6 @@ def bin_to_dec(s): # input in two's compliment form
         return -1 * (int(''.join('1' if x == '0' else '0' for x in s), 2) + 1)
     else:
         return int(s, 2)
-    
 def execute(fmt,inst,args):
     PC = 0 #just for sake of convinience
     rs1 = None
@@ -70,6 +69,8 @@ def execute(fmt,inst,args):
             ry =  rs1<rs2
         if inst == 'and': # and
             ry =  rs1&rs2
+        if ry>2147483647 or ry<-2147483648:
+            ry = 0
         return ry
             
     elif fmt == 2: #I : addi, andi, ori, lb, lh, lw, jalr
@@ -77,6 +78,7 @@ def execute(fmt,inst,args):
         imm = bin_to_dec(imm)
         if imm<-2048  or imm>2047: 
             raise ValueError("Immidiate {} out of range immidiate should be between -2048-2047".format(imm))
+            return
         if inst == 'addi' : # addi
             ry =  rs1+imm
             
@@ -99,6 +101,8 @@ def execute(fmt,inst,args):
         #rd update necessary rd = PC+4
             PC = rs1+imm
             return 
+        if ry>2147483647 or ry<-2147483648:
+            ry = 0
         return ry
     
     elif fmt == 3: # S : sb, sw, sh
@@ -118,6 +122,7 @@ def execute(fmt,inst,args):
             imm//=2
         if imm<-2048  or imm>2047:
             raise ValueError("Immidiate {} out of range immidiate should be between -2048-2047".format(imm))
+            return 
         if inst =='beq':
             if rs1 == rs2:
                 PC = PC+imm
@@ -141,7 +146,6 @@ def execute(fmt,inst,args):
         
         
     output_message(fmt,inst,*args)
-    
     return "No return type"
     
-print(execute(3, 'sw', [20, 12, None, '000000000000']))
+print(execute(3, 'sw', [20, 12, None, '000000000001']))
