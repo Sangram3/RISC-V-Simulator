@@ -77,7 +77,6 @@ def execute(fmt,inst,args):
         imm = bin_to_dec(imm)
         if imm<-2048  or imm>2047: 
             raise ValueError("Immidiate {} out of range immidiate should be between -2048-2047".format(imm))
-            return
         if inst == 'addi' : # addi
             ry =  rs1+imm
             
@@ -119,7 +118,6 @@ def execute(fmt,inst,args):
             imm//=2
         if imm<-2048  or imm>2047:
             raise ValueError("Immidiate {} out of range immidiate should be between -2048-2047".format(imm))
-            return 
         if inst =='beq':
             if rs1 == rs2:
                 PC = PC+imm
@@ -144,6 +142,6 @@ def execute(fmt,inst,args):
         
     output_message(fmt,inst,*args)
     
-    return "I got no return type"
+    return "No return type"
     
 print(execute(3, 'sw', [20, 12, None, '000000000000']))
