@@ -138,7 +138,9 @@ def decode(ins):
     elif(fmt==6): #UJ
         imm=(inst[0]+inst[12:20]+inst[11]+inst[1:11])
 
-    list = [rs1, rs2, rd, imm]
+    registers.set_rs1(rs1);
+    registers.set_rs2(rs2);
+    registers.set_rd(rd);
    
     #below code is for checking code    
 
@@ -150,7 +152,7 @@ def decode(ins):
     print("rs1: ",rs1)
     print("rs2: ",rs2)
     
-    return (fmt, mneumonic, list)
+    return (fmt, mneumonic, imm)
         
     #format of input for decode function = decode('00000001010110100000010010110011')
 
