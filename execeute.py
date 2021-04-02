@@ -16,7 +16,7 @@ def bin_to_dec(s): # input in two's compliment form
         return -1 * (int(''.join('1' if x == '0' else '0' for x in s), 2) + 1)
     else:
         return int(s, 2)
-def execute(fmt,inst,args):
+def execute(fmt,inst,im):
     PC = 0 #just for sake of convinience
     rs1 = None
     rs2 = None
@@ -24,10 +24,10 @@ def execute(fmt,inst,args):
     imm = None
     ry = None
     try:
-        rs1 = args[0]
-        rs2 = args[1]
-        rd = args[2]
-        imm = args[3]
+        rs1 = registers.get_rs1();
+        rs2 = registers.get_rs2();
+        rd = registers.get_rd();
+        imm = im
         # rs1 = Register.__regs[rs1]
         # rs2 = Register.__regs[rs2]
         
