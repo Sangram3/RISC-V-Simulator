@@ -44,44 +44,44 @@ class registers:
     __rs2 = 0
     __rd = 0
  
-    def add_PC(x):
-        __PC += x
+    def add_PC(self, x):
+        self.__PC += x
  
-    def get_PC():
-        return __PC
- 
- 
-    def set_IR(x):
-        __IR = x
- 
-    def get_IR():
-        return __IR
+    def get_PC(self):
+        return self.__PC
  
  
-    def set_rs1(x):
-        __rs1 = x
+    def set_IR(self,x):
+        self.__IR = x
  
-    def get_rs1():
-        return __rs1
+    def get_IR(self):
+        return self.__IR
+ 
+ 
+    def set_rs1(self,x):
+        self.__rs1 = x
+ 
+    def get_rs1(self):
+        return self.__rs1
  
     
  
-    def set_rs2(x):
-        __rs2 = x
+    def set_rs2(self,x):
+        self.__rs2 = x
  
-    def get_rs2():
-        return __rs2
- 
- 
-    def set_rd(x):
-        __rd = x
- 
-    def get_rd():
-        return __rd
+    def get_rs2(self):
+        return self.__rs2
  
  
-    def load_reg(reg_num):
-        return __regs[reg_num]
+    def set_rd(self,x):
+        self.__rd = x
+ 
+    def get_rd(self):
+        return self.__rd
+ 
+ 
+    def load_reg(self,reg_num):
+        return self.__regs[reg_num]
     
-    def store_reg(reg_num, data):   
-        __regs[reg_num] = data
+    def store_reg(self,reg_num, data):   
+        self.__regs[reg_num] = data
