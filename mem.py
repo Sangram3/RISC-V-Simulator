@@ -1,12 +1,12 @@
-def write_back(write_control, reg_no, data):      #reg_no is found using reg_obj.get_rd() function
-    if(write_control):
+def write_back(write_control, reg_no, data):      #reg_no is found using reg_obj.get_rd() function, data is in hex (with 0x)
+    if(write_control):                            
         reg_obj.store_reg(reg_no, data)               #reg_obj is the object of the registers class
 
-def memory_access(memory_control, address, reg_no, data):
-    if(memory_control == 1):   # for load data control = 1 
-        reg_obj.store_reg(reg_no, mem_obj.load_data(address))   #reg_obj is registers class obj and mem_obj is the memory class object
-    else if(memory_control == 2):   #for store, control = 2
-        mem_obj.store_data(address, data)
+# def memory_access(memory_control, address, reg_no, data):
+#     if(memory_control == 1):   # for load data control = 1 
+#         reg_obj.store_reg(reg_no, mem_obj.lw(address))   #reg_obj is registers class obj and mem_obj is the memory class object
+#     else if(memory_control == 2):   #for store, control = 2
+#         mem_obj.store_data(address, data)
 
 
 
