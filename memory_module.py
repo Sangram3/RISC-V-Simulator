@@ -113,5 +113,5 @@ class registers:
     def load_reg(self,reg_num):
         return self.__regs[reg_num]
     
-    def store_reg(self,reg_num, data):   
+    def store_reg(self,reg_num, data):   #the data is in hex with 0x
         self.__regs[reg_num] = data
