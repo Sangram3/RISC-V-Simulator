@@ -1,51 +1,30 @@
+  
 def write_back(write_control, reg_obj, data):      #reg_no is found using reg_obj.get_rd() function, data is in hex (with 0x)
-    if(write_control):    
-        reg_no = reg_obj.get_rd()
-        reg_obj.store_reg(reg_no, data)               #reg_obj is the object of the registers class
-
-# def memory_access(memory_control, address, reg_no, data):
-#     if(memory_control == 1):   # for load data control = 1 
-#         reg_obj.store_reg(reg_no, mem_obj.lw(address))   #reg_obj is registers class obj and mem_obj is the memory class object
-#     else if(memory_control == 2):   #for store, control = 2
-#         mem_obj.store_data(address, data)
+    if(write_control):   
+        reg_no = reg_obj.get_rd()                         
+        reg_obj.store_reg(reg_no, data) 
 
 
+def mem(if_needed, mem_control, mem_obj, add, *args):   #data in hex with 0x
+    if(if_needed):
+        if(mem_control == 1):
+            # sw
+            sw(add, args[0])
+        else if(mem_control == 2):
+            # sh
+            sh(add,args[0])
+        else if(mem_control == 3):
+            # sb
+            sb(add,args[0])   #args[0] is the data in hexwith 0x
+        else if(mem_control == 4):
+            # lw    
+            lw(add)
+        else if(mem_control == 5):
+            # lb
+            lb(add)
+        else if(mem_control == 6):
+            lh(add)
+            # lh    #     #      
 
 
-#memory access
-
-#create memory class
-#create dictionary~CPU Memory
-#dictionary <int,int/Byte> ~ <address,value>
-
-#create following class variables:
-#code_start ~ text segment
-#data_start ~ data segment
-#data_stop 
-#stack_start ~ stack segment
-#heap_start ~ heap segment
-
-#create following methods/functions
-#load_data,load_word,load_byte etc.
-#store_data,store_word,store_byte etc.
-#get_next_instruction
-#get_data_at
-#add_data_at
-#show_memory
-
-#create PC class
-#create following methods
-#add_PC
-#get_PC
-
-
-
-#create Registers class:
-#create 32 registers
-#create following methods
-#load_from_register
-#store_to_register
-#print_register_value
-
-#create ... 
 
