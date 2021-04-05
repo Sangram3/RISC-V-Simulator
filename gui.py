@@ -6,11 +6,11 @@ class Window(QWidget):
    def __init__(self):
       super().__init__()
       self.setWindowTitle("QTabWidget Example")
-      self.resize(4000, 3000)
-      # Create a top-level layout
+      self.resize(300, 200)
+      
       layout = QVBoxLayout()
       self.setLayout(layout)
-      # Create the tab widget with two tabs
+      
       tabs = QTabWidget()
       tabs.addTab(self.EditorTabUI(), "Editor")
       tabs.addTab(self.CompilerTabUI(), "Compiler")
@@ -62,16 +62,47 @@ class Window(QWidget):
       lef_s.addLayout(run)
       layout.addStretch()
 
-      for i in range(5):
-         lef_s.addWidget(QLabel("Inst"))  
-         lef_s.addStretch()
-      self.Output= QLabel("Output")
-      lef_s.addWidget(self.Output)
+      formLayout =QFormLayout()
+      groupBox = QGroupBox("Machine Code Input")
+      labelLis = []
+      comboList = []
+      labelLis.append(QLabel("PC    "))
+      comboList.append(QLabel("Instruction"))
+         
+      for i in  range(100):
+         labelLis.append(QLabel("0x0      "))
+         comboList.append(QLabel("Inst"))
+         formLayout.addRow(labelLis[i], comboList[i])
+
+      groupBox.setLayout(formLayout)
+      scroll = QScrollArea()
+      
+      scroll.setWidget(groupBox)
+      scroll.setWidgetResizable(True)
+      scroll.setFixedHeight(700)
+      scroll.setFixedWidth(1000)
+
+      lef_s.addWidget(scroll)
+
+      gB = QGroupBox("Output")
+      vb= QFormLayout()
+         
+      for i in range(100):
+         vb.addRow(QLabel(str(i)))   
+      gB.setLayout(vb)
+      scr = QScrollArea()
+      
+      scr.setWidget(gB)
+      scr.setWidgetResizable(True)
+      scr.setFixedHeight(250)
+      scr.setFixedWidth(700)
+      
+      lef_s.addWidget(scr)
       lef_s.addStretch()
       
       layout.addLayout(lef_s)
       layout.addStretch()
-      
+
       tabs = QTabWidget()
       tabs.addTab(self.MemoryTabUI(), "Memory")
       tabs.addTab(self.RegisterTabUI(), "Register")
@@ -84,18 +115,18 @@ class Window(QWidget):
    def MemoryTabUI(self):
       memoryTab = QWidget()
       layout = QGridLayout()
-      layout.addWidget(QLabel("Address"),0,0)
-      layout.addWidget(QLabel("+0"),0,1)
-      layout.addWidget(QLabel("+1"),0,2)
-      layout.addWidget(QLabel("+2"),0,3)
-      layout.addWidget(QLabel("+4"),0,4)
+      layout.addWidget(QLabel("Address"),0,0,1,2)
+      layout.addWidget(QLabel("+0"),0,1,1,2)
+      layout.addWidget(QLabel("+1"),0,2,1,2)
+      layout.addWidget(QLabel("+2"),0,3,1,2)
+      layout.addWidget(QLabel("+4"),0,4,1,2)
 
       for i in range(10):
          for j in range(5):
             if(j==0):
-               layout.addWidget(QLabel("0x0"),i+1,j) 
+               layout.addWidget(QLabel("0x0"),i+1,j,1,2) 
             else:
-               layout.addWidget(QLabel("00"),i+1,j)
+               layout.addWidget(QLabel("00"),i+1,j,1,2)
       
       memoryTab.setLayout(layout)
       return memoryTab
@@ -103,16 +134,27 @@ class Window(QWidget):
    def RegisterTabUI(self):
 
       registerTab = QWidget()
-      layout = QVBoxLayout()
+      v= QVBoxLayout()
 
-      
+      gb = QGroupBox()
+
+      layout = QVBoxLayout()
       for i in range(32):
          reg = QHBoxLayout()
          reg.addWidget(QLabel("x"+str(i+1)))
          reg.addWidget(QLabel("0x0"))
          layout.addLayout(reg)
 
-      registerTab.setLayout(layout)
+      gb.setLayout(layout)
+      scr = QScrollArea()
+      
+      scr.setWidget(gb)
+      scr.setWidgetResizable(True)
+      scr.setFixedHeight(700)
+      scr.setFixedWidth(200)
+
+      v.addWidget(scr)
+      registerTab.setLayout(v)
       return registerTab
 
 if __name__ == "__main__":
