@@ -1,11 +1,15 @@
 class registers:
     __regs=[0 for i in range(32)]
- 
+    __regs[2] =  int("0x7FFFFFFC",16) #stack pointer
+    __regs[3] =  int("0x10000000",16) #global pointer
     __PC = 0
     __IR = 0
     __rs1 = 0
     __rs2 = 0
     __rd = 0
+
+    def make0(self):
+        self.__regs[0] = 0
  
     def print_reg(self):
         print(self.__regs)
