@@ -1,11 +1,5 @@
-#fetch
-#create IR class with following:-
-
-#-IR variable
-#-set IR method (fetch step)(sets current instruction according to PC value)
-#-get IR method (returns current instruction)
-
-#method to increment PC (PC+4) by calling add_PC in PC class
-
-#code starts here
-
+def fetch(mem_mod, reg_mod):
+    inst = mem_mod.lw(reg_mod.get_PC())
+    reg_mod.set_IR(inst)
+    reg_mod.add_PC(4)
+    
