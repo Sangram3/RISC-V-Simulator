@@ -16,7 +16,7 @@ def bin_to_dec(s): # input in two's compliment form
         return -1 * (int(''.join('1' if x == '0' else '0' for x in s), 2) + 1)
     else:
         return int(s, 2)
-def execute(fmt,inst,im):
+def execute(fmt,inst,im,registers):
     PC = 0 #just for sake of convinience
     rs1 = None
     rs2 = None
@@ -28,8 +28,8 @@ def execute(fmt,inst,im):
         rs2 = registers.get_rs2();
         rd = registers.get_rd();
         imm = im
-        # rs1 = Register.__regs[rs1]
-        # rs2 = Register.__regs[rs2]
+        rs1 = registers.load_reg(rs1)
+        rs2 = registers.load_reg(rs2)
         
     except:
         pass
@@ -164,4 +164,4 @@ def execute(fmt,inst,im):
     output_message(fmt,inst,*args)
     return "No return type"
     
-print(execute(3, 'sw', [20, 12, None, '000000000001']))
+# print(execute(3, 'sw', [20, 12, None, '000000000001']))
