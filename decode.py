@@ -5,7 +5,7 @@ from collections import defaultdict
 def bin32(num):
     return '{0:032b}'.format(num)
 
-def decode(ins):
+def decode(ins, memory, registers):
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -24,6 +24,7 @@ def decode(ins):
     #opcode extraction
     op = inst[25:]
     #fmt check
+    print(op)
     fmt = d[op]
 
     #func3 extraction if present
@@ -157,4 +158,4 @@ def decode(ins):
     #format of input for decode function = decode('00000001010110100000010010110011')
 
 
-decode(bin32(0x00A37293))
+#decode(bin32(0x00A37293))
