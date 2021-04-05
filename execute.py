@@ -17,16 +17,16 @@ def bin_to_dec(s): # input in two's compliment form
     else:
         return int(s, 2)
 def execute(fmt,inst,im,registers):
-    PC = 0 #just for sake of convinience
+    # PC = 0 #just for sake of convinience
     rs1 = None
     rs2 = None
     rd = None
     imm = None
     ry = None
     try:
-        rs1 = registers.get_rs1();
-        rs2 = registers.get_rs2();
-        rd = registers.get_rd();
+        rs1 = registers.get_rs1()
+        rs2 = registers.get_rs2()
+        rd = registers.get_rd()
         imm = im
         rs1 = registers.load_reg(rs1)
         rs2 = registers.load_reg(rs2)
@@ -99,7 +99,8 @@ def execute(fmt,inst,im,registers):
         
         if inst == 'jalr': # jalr
         #rd update necessary rd = PC+4
-            PC = rs1+imm
+            # PC = rs1+imm-PC
+            registers.add_PC(rs1+imm-registers.get_PC())
             return 
         if ry>2147483647 or ry<-2147483648:
             ry = 0
@@ -125,16 +126,20 @@ def execute(fmt,inst,im,registers):
             return 
         if inst =='beq':
             if rs1 == rs2:
-                PC = PC+imm-4
+                registers.add_PC(imm-4)
+                # PC = PC+imm-4
         if inst == 'bne':
             if rs1 != rs2:
-                PC = PC+imm-4
+                registers.add_PC(imm-4)
+                # PC = PC+imm-4
         if inst =='bge':
             if rs1 >= rs2:
-                PC = PC+imm-4
+                registers.add_PC(imm-4)
+                # PC = PC+imm-4
         if inst == 'blt':
             if rs1 < rs2:
-                PC = PC+imm-4
+                registers.add_PC(imm-4)
+                # PC = PC+imm-4
         
     elif fmt == 5: # U : auipc, lui
     #Memory access not necessary
@@ -146,7 +151,7 @@ def execute(fmt,inst,im,registers):
             ry = imm*4096
         if(inst == 'auipc'):
             ry = imm*4096
-            ry = PC+ry
+            ry = registers.get_PC()+ry
         return ry
     
     elif fmt == 6: #UJ : jal
@@ -156,8 +161,9 @@ def execute(fmt,inst,im,registers):
         if imm<-1048576  or imm>1048574: 
             raise ValueError("Immidiate {} out of range immidiate should be between -1048576-1048574".format(imm))
             return
-        ry=PC
-        PC=PC-4+imm 
+        ry=registers.get_PC()
+        # PC=PC-4+imm 
+        registers.add_PC(imm-4)
         return ry
         
         
