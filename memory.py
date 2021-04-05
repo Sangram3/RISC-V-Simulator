@@ -3,8 +3,11 @@ class memory:
 
     #     __code_start=0x00000000
     #     __data_start=0x10000000
-    __stack_start=0x7FFFFFFC
-    __heap_start=0x10007FE8
+    # __stack_start=0x7FFFFFFC
+    # __heap_start=0x10007FE8
+
+    def print_mem(self):
+        print(self.__mem_dict)
 
     def __init__(self,mc_file):
         f=open(mc_file,"r")
@@ -68,6 +71,3 @@ class memory:
         if(len(data) != 4):
             data = "0x"+ ('0'*(4-len(data))) + data[2:]
         self.__mem_dict[add + 0] = data[-2:]
-        
-        
-
