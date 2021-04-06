@@ -6,6 +6,9 @@ class memory:
     # __stack_start=0x7FFFFFFC
     # __heap_start=0x10007FE8
 
+    def reset_mem(self):
+        self.__mem_dict = {}
+
     def print_mem(self):
         print(self.__mem_dict)
     
