@@ -102,7 +102,6 @@ class Window(QtWidgets.QTabWidget):
       tabs.addTab(self.CompilerTabUI(), "Compiler")
       layout.addWidget(tabs)
       ########################################################################
-
    def EditorTabUI(self):
       editorTab = QWidget()
       layout = QVBoxLayout()
@@ -113,11 +112,9 @@ class Window(QtWidgets.QTabWidget):
       self.fn='File'
       filebox = QHBoxLayout()
       self.f=QLabel("File")
-
       filebox.addStretch(0)
       filebox.addWidget(self.f)
       filebox.addStretch(0)
-
       btn = QPushButton("Select File")
       btn.setStyleSheet("QPushButton"
                              "{"
@@ -130,19 +127,28 @@ class Window(QtWidgets.QTabWidget):
                              )
       filebox.addWidget(btn)
       filebox.addStretch(2)
-
       btn.clicked.connect(self.getfile)
-      
       layout.addLayout(filebox)
-      layout.addWidget(QTextEdit())
-      
+      self.editor = QPlainTextEdit()
+      fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
+      fixedfont.setPointSize(12)
+      self.editor.setFont(fixedfont)
+      layout.addWidget(self.editor)
       editorTab.setLayout(layout)
       return editorTab
 
    def getfile(self):
-      fname = QFileDialog.getOpenFileName(self, 'Open file', 'D:\\4th_Sem\CS204\Project',"Machine Cdde files (*.mc)")
-      print(str(fname[0]))
-      self.f.setText(str(fname[0]))
+      path, _ = QFileDialog.getOpenFileName(self, "Open file", "", 
+                             "MC documents (*.mc)")
+      self.f.setText(str(path))
+      if path:
+            try:
+                with open(path) as f:
+                    text = f.read()
+            except Exception as e:
+                self.dialog_critical(str(e))
+            else:
+                self.editor.setPlainText(text)
    
    def assemble_clicked(self):
       self.bt.hide()
@@ -454,5 +460,5 @@ if __name__ == "__main__":
    QApplication.setFont(custom_font, "QLabel")
    window = Window()
    
-   window.show()
+   window.showMaximized()
    sys.exit(app.exec_())
