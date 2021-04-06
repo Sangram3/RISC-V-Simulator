@@ -1,25 +1,109 @@
 import sys
-
+from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtWidgets import * 
+from PyQt5.QtGui import * 
+from PyQt5.QtCore import * 
+import sys
 from PyQt5.QtWidgets import *
+from maincopy import *
+from PyQt5.QtCore import QFile, QTextStream
+from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtCore
 
-class Window(QWidget):
+class TabBar(QtWidgets.QTabBar):
+    def __init__(self, colors, parent=None):
+        super(TabBar, self).__init__(parent)
+        self.mColors = colors
+
+    def paintEvent(self, event):
+        painter = QtWidgets.QStylePainter(self)
+        opt = QtWidgets.QStyleOptionTab()
+
+        for i in range(self.count()):
+            self.initStyleOption(opt, i)
+            if opt.text in self.mColors:
+                opt.palette.setColor(
+                    QtGui.QPalette.Button, self.mColors[opt.text]
+                )
+            painter.drawControl(QtWidgets.QStyle.CE_TabBarTabShape, opt)
+            painter.drawControl(QtWidgets.QStyle.CE_TabBarTabLabel, opt)
+
+class Window(QtWidgets.QTabWidget):
    def __init__(self):
       super().__init__()
       self.setWindowTitle("QTabWidget Example")
-      self.resize(300, 200)
+      self.setGeometry(300, 300,300,300)
+      self.move(0,0)
+      self.setStyleSheet("background: white;")  
+      self.setStyleSheet("color: white;background: black")
+      # set reset step dump ##################################################
       
+      self.run_btn = QPushButton('Run')
+      self.step_btn= QPushButton('Step')
+      self.reset_btn= QPushButton('Reset')
+      self.dump_btn= QPushButton('Dump')
+     
+      self.run_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : green;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
+      
+      self.step_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : purple;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
+      
+      self.reset_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : blue;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             ) 
+      self.dump_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : lightblue;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
+      
+      ########################################################################
       layout = QVBoxLayout()
       self.setLayout(layout)
-      
+      # Editor Compiler#######################################################
       tabs = QTabWidget()
+      d = {
+            "Editor": QtGui.QColor("blue"),
+            "Compiler": QtGui.QColor("#87ceeb"),
+        }
+      tabs.setTabBar(TabBar(d))
       tabs.addTab(self.EditorTabUI(), "Editor")
       tabs.addTab(self.CompilerTabUI(), "Compiler")
       layout.addWidget(tabs)
+      ########################################################################
 
    def EditorTabUI(self):
       editorTab = QWidget()
       layout = QVBoxLayout()
-      
+      editorTab.setAutoFillBackground(True)
+      palette = editorTab.palette()
+      palette.setColor(editorTab.backgroundRole(), QtCore.Qt.blue)
+      editorTab.setPalette(palette)
       self.fn='File'
       filebox = QHBoxLayout()
       self.f=QLabel("File")
@@ -27,8 +111,17 @@ class Window(QWidget):
       filebox.addStretch()
 
       btn = QPushButton("Select File")
+      btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : violet;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : brown;"
+                             "}"
+                             )
       filebox.addWidget(btn)
-      filebox.addStretch()
+      # filebox.addStretch()
 
       btn.clicked.connect(self.getfile)
       
@@ -50,14 +143,24 @@ class Window(QWidget):
       lef_s = QVBoxLayout()
 
       run= QHBoxLayout()
-      run.addWidget(QPushButton("Run"))
+      run.addWidget(self.run_btn)
       run.addStretch()
-      run.addWidget(QPushButton("Step"))
+      
+      run.addWidget(self.step_btn)
       run.addStretch()
-      run.addWidget(QPushButton("Reset"))
+      
+      run.addWidget(self.reset_btn)
       run.addStretch()
-      run.addWidget(QPushButton("Dump"))
+      
+      run.addWidget(self.dump_btn)
       run.addStretch()
+
+      self.run_btn.clicked.connect(self.run_code)      
+      self.step_btn.clicked.connect(self.step_code)      
+      self.reset_btn.clicked.connect(self.reset_code)      
+      self.dump_btn.clicked.connect(self.dump_code)      
+
+    
 
       lef_s.addLayout(run)
       layout.addStretch()
@@ -66,20 +169,22 @@ class Window(QWidget):
       groupBox = QGroupBox("Machine Code Input")
       labelLis = []
       comboList = []
+      basic_codes = []
       labelLis.append(QLabel("PC    "))
       comboList.append(QLabel("Instruction"))
-         
-      for i in  range(100):
+      basic_codes.append(QLabel("Basic Code"))
+      
+      for i in  range(15):
          labelLis.append(QLabel("0x0      "))
          comboList.append(QLabel("Inst"))
-         formLayout.addRow(labelLis[i], comboList[i])
+         basic_codes.append(QLabel("add x11 x12 x13"))
+         formLayout.addRow(labelLis[i], basic_codes[i])
 
       groupBox.setLayout(formLayout)
       scroll = QScrollArea()
-      
       scroll.setWidget(groupBox)
       scroll.setWidgetResizable(True)
-      scroll.setFixedHeight(700)
+      scroll.setFixedHeight(300)
       scroll.setFixedWidth(1000)
 
       lef_s.addWidget(scroll)
@@ -95,7 +200,7 @@ class Window(QWidget):
       scr.setWidget(gB)
       scr.setWidgetResizable(True)
       scr.setFixedHeight(250)
-      scr.setFixedWidth(700)
+      scr.setFixedWidth(1000)
       
       lef_s.addWidget(scr)
       lef_s.addStretch()
@@ -104,6 +209,7 @@ class Window(QWidget):
       layout.addStretch()
 
       tabs = QTabWidget()
+      
       tabs.addTab(self.MemoryTabUI(), "Memory")
       tabs.addTab(self.RegisterTabUI(), "Register")
       layout.addWidget(tabs)
@@ -112,6 +218,22 @@ class Window(QWidget):
       compilerTab.setLayout(layout)
       return compilerTab
 
+   def run_code(self):
+       # run()
+       print("run clicked")
+       
+   def step_code(self):
+       # step()
+       print("step clicked")
+       
+   def reset_code(self):
+       # reset()
+       print("reset clicked")
+       
+   def dump_code(self):
+       # dump()
+       print("dump clicked")
+       
    def MemoryTabUI(self):
       memoryTab = QWidget()
       layout = QGridLayout()
@@ -159,6 +281,10 @@ class Window(QWidget):
 
 if __name__ == "__main__":
    app = QApplication(sys.argv)
+   app.setStyleSheet("QLabel{font-size: 12pt;font-color: white;}")
+   custom_font = QFont()
+   custom_font.setWeight(12);
+   QApplication.setFont(custom_font, "QLabel")
    window = Window()
    window.show()
    sys.exit(app.exec_())
