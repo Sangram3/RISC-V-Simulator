@@ -3,9 +3,7 @@ from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import * 
-import sys
 from PyQt5.QtWidgets import *
-from maincopy import *
 from PyQt5.QtCore import QFile, QTextStream
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore
