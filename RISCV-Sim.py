@@ -37,7 +37,7 @@ def main():
         clock =  clock+1
         
         regi = [reg_mod.load_reg(i) for i in range(32)]
-        memi = mem_mod.get_mem()
+        memi = mem_mod.dic()
         dic[clock] = [regi, memi, reg_mod.get_PC(), reg_mod.get_IR()]
         print(dic)
     
