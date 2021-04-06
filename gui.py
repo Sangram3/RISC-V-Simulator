@@ -308,9 +308,11 @@ class Window(QtWidgets.QTabWidget):
 if __name__ == "__main__":
    app = QApplication(sys.argv)
    app.setStyleSheet("QLabel{font-size: 12pt;font-color: white;}")
+   app.setStyle("fusion")
    custom_font = QFont()
    custom_font.setWeight(12);
    QApplication.setFont(custom_font, "QLabel")
    window = Window()
+   
    window.show()
    sys.exit(app.exec_())
