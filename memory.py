@@ -8,6 +8,9 @@ class memory:
 
     def print_mem(self):
         print(self.__mem_dict)
+    
+    def get_mem(self):
+        return self.__mem_dict
 
     def __init__(self,mc_file):
         f=open(mc_file,"r")
@@ -38,7 +41,8 @@ class memory:
     def lw(self, address):
         hex=""
         for i in range(4):
-            hex = self.__mem_dict[address+i] + hex
+            # hex = self.__mem_dict[address+i] + hex
+            hex = self.__mem_dict.get(address+i, "00") + hex
         return "0x"+hex 
 
     def sw(self, add, data):    #data - hex
@@ -52,7 +56,8 @@ class memory:
     def lh(self, address):
         hex=""
         for i in range(2):
-            hex = self.__mem_dict[address+i] + hex
+            # hex = self.__mem_dict[address+i] + hex
+            hex = self.__mem_dict.get(address+i, "00") + hex
         return "0x"+hex  
 
     def sh(self, add, data):
@@ -64,10 +69,14 @@ class memory:
 
     def lb(self, address):
         hex=""
-        hex = self.__mem_dict[address] 
+        # hex = self.__mem_dict[address] 
+        hex = self.__mem_dict.get(address, "00") + hex
         return "0x"+hex  
 
     def sb(self, add, data):
         if(len(data) != 4):
             data = "0x"+ ('0'*(4-len(data))) + data[2:]
         self.__mem_dict[add + 0] = data[-2:]
+        
+        
+
