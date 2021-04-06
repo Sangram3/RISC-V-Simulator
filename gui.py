@@ -72,7 +72,7 @@ class Window(QtWidgets.QTabWidget):
                              ) 
       self.dump_btn.setStyleSheet("QPushButton"
                              "{"
-                             "background-color : lightblue;"
+                             "background-color : #87ceeb;"
                              "}"
                              "QPushButton::pressed"
                              "{"
@@ -87,7 +87,7 @@ class Window(QtWidgets.QTabWidget):
       tabs = QTabWidget()
       d = {
             "Editor": QtGui.QColor("blue"),
-            "Compiler": QtGui.QColor("#87ceeb"),
+            "Compiler": QtGui.QColor("lightblue"),
         }
       tabs.setTabBar(TabBar(d))
       tabs.addTab(self.EditorTabUI(), "Editor")
@@ -206,11 +206,22 @@ class Window(QtWidgets.QTabWidget):
       layout.addLayout(lef_s)
       layout.addStretch()
 
-      tabs = QTabWidget()
+
+      Tabs = QTabWidget()
+      D = {
+             "Memory": QtGui.QColor("blue"),
+             "Register": QtGui.QColor("purple"),
+         }
+      Tabs.setTabBar(TabBar(D))
+      Tabs.addTab(self.MemoryTabUI(), "Memory")
+      Tabs.addTab(self.RegisterTabUI(), "Register")
+      layout.addWidget(Tabs)
       
-      tabs.addTab(self.MemoryTabUI(), "Memory")
-      tabs.addTab(self.RegisterTabUI(), "Register")
-      layout.addWidget(tabs)
+      # tabs = QTabWidget()
+   
+      # tabs.addTab(self.MemoryTabUI(), "Memory")
+      # tabs.addTab(self.RegisterTabUI(), "Register")
+      # layout.addWidget(tabs)
       layout.addStretch()
 
       compilerTab.setLayout(layout)
