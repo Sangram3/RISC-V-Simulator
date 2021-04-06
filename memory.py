@@ -77,6 +77,9 @@ class memory:
         if(len(data) != 4):
             data = "0x"+ ('0'*(4-len(data))) + data[2:]
         self.__mem_dict[add + 0] = data[-2:]
+
+    def value(self, key):
+        return self.__mem_dict[key]
         
         
 
