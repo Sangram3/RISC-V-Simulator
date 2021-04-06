@@ -157,6 +157,15 @@ class Window(QtWidgets.QTabWidget):
       run.addWidget(self.bt)
       run.addStretch()
       self.bt.clicked.connect(self.assemble_clicked)
+      self.bt.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : maroon;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
 
       run.addWidget(self.run_btn)
       run.addStretch()
