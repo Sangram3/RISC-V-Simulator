@@ -35,6 +35,9 @@ class Window(QtWidgets.QTabWidget):
       self.setStyleSheet("background: white;")  
       self.setStyleSheet("color: white;background: black")
       self.bt=QPushButton("",self)
+
+      self.memory={}
+      self.register=[]
       # set reset step dump ##################################################
       
       self.run_btn = QPushButton('Run')
@@ -157,15 +160,6 @@ class Window(QtWidgets.QTabWidget):
       run.addWidget(self.bt)
       run.addStretch()
       self.bt.clicked.connect(self.assemble_clicked)
-      self.bt.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : maroon;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : red;"
-                             "}"
-                             )
 
       run.addWidget(self.run_btn)
       run.addStretch()
@@ -271,22 +265,107 @@ class Window(QtWidgets.QTabWidget):
        
    def MemoryTabUI(self):
       memoryTab = QWidget()
+      f_lay = QVBoxLayout()
       layout = QGridLayout()
-      layout.addWidget(QLabel("Address"),0,0,1,2)
+      
+      self.labels=[]
+      self.mem_page = 0
+
+      for i in range(10):
+         t = []
+         for j in range(5):
+            if(j==0):
+               t.append(QLabel(hex(4*i))) 
+            else:
+               t.append(QLabel("00"))
+               
+         self.labels.append(t)
+      
+      
+      layout.addWidget(QLabel("Address"),0,0,1,1)
       layout.addWidget(QLabel("+0"),0,1,1,2)
       layout.addWidget(QLabel("+1"),0,2,1,2)
       layout.addWidget(QLabel("+2"),0,3,1,2)
       layout.addWidget(QLabel("+4"),0,4,1,2)
+      
 
       for i in range(10):
          for j in range(5):
             if(j==0):
-               layout.addWidget(QLabel("0x0"),i+1,j,1,2) 
-            else:
-               layout.addWidget(QLabel("00"),i+1,j,1,2)
+               layout.addWidget(self.labels[i][j],i+1,j,1,1)   
+            layout.addWidget(self.labels[i][j],i+1,j,1,2)
       
-      memoryTab.setLayout(layout)
+      f_lay.addLayout(layout)
+      
+      nav_pane = QHBoxLayout()
+
+      self.jump = QComboBox()
+      self.jump.addItems(["--Choose--","Text","Data","Heap","Stack"])
+      self.jump.currentIndexChanged.connect(self.selectionchange)
+
+
+      up = QPushButton("UP")
+      up.clicked.connect(self.UP_onclick)
+
+      down = QPushButton("DOWN")
+      down.clicked.connect(self.DOWN_onclick)
+
+      nav_pane.addWidget(QLabel("Jump"))
+      nav_pane.addWidget(self.jump)
+      nav_pane.addWidget(up)
+      nav_pane.addWidget(down) 
+      f_lay.addLayout(nav_pane)
+      f_lay.addStretch()
+
+      jumpto = QHBoxLayout()
+      jumpto.addWidget(QLabel("Jump to"))
+      jump_add = QLineEdit()
+      jumpto.addWidget(jump_add)
+      self.jump_to=""
+      jump_add.textChanged.connect(self.textChanged)
+      jump_add.editingFinished.connect(self.jump_enterPress)
+
+      f_lay.addLayout(jumpto)
+
+      memoryTab.setLayout(f_lay)
       return memoryTab
+
+   def DOWN_onclick(self):
+      self.mem_page+=1
+      self.mem_pane_update()
+   
+   def UP_onclick(self):
+      if(self.mem_page>0):
+         self.mem_page-=1
+         self.mem_pane_update()
+
+   def textChanged(self, address):
+      self.jump_to = address
+
+   def jump_enterPress(self):
+      if(self.jump_to != "" and int(self.jump_to, 16) >= 0 and int(self.jump_to, 16)<= 2147483647):
+         self.mem_page = int(int(self.jump_to, 16)/40)
+         self.mem_pane_update()
+
+
+   def selectionchange(self,i):
+      pg = [0, 0, 6710886, 6711705, 53687090]
+      if(i>0):
+         self.mem_page = pg[i]
+      self.mem_pane_update()
+
+   def mem_pane_update(self):
+      for i in range(10):
+         for j in range(5):
+            if(j==0):
+               self.labels[i][j].setText(hex(4*i+(40*self.mem_page)))
+            else:
+               if(4*i+(40*self.mem_page)+j-1 in self.memory):
+                  self.labels[i][j].setText(self.memory[4*i+(40*self.mem_page)+j-1])
+               elif(4*i+(40*self.mem_page)+j-1 < 0 or 4*i+(40*self.mem_page)+j-1> 2147483647):
+                  self.labels[i][j].setText("--")
+               else:
+                  self.labels[i][j].setText("00")
 
    def RegisterTabUI(self):
 
