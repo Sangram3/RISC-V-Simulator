@@ -66,7 +66,7 @@ def execute(fmt,inst,im,registers):
             ry= sra(rs1,rs2)
             
         if inst == 'slt': # slt
-            ry =  rs1<rs2
+            ry =  int(rs1<rs2)
         if inst == 'and': # and
             ry =  rs1&rs2
         if ry>2147483647 or ry<-2147483648:
@@ -100,8 +100,8 @@ def execute(fmt,inst,im,registers):
         if inst == 'jalr': # jalr
         #rd update necessary rd = PC+4
             # PC = rs1+imm-PC
+            ry = registers.get_PC()
             registers.add_PC(rs1+imm-registers.get_PC())
-            return 
         if ry>2147483647 or ry<-2147483648:
             ry = 0
         return ry
@@ -167,8 +167,7 @@ def execute(fmt,inst,im,registers):
         registers.add_PC(imm-4)
         return ry
         
-        
-    output_message(fmt,inst,*args)
+
     return "No return type"
     
 # print(execute(3, 'sw', [20, 12, None, '000000000001']))
