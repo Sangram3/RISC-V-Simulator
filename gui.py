@@ -77,7 +77,7 @@ class Window(QtWidgets.QTabWidget):
                              ) 
       self.dump_btn.setStyleSheet("QPushButton"
                              "{"
-                             "background-color : #87ceeb;"
+                             "background-color : #000080;"
                              "}"
                              "QPushButton::pressed"
                              "{"
@@ -92,7 +92,7 @@ class Window(QtWidgets.QTabWidget):
       tabs = QTabWidget()
       d = {
             "Editor": QtGui.QColor("blue"),
-            "Compiler": QtGui.QColor("lightblue"),
+            "Compiler": QtGui.QColor("brown"),
         }
       tabs.setTabBar(TabBar(d))
       tabs.addTab(self.EditorTabUI(), "Editor")
@@ -116,7 +116,7 @@ class Window(QtWidgets.QTabWidget):
       btn = QPushButton("Select File")
       btn.setStyleSheet("QPushButton"
                              "{"
-                             "background-color : violet;"
+                             "background-color : #000080;"
                              "}"
                              "QPushButton::pressed"
                              "{"
@@ -157,15 +157,6 @@ class Window(QtWidgets.QTabWidget):
       run.addWidget(self.bt)
       run.addStretch()
       self.bt.clicked.connect(self.assemble_clicked)
-      self.bt.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : maroon;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : red;"
-                             "}"
-                             )
 
       run.addWidget(self.run_btn)
       run.addStretch()
