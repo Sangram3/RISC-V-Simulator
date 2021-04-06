@@ -37,7 +37,53 @@ class Window(QtWidgets.QTabWidget):
       self.bt=QPushButton("",self)
       # set reset step dump ##################################################
       
+      self.run_btn = QPushButton('Run')
+      self.run_btn.setEnabled(False)
+      self.step_btn= QPushButton('Step')
+      self.step_btn.setEnabled(False)
+      self.reset_btn= QPushButton('Reset')
+      self.reset_btn.setEnabled(False)
+      self.dump_btn= QPushButton('Dump')
+      self.dump_btn.setEnabled(False)
+     
+      self.run_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : green;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
       
+      self.step_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : purple;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
+      
+      self.reset_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : blue;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             ) 
+      self.dump_btn.setStyleSheet("QPushButton"
+                             "{"
+                             "background-color : #87ceeb;"
+                             "}"
+                             "QPushButton::pressed"
+                             "{"
+                             "background-color : red;"
+                             "}"
+                             )
       
       ########################################################################
       layout = QVBoxLayout()
@@ -93,74 +139,12 @@ class Window(QtWidgets.QTabWidget):
       print(str(fname[0]))
       self.f.setText(str(fname[0]))
    
-
    def assemble_clicked(self):
-
       self.bt.hide()
-      run_btn = QPushButton("Run",self)
-      run_btn.move(300,60)
-      run_btn.show()
-      step_btn= QPushButton("Step",self)
-      step_btn.move(500,60)
-      step_btn.show()
-      reset_btn= QPushButton("Reset",self)
-      reset_btn.move(700,60)
-      reset_btn.show()
-      dump_btn= QPushButton("Dump",self)
-      dump_btn.move(900,60)
-      dump_btn.show()
-     
-      run_btn.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : green;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : red;"
-                             "}"
-                             )
-      
-      step_btn.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : purple;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : red;"
-                             "}"
-                             )
-      
-      reset_btn.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : blue;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : red;"
-                             "}"
-                             ) 
-      dump_btn.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : lightblue;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : red;"
-                             "}"
-                             )
-      
-
-      
-      
-
-      run_btn.clicked.connect(self.run_code)      
-      step_btn.clicked.connect(self.step_code)      
-      reset_btn.clicked.connect(self.reset_code)      
-      dump_btn.clicked.connect(self.dump_code)      
-
-    
-
-   
+      self.run_btn.setEnabled(True)
+      self.step_btn.setEnabled(True)
+      self.reset_btn.setEnabled(True)
+      self.dump_btn.setEnabled(True)
 
    def CompilerTabUI(self):
       compilerTab = QWidget()
@@ -168,10 +152,29 @@ class Window(QtWidgets.QTabWidget):
       lef_s = QVBoxLayout()
 
       run= QHBoxLayout()
+
       self.bt=QPushButton("Assemble and Simulate from the editor")
       run.addWidget(self.bt)
       run.addStretch()
       self.bt.clicked.connect(self.assemble_clicked)
+
+      run.addWidget(self.run_btn)
+      run.addStretch()
+      
+      run.addWidget(self.step_btn)
+      run.addStretch()
+      
+      run.addWidget(self.reset_btn)
+      run.addStretch()
+      
+      run.addWidget(self.dump_btn)
+      run.addStretch()
+
+      self.run_btn.clicked.connect(self.run_code)      
+      self.step_btn.clicked.connect(self.step_code)      
+      self.reset_btn.clicked.connect(self.reset_code)      
+      self.dump_btn.clicked.connect(self.dump_code)      
+
     
 
       lef_s.addLayout(run)
