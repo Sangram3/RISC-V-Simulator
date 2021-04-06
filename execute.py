@@ -151,7 +151,8 @@ def execute(fmt,inst,im,registers):
             ry = imm*4096
         if(inst == 'auipc'):
             ry = imm*4096
-            ry = registers.get_PC()+ry
+            ry = registers.get_PC()+ry-4
+        print(ry)
         return ry
     
     elif fmt == 6: #UJ : jal
