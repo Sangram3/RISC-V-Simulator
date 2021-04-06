@@ -6,6 +6,7 @@ from execute import *
 from mem import *
 from control import *
 from write_back import *
+import copy
 
 def bin_to_dec(s): # input in two's compliment form
     if s[0] == '1':
@@ -63,17 +64,20 @@ def main():
 
         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
             write_back(control_bits[0],  reg_mod, return_of_mem)
-
+        
         else:
             write_back(control_bits[0],  reg_mod, return_of_execute)
         clock =  clock+1
         
         regi = [reg_mod.load_reg(i) for i in range(32)]
-        memi = mem_mod.get_mem()
+        memi={}
+        d = mem_mod.dic()
+        for key in d:
+            memi[key] = mem_mod.value(key)
         code = basic_code(return_of_decode, reg_mod, mem_mod)
         print(code)
-        dic[clock] = [regi, memi, reg_mod.get_PC(), reg_mod.get_IR(), code]
-        #print(dic)
+        dic[clock] = list([regi, memi, reg_mod.get_PC(), reg_mod.get_IR(), code])
+        print(dic)
         print(reg_mod.get_PC())
         mem_mod.print_mem()
         reg_mod.print_reg()
