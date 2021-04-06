@@ -7,6 +7,27 @@ class registers:
     __rs1 = 0
     __rs2 = 0
     __rd = 0
+    clock = 0
+
+    def reset_regs(self):
+        self.__regs=[0 for i in range(32)]
+        self.__regs[2] =  int("0x7FFFFFFC",16) #stack pointer
+        self.__regs[3] =  int("0x10000000",16) #global pointer
+        self.__PC = 0
+        self.__IR = 0
+        self.__rs1 = 0
+        self.__rs2 = 0
+        self.__rd = 0
+        self.clock = 0
+
+    def get_clock(self):
+        return self.clock
+
+    def add_clock(self):
+        self.clock = self.clock+1  
+
+    def get_regs(self):
+        return self.__regs
 
     def make0(self):
         self.__regs[0] = 0
