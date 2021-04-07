@@ -1,8 +1,7 @@
 #decode function
 #all extractions and decode done in string format and at the end converted everything to decimal, example rs1 = '00110' then rs1 becomes 6 at the end.
 from collections import defaultdict
-from memory import *
-from registers import *
+
 def bin32(num):
     return '{0:032b}'.format(num)
 
@@ -158,7 +157,5 @@ def decode(ins, memory, registers):
         
     #format of input for decode function = decode('00000001010110100000010010110011')
 
-# mem = memory('test.mc')
-# regs = registers()
-# print(bin32(0xEF000011))
-# decode(bin32(0xEF000011),mem,regs)
+
+#decode(bin32(0x00A37293))
