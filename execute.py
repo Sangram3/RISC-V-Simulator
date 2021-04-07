@@ -107,7 +107,8 @@ def execute(fmt,inst,im,registers):
         return ry
     
     elif fmt == 3: # S : sb, sw, sh
-        imm = bin_to_dec(imm)*2
+        # imm = bin_to_dec(imm)*2
+        imm = bin_to_dec(imm)
         if imm<0:
             imm//=2
         if imm<-2048  or imm>2047:
