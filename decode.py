@@ -1,7 +1,8 @@
 #decode function
 #all extractions and decode done in string format and at the end converted everything to decimal, example rs1 = '00110' then rs1 becomes 6 at the end.
 from collections import defaultdict
-
+from memory import *
+from registers import *
 def bin32(num):
     return '{0:032b}'.format(num)
 
@@ -24,7 +25,7 @@ def decode(ins, memory, registers):
     #opcode extraction
     op = inst[25:]
     #fmt check
-    print(op)
+    # print(op)
     fmt = d[op]
 
     #func3 extraction if present
@@ -145,17 +146,19 @@ def decode(ins, memory, registers):
    
     #below code is for checking code    
 
-    print("op: ",op)
-    print("fmt: ",fmt)
-    print("func3: ",func3)
-    print("func7: ",func7)
-    print("rd: ",rd)
-    print("rs1: ",rs1)
-    print("rs2: ",rs2)
+    # print("op: ",op)
+    # print("fmt: ",fmt)
+    # print("func3: ",func3)
+    # print("func7: ",func7)
+    # print("rd: ",rd)
+    # print("rs1: ",rs1)
+    # print("rs2: ",rs2)
     
     return (fmt, mneumonic, imm)
         
     #format of input for decode function = decode('00000001010110100000010010110011')
 
-
-#decode(bin32(0x00A37293))
+# mem = memory('test.mc')
+# regs = registers()
+# print(bin32(0xEF000011))
+# decode(bin32(0xEF000011),mem,regs)
