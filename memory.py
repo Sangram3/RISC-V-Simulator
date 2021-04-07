@@ -18,10 +18,22 @@ class memory:
         lines = f.readlines()
         for line in lines:
             line = line.split()
+            if(len(line[1]) != 10):
+                line[1] = "0x"+ ('0'*(10-len(line[1]))) + line[1][2:]
             self.__mem_dict[int(line[0],16) + 0] = line[1][-2:]
             self.__mem_dict[int(line[0],16) + 1] = line[1][-4:-2]
             self.__mem_dict[int(line[0],16) + 2] = line[1][-6:-4]
             self.__mem_dict[int(line[0],16) + 3] = line[1][-8:-6]
+            
+#     def __init__(self,mc_file):
+#         f=open(mc_file,"r")
+#         lines = f.readlines()
+#         for line in lines:
+#             line = line.split()
+#             self.__mem_dict[int(line[0],16) + 0] = line[1][-2:]
+#             self.__mem_dict[int(line[0],16) + 1] = line[1][-4:-2]
+#             self.__mem_dict[int(line[0],16) + 2] = line[1][-6:-4]
+#             self.__mem_dict[int(line[0],16) + 3] = line[1][-8:-6]
 
     def code_ends(self, mc_output):
         file = open(mc_output,"w")
