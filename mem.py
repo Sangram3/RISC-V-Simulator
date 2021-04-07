@@ -6,46 +6,55 @@ def Twos_to_dec(hex):
 
 
 
-def mem(mem_control, mem_obj, reg_obj, add):   #data in hex with 0x 
+def mem(mem_control, mem_obj, reg_obj, add, l):   #data in hex with 0x 
     x = 0
     if(mem_control == 1):
         # sw
         mem_obj.sw(add, hex(reg_obj.load_reg(reg_obj.get_rs2())))
+        l.append("MEMORY : Store word " + hex(reg_obj.load_reg(reg_obj.get_rs2())) + " in " + add)  
+
     elif(mem_control == 2):
         # sh
         mem_obj.sh(add, hex(reg_obj.load_reg(reg_obj.get_rs2())))
+        l.append("MEMORY : Store half word " + hex(reg_obj.load_reg(reg_obj.get_rs2())) + " in " + add)
+
     elif(mem_control == 3):
         # sb
         mem_obj.sb(add, hex(reg_obj.load_reg(reg_obj.get_rs2())))   #args[0] is the data in hexwith 0x
+        l.append("MEMORY : Store byte " + hex(reg_obj.load_reg(reg_obj.get_rs2())) + " in " + add)
+
     elif(mem_control == 4):
         # lw    
         x = mem_obj.lw(add)
-        print(x)
+        # print(x)
         if(int(x[2],16) > 7):
             x = Twos_to_dec(x)
-            print (x)
+            # print (x)
         else:
             x = int(x, 16)
+        l.append("MEMORY : Load word " + hex(x) + " at " + add)   
+
     elif(mem_control == 5):
         # lh
-        
         x = mem_obj.lh(add)
-        print(x)
+        # print(x)
         if(int(x[2],16) > 7):
             x = Twos_to_dec(x)
-            print (x)
+            # print (x)
         else:
             x = int(x, 16)
+        l.append("MEMORY : Load half word " + hex(x) + " at " + add)
+
     elif(mem_control == 6):
         x = mem_obj.lb(add)
-        print(x)
+        # print(x)
         if(int(x[2],16) > 7):
             x = Twos_to_dec(x)
-            print (x)
+            # print (x)
         else:
-            x = int(x, 16)  
+            x = int(x, 16)
+        l.append("MEMORY : Load byte " + hex(x) + " at " + add) 
+
+    else:
+        l.append("MEMORY : No memory operation")         
     return x
-
-
-
-
