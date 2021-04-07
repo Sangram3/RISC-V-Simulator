@@ -83,9 +83,10 @@ mem_mod = memory(mc_file)
 reg_mod = registers()
 
 
-def run():  
+def run(li):  
     d = {}
-    l = []
+    global l 
+    l=[]
     while(1):
         fetch(mem_mod,  reg_mod, l)
         if(reg_mod.get_IR() == '0xEF000011'):
@@ -97,10 +98,9 @@ def run():
         return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod, l)
         if(control_bits[1] != 0):
             return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
+        elif(control_bits[1]==0):
+            l.append("MEMORY : No memory operation ")
 
-        elif(control_bits[1] == 0):
-            l.append("MEMORY: No memory operation")
-            
         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
             write_back(control_bits[0],  reg_mod, return_of_mem, l)
         
@@ -108,8 +108,8 @@ def run():
             write_back(control_bits[0],  reg_mod, return_of_execute, l)
         reg_mod.add_clock()
         d[reg_mod.get_clock()] = [hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)]
-    # print(l)
-    return d
+    li=l
+    return [d,li]
 
 def step():  
     l = []
@@ -121,17 +121,17 @@ def step():
         ins = reg_mod.get_IR()
         return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
         control_bits = control(return_of_decode)
-        return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod, l)
+        return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod,l)
         if(control_bits[1] != 0):
             return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
         elif(control_bits[1] == 0):
-            l.append("MEMORY: No memory operation")    
+            l.append("MEMORY: No memory operation")
 
         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
-            write_back(control_bits[0],  reg_mod, return_of_mem, l)
+            write_back(control_bits[0],  reg_mod, return_of_mem,l)
         
         else:
-            write_back(control_bits[0],  reg_mod, return_of_execute, l)
+            write_back(control_bits[0],  reg_mod, return_of_execute,l)
         reg_mod.add_clock()
 
         return([hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)])
@@ -141,10 +141,11 @@ def reset():
     mem_mod.reset_mem()
     reg_mod.reset_regs()
     mem_mod.__init__(mc_file)
-        
+    
+
 
 def dump():
     pass
 
 
-run()
+
