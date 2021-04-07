@@ -39,7 +39,8 @@ class TabBar(QtWidgets.QTabBar):
 class Window(QtWidgets.QTabWidget):
    def __init__(self):
       super().__init__()
-      self.setWindowTitle("QTabWidget Example")
+      self.setWindowTitle("RISC-V Simulator")
+      self.setWindowIcon(QIcon("logo.png"))
       self.setGeometry(300, 300,300,300)
       self.move(0,0)
       self.setStyleSheet("background: white;")  
@@ -48,6 +49,7 @@ class Window(QtWidgets.QTabWidget):
       self.merged = []
       self.memory={}
       self.register=[]
+      self.file_mc=""
       # set reset step dump ##################################################
       self.first_frame = {}
       self.run_btn = QPushButton('Run')
@@ -136,6 +138,7 @@ class Window(QtWidgets.QTabWidget):
       btn.clicked.connect(self.getfile)
       layout.addLayout(filebox)
       self.editor = QPlainTextEdit()
+      self.editor.setReadOnly(True)
       fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
       fixedfont.setPointSize(12)
       self.editor.setFont(fixedfont)
@@ -153,6 +156,8 @@ class Window(QtWidgets.QTabWidget):
             try:
                 with open(path) as f:
                     text = f.read()
+                    self.file_mc=path
+                    print(path)
                     mem_mod.__init__(path)
             except Exception as e:
                 self.dialog_critical(str(e))
@@ -264,7 +269,19 @@ class Window(QtWidgets.QTabWidget):
                self.reg_pane_update()
        
    def reset_code(self):
-       reset()
+       
+       if(self.file_mc!=""):
+          mc_file= self.file_mc
+       
+       else:
+          mc_file = "temp.mc"
+
+       mem_mod.reset_mem()
+       reg_mod.reset_regs()
+       print(mc_file)
+       mem_mod.__init__(mc_file)
+       
+
        self.first_time = 1
        self.memory = mem_mod.get_mem()
        self.mem_pane_update()
