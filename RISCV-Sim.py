@@ -6,7 +6,6 @@ from execute import *
 from mem import *
 from control import *
 from write_back import *
-import copy
 
 def bin_to_dec(s): # input in two's compliment form
     if s[0] == '1':
@@ -37,28 +36,63 @@ def basic_code(dec_out, reg, mem):
         code = "Wrong Instruction"
     return code
 
-def main():
+# def main():
 
-    dic = {}
-
-    mc_file = "test.mc"
-
-    mem_mod = memory(mc_file)
-    reg_mod = registers()
-    clock = 0
-    regi = [reg_mod.load_reg(i) for i in range(32)]
-    memi = mem_mod.get_mem()
-    dic[clock] = [regi, memi, reg_mod.get_PC(), reg_mod.get_IR()]
+#     dic = {}
+#     mc_file = "test.mc"
+#     mem_mod = memory(mc_file)
+#     reg_mod = registers()
+#     clock = 0
+#     regi = [reg_mod.load_reg(i) for i in range(32)]
+#     memi = mem_mod.get_mem()
+#     dic[clock] = [regi, memi, reg_mod.get_PC(), reg_mod.get_IR()]
             
+#     while(1):
+#         fetch(mem_mod,  reg_mod)
+#         if(reg_mod.get_IR() == '0xEF000011'):
+#             mem_mod.code_ends('output.mc')
+#             break
+#         return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
+#         control_bits = control(return_of_decode)
+#         return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod)
+#         # return_of_mem = mem(control_bits[1], mem_obj, return_of_execute, data)
+#         if(control_bits[1] != 0):
+#             return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute)
+
+#         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
+#             write_back(control_bits[0],  reg_mod, return_of_mem)
+
+#         else:
+#             write_back(control_bits[0],  reg_mod, return_of_execute)
+#         clock =  clock+1
+        
+#         regi = [reg_mod.load_reg(i) for i in range(32)]
+#         memi = mem_mod.get_mem()
+#         code = basic_code(return_of_decode, reg_mod, mem_mod)
+#         # print(code)
+#         dic[clock] = [regi, memi, reg_mod.get_PC(), reg_mod.get_IR(), code]
+#         # print(dic)
+#         # print(reg_mod.get_PC())
+#         mem_mod.print_mem()
+#         reg_mod.print_reg()
+    
+#     return dic
+
+mc_file = "test.mc"
+mem_mod = memory(mc_file)
+reg_mod = registers()
+
+def run():  
+    d = {}
     while(1):
         fetch(mem_mod,  reg_mod)
         if(reg_mod.get_IR() == '0xEF000011'):
             mem_mod.code_ends('output.mc')
             break
+        ins = reg_mod.get_IR()
         return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
         control_bits = control(return_of_decode)
         return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod)
-        # return_of_mem = mem(control_bits[1], mem_obj, return_of_execute, data)
         if(control_bits[1] != 0):
             return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute)
 
@@ -67,22 +101,39 @@ def main():
         
         else:
             write_back(control_bits[0],  reg_mod, return_of_execute)
-        clock =  clock+1
+        reg_mod.add_clock()
+        d[reg_mod.get_clock()] = [hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)]
         
-        regi = [reg_mod.load_reg(i) for i in range(32)]
-        memi={}
-        d = mem_mod.dic()
-        for key in d:
-            memi[key] = mem_mod.value(key)
-        code = basic_code(return_of_decode, reg_mod, mem_mod)
-        print(code)
-        dic[clock] = list([regi, memi, reg_mod.get_PC(), reg_mod.get_IR(), code])
-        print(dic)
-        print(reg_mod.get_PC())
-        mem_mod.print_mem()
-        reg_mod.print_reg()
-    
-    return dic
+    return d
 
+def step():  
+    fetch(mem_mod,  reg_mod)
+    if(reg_mod.get_IR() == '0xEF000011'):
+        mem_mod.code_ends('output.mc')
+        return
+    else:
+        ins = reg_mod.get_IR()
+        return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
+        control_bits = control(return_of_decode)
+        return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod)
+        if(control_bits[1] != 0):
+            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute)
 
-d = main()
+        if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
+            write_back(control_bits[0],  reg_mod, return_of_mem)
+        
+        else:
+            write_back(control_bits[0],  reg_mod, return_of_execute)
+        reg_mod.add_clock()
+
+        return([hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)])
+
+def reset():
+    mc_file = "test.mc"
+    mem_mod.reset_mem()
+    reg_mod.reset_regs()
+    mem_mod.__init__(mc_file)
+        
+
+def dump():
+    pass
