@@ -101,11 +101,11 @@ class Window(QtWidgets.QTabWidget):
       tabs = QTabWidget()
       d = {
             "Editor": QtGui.QColor("blue"),
-            "Compiler": QtGui.QColor("brown"),
+            "Simulator": QtGui.QColor("brown"),
         }
       tabs.setTabBar(TabBar(d))
       tabs.addTab(self.EditorTabUI(), "Editor")
-      tabs.addTab(self.CompilerTabUI(), "Compiler")
+      tabs.addTab(self.CompilerTabUI(), "Simulator")
       layout.addWidget(tabs)
       ########################################################################
    def EditorTabUI(self):
@@ -153,6 +153,7 @@ class Window(QtWidgets.QTabWidget):
             try:
                 with open(path) as f:
                     text = f.read()
+                    mem_mod.__init__(path)
             except Exception as e:
                 self.dialog_critical(str(e))
             else:
