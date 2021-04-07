@@ -16,7 +16,7 @@ from execute import *
 from mem import *
 from control import *
 from write_back import *
-from RISCV_Sim import *
+from RISCV import *
 
 class TabBar(QtWidgets.QTabBar):
     def __init__(self, colors, parent=None):
@@ -47,6 +47,7 @@ class Window(QtWidgets.QTabWidget):
       self.setStyleSheet("color: white;background: black")
       self.bt=QPushButton("",self)
       self.merged = []
+      self.out_msg=[]
       self.memory={}
       self.register=[]
       self.file_mc=""
@@ -57,6 +58,7 @@ class Window(QtWidgets.QTabWidget):
       self.reset_btn= QPushButton('Reset')
       self.dump_btn= QPushButton('Dump')
       self.code_ended = 0
+      self.index=0
       self.run_btn.setStyleSheet("QPushButton"
                              "{"
                              "background-color : green;"
@@ -205,15 +207,15 @@ class Window(QtWidgets.QTabWidget):
       lef_s.addWidget(QLabel())
       lef_s.addWidget(QLabel())
 
-      gB = QGroupBox("Output")
-      vb= QFormLayout()
+      self.gB = QGroupBox("Output")
+      self.vb= QFormLayout()
+      
+      
          
-      for i in range(100):
-         vb.addRow(QLabel(str(i)))   
-      gB.setLayout(vb)
+      self.gB.setLayout(self.vb)
       scr = QScrollArea()
       
-      scr.setWidget(gB)
+      scr.setWidget(self.gB)
       scr.setWidgetResizable(True)
       scr.setFixedHeight(250)
       scr.setFixedWidth(1000)
@@ -241,10 +243,12 @@ class Window(QtWidgets.QTabWidget):
 
     
    def run_code(self):
+      
        if self.code_ended == 0:
            self.code_ended = 1
            self.is_step_first_time = 0
-           self.first_frame = run()
+           self.first_frame ,self.out_msg= run(self.out_msg)
+           #print(self.out_msg)
            for key in self.first_frame:
               self.merged.append(QLabel("{}                {}                         {}                         {}".format(self.first_frame[key][0],self.first_frame[key][1],self.first_frame[key][2],self.first_frame[key][3])))
               self.formLayout.addRow(self.merged[-1])
@@ -252,6 +256,11 @@ class Window(QtWidgets.QTabWidget):
            self.mem_pane_update()
            self.register = reg_mod.get_regs()
            self.reg_pane_update()
+           for i in range(len(self.out_msg)):
+              self.vb.addRow(QLabel(self.out_msg[i]))
+              if(self.out_msg[i][0][0]=="W"):
+                  self.vb.addRow(QLabel(" "))    
+           self.gB.setLayout(self.vb)
        return 
        
    def step_code(self):
@@ -269,7 +278,11 @@ class Window(QtWidgets.QTabWidget):
                self.reg_pane_update()
        
    def reset_code(self):
-       
+
+       for i in reversed(range(self.vb.count())): 
+         self.vb.itemAt(i).widget().setParent(None)
+       self.gB.setLayout(self.vb)
+
        if(self.file_mc!=""):
           mc_file= self.file_mc
        
@@ -297,6 +310,12 @@ class Window(QtWidgets.QTabWidget):
        
    def dump_code(self):
        dump()
+
+   '''def clearLayout(self,layout):
+      while layout.count():
+         child = layout.takeAt(0)
+         if child.widget():
+            child.widget().deleteLater()'''
         
    def MemoryTabUI(self):
       memoryTab = QWidget()
