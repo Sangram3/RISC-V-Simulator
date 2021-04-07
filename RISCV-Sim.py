@@ -112,7 +112,8 @@ def run():
     return d
 
 def step():  
-    fetch(mem_mod,  reg_mod)
+    l = []
+    fetch(mem_mod,  reg_mod, l)
     if(reg_mod.get_IR() == '0xEF000011'):
         mem_mod.code_ends('output.mc')
         return
@@ -120,15 +121,17 @@ def step():
         ins = reg_mod.get_IR()
         return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
         control_bits = control(return_of_decode)
-        return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod)
+        return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod, l)
         if(control_bits[1] != 0):
-            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute)
+            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
+        elif(control_bits[1] == 0):
+            l.append("MEMORY: No memory operation")    
 
         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
-            write_back(control_bits[0],  reg_mod, return_of_mem)
+            write_back(control_bits[0],  reg_mod, return_of_mem, l)
         
         else:
-            write_back(control_bits[0],  reg_mod, return_of_execute)
+            write_back(control_bits[0],  reg_mod, return_of_execute, l)
         reg_mod.add_clock()
 
         return([hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)])
