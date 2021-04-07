@@ -98,6 +98,9 @@ def run():
         if(control_bits[1] != 0):
             return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
 
+        elif(control_bits[1] == 0):
+            l.append("MEMORY: No memory operation")
+            
         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
             write_back(control_bits[0],  reg_mod, return_of_mem, l)
         
