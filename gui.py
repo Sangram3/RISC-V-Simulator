@@ -16,7 +16,7 @@ from execute import *
 from mem import *
 from control import *
 from write_back import *
-from RISCV import *
+from RISCV-Sim import *
 
 class TabBar(QtWidgets.QTabBar):
     def __init__(self, colors, parent=None):
