@@ -139,9 +139,9 @@ def decode(ins, memory, registers):
     elif(fmt==6): #UJ
         imm=(inst[0]+inst[12:20]+inst[11]+inst[1:11])
 
-    registers.set_rs1(rs1);
-    registers.set_rs2(rs2);
-    registers.set_rd(rd);
+    registers.set_rs1(rs1)
+    registers.set_rs2(rs2)
+    registers.set_rd(rd)
    
     #below code is for checking code    
 
