@@ -8,6 +8,16 @@ from PyQt5.QtCore import QFile, QTextStream
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore
 
+from memory import *
+from registers import *
+from fetch import *
+from decode import *
+from execute import *
+from mem import *
+from control import *
+from write_back import *
+from RISCV_Sim import *
+
 class TabBar(QtWidgets.QTabBar):
     def __init__(self, colors, parent=None):
         super(TabBar, self).__init__(parent)
@@ -35,20 +45,16 @@ class Window(QtWidgets.QTabWidget):
       self.setStyleSheet("background: white;")  
       self.setStyleSheet("color: white;background: black")
       self.bt=QPushButton("",self)
-
+      self.merged = []
       self.memory={}
       self.register=[]
       # set reset step dump ##################################################
-      
+      self.first_frame = {}
       self.run_btn = QPushButton('Run')
-      self.run_btn.setEnabled(False)
       self.step_btn= QPushButton('Step')
-      self.step_btn.setEnabled(False)
       self.reset_btn= QPushButton('Reset')
-      self.reset_btn.setEnabled(False)
       self.dump_btn= QPushButton('Dump')
-      self.dump_btn.setEnabled(False)
-     
+      self.code_ended = 0
       self.run_btn.setStyleSheet("QPushButton"
                              "{"
                              "background-color : green;"
@@ -140,7 +146,9 @@ class Window(QtWidgets.QTabWidget):
    def getfile(self):
       path, _ = QFileDialog.getOpenFileName(self, "Open file", "", 
                              "MC documents (*.mc)")
+      
       self.f.setText(str(path))
+      
       if path:
             try:
                 with open(path) as f:
@@ -150,24 +158,11 @@ class Window(QtWidgets.QTabWidget):
             else:
                 self.editor.setPlainText(text)
    
-   def assemble_clicked(self):
-      self.bt.hide()
-      self.run_btn.setEnabled(True)
-      self.step_btn.setEnabled(True)
-      self.reset_btn.setEnabled(True)
-      self.dump_btn.setEnabled(True)
-
    def CompilerTabUI(self):
       compilerTab = QWidget()
       layout = QHBoxLayout()
       lef_s = QVBoxLayout()
-
       run= QHBoxLayout()
-
-      self.bt=QPushButton("Assemble and Simulate from the editor")
-      run.addWidget(self.bt)
-      run.addStretch()
-      self.bt.clicked.connect(self.assemble_clicked)
 
       run.addWidget(self.run_btn)
       run.addStretch()
@@ -186,27 +181,13 @@ class Window(QtWidgets.QTabWidget):
       self.reset_btn.clicked.connect(self.reset_code)      
       self.dump_btn.clicked.connect(self.dump_code)      
 
-    
-
       lef_s.addLayout(run)
       layout.addStretch()
 
-      formLayout =QFormLayout()
-      groupBox = QGroupBox("Machine Code Input")
-      labelLis = []
-      comboList = []
-      basic_codes = []
-      labelLis.append(QLabel("PC    "))
-      comboList.append(QLabel("Instruction"))
-      basic_codes.append(QLabel("Basic Code"))
-      
-      for i in  range(15):
-         labelLis.append(QLabel("0x0      "))
-         comboList.append(QLabel("Inst"))
-         basic_codes.append(QLabel("add x11 x12 x13"))
-         formLayout.addRow(labelLis[i], basic_codes[i])
-
-      groupBox.setLayout(formLayout)
+      self.formLayout =QFormLayout()
+      groupBox = QGroupBox("     clk                                 PC                                              Machine Code                                                 Basic Code")
+     
+      groupBox.setLayout(self.formLayout)
       scroll = QScrollArea()
       scroll.setWidget(groupBox)
       scroll.setWidgetResizable(True)
@@ -247,32 +228,57 @@ class Window(QtWidgets.QTabWidget):
       Tabs.addTab(self.MemoryTabUI(), "Memory")
       Tabs.addTab(self.RegisterTabUI(), "Register")
       layout.addWidget(Tabs)
-      
-      # tabs = QTabWidget()
-   
-      # tabs.addTab(self.MemoryTabUI(), "Memory")
-      # tabs.addTab(self.RegisterTabUI(), "Register")
-      # layout.addWidget(tabs)
       layout.addStretch()
 
       compilerTab.setLayout(layout)
       return compilerTab
 
+    
    def run_code(self):
-       # run()
-       print("run clicked")
+       if self.code_ended == 0:
+           self.code_ended = 1
+           self.is_step_first_time = 0
+           self.first_frame = run()
+           for key in self.first_frame:
+              self.merged.append(QLabel("{}                {}                         {}                         {}".format(self.first_frame[key][0],self.first_frame[key][1],self.first_frame[key][2],self.first_frame[key][3])))
+              self.formLayout.addRow(self.merged[-1])
+           self.memory = mem_mod.get_mem()
+           self.mem_pane_update()
+           self.register = reg_mod.get_regs()
+           self.reg_pane_update()
+       return 
        
    def step_code(self):
-       # step()
-       print("step clicked")
+       if self.code_ended == 0:
+           
+           st = step()
+           if st==None:
+               self.code_ended = 1
+           else:
+               self.merged.append(QLabel("{}                {}                         {}                         {}".format(st[0],st[1],st[2],st[3])))
+               self.formLayout.addRow(self.merged[-1])
+               self.memory = mem_mod.get_mem()
+               self.mem_pane_update()
+               self.register = reg_mod.get_regs()
+               self.reg_pane_update()
        
    def reset_code(self):
-       # reset()
-       print("reset clicked")
+       reset()
+       self.first_time = 1
+       self.memory = mem_mod.get_mem()
+       self.mem_pane_update()
+       self.register = reg_mod.get_regs()
+       self.reg_pane_update()
+       self.code_ended = 0
+       for i in self.merged:
+           i.clear()
+       for i in range(self.formLayout.count()):
+            self.formLayout.itemAt(0).widget().close()
+            self.formLayout.takeAt(0)
+
        
    def dump_code(self):
-       # dump()
-       print("dump clicked")
+       dump()
         
    def MemoryTabUI(self):
       memoryTab = QWidget()
@@ -443,7 +449,7 @@ class Window(QtWidgets.QTabWidget):
    def dec_to_2s(data, digits):
       return (hex(2**(digits*4) - data))
    
-   def extend_hex(data, digits):
+   def extend_hex(self,data, digits):
       ans =hex(data)[2:]
       if(len(hex(data)) < 10):
          for i in range(10- len(hex(data))):
