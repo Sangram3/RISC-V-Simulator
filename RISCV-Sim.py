@@ -111,7 +111,8 @@ def run(li):
     li=l
     return [d,li]
 
-def step():  
+def step(ll):  
+    
     l = []
     fetch(mem_mod,  reg_mod, l)
     if(reg_mod.get_IR() == '0xEF000011'):
@@ -133,8 +134,11 @@ def step():
         else:
             write_back(control_bits[0],  reg_mod, return_of_execute,l)
         reg_mod.add_clock()
+        #print(l)
+        ll=l
 
-        return([hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)])
+        return[[hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)],ll]
+
 
 def reset():
     mc_file = "test.mc"
