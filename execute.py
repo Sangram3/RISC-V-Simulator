@@ -45,7 +45,10 @@ def execute(fmt,inst,im,registers, l):
             ry = rs1*rs2
             
         if inst == 'div' : # div
-            ry = rs1//rs2
+            if rs2 == 0:
+                ry = 0
+            else:
+                ry = rs1//rs2
             
         if inst == 'xor': # xor
             ry  = rs1^rs2
@@ -54,16 +57,28 @@ def execute(fmt,inst,im,registers, l):
             ry = rs1|rs2
             
         if inst == 'rem': # rem
-            ry =  rs1%rs2
+            if rs2 == 0:
+                ry = 0
+            else:
+                ry =  rs1%rs2
             
         if inst == 'srl': # srl
-            ry =  rs1>>rs2
+            if rs2<0:
+                ry = 0
+            else:
+                ry =  rs1>>rs2
             
         if inst == 'sll':# sll
-            ry =  rs1<<rs2
+            if rs2 <0:
+                ry = 0
+            else:
+                ry =  rs1<<rs2
             
         if inst == 'sra': #sra
-            ry= sra(rs1,rs2)
+            if rs2<0:
+                ry = 0
+            else:
+                ry= sra(rs1,rs2)
             
         if inst == 'slt': # slt
             ry =  int(rs1<rs2)
