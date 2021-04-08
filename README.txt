@@ -67,6 +67,7 @@ How to Run:
  13. The output console will display the information for all the instructions which have been executed.
  14. It will display about what has been performed in the stages (fetch, decode, execute, memory access and write back) of one instruction.
 
+Note : Sometimes Program may stop responding on Large Tasks due to The large number of print stmts in the output panel. Please wait for it to respond.
 
 Instructions Supported:
 R format - add, and, or, sll, slt, sra, srl, sub, xor, mul, div, rem 
