@@ -32,16 +32,14 @@ RISCV_Simulator
 	|	  |--- temp.mc
 	|
 	|--- test
-	|	     |--- bubblesort_recursive.mc
-	|	     |--- bubblesort_iterative.mc
-	|	     |--- factorial_iterative.mc
-	|	     |--- factorial_recursive.mc
-	|	     |--- fibonacci_iterative.mc
-	|	     |--- fibonacci_recursive.mc
-	|	     |--- test.mc
+	|	|--- bubblesort_recursive.mc
+	|	|--- bubblesort_iterative.mc
+	|	|--- factorial_iterative.mc
+	|	|--- factorial_recursive.mc
+	|	|--- fibonacci_iterative.mc
+	|	|--- fibonacci_recursive.mc
+	|	|--- test.mc
         |
-        |--- output 
-        |        |--- output.mc
         |
         |--- Simulator.bat
 
@@ -64,7 +62,7 @@ How to Run:
  8. The navigation pane in the memory tab can be used to go to a particular Memory location.
  9. The Register tab shows the current value stored in registers in hex.
  10. The Reset button will Reset the Memory and Registers and Clear the Input output Consoles. You can select another file after this.
- 11. The dump button will save the Current memory State into an Output.mc file.
+ 11. The dump button will save the Current memory State into a Selected file.
  12. In the input console clock (clk), PC, Machine code and Basic code will be displayed for the instructions which have been executed.
  13. The output console will display the information for all the instructions which have been executed.
  14. It will display about what has been performed in the stages (fetch, decode, execute, memory access and write back) of one instruction.
