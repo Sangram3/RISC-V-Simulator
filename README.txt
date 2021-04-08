@@ -7,14 +7,14 @@
                                                                  |________________________________________________|
                                                                  
 Team Members:
-Antara Arun Agarwal - 2019CSB1076
-Bharat Sharma - 2019CSB1081
-Himanshi Nim - 2019CSB1090
-Jagadale Sangram Rajendra - 2019CSB1091
-Nupur Rathi - 2019CSB1104
+2019CSB1076 - Antara Arun Agarwal 
+2019CSB1081 - Bharat Sharma 
+2019CSB1090 - Himanshi Nim
+2019CSB1091 - Jagadale Sangram Rajendra 
+2019CSB1104 - Nupur Rathi 
 
 About:
-RISC-V Simulator is a python based program which is a simulation to run machine code
+RISC-V Simulator is a python based program which is a simulation to run machine code.
 
 Directories:
 RISCV_Simulator
@@ -39,11 +39,11 @@ RISCV_Simulator
 	|	     |--- fibonacci_iterative.mc
 	|	     |--- fibonacci_recursive.mc
 	|	     |--- test.mc
-  |
-  |--- output 
-  |	      |--- output.mc
-  |
-  |--- Simulator.bat
+        |
+        |--- output 
+        |        |--- output.mc
+        |
+        |--- Simulator.bat
 
 Installation:
  1. Unzip the RISCV_Simulator
@@ -79,6 +79,12 @@ U format - auipc, lui
 UJ format - jal
 
 Individual Contributions:
+ All Work was done together and it will be hard to tell Individual Contribution.
+ But the main focus areas of Team Members were: 
+  1. Fetch , Decode, Execute - Jointly Coded by Nupur, Sangram and Himanshi
+  2. Main Memory, Memory Access, Writeback - Jointly Coded by Antara and Bharat
+  3. GUI - Jointly Coded by Sangram, Himanshi and Bharat
+  4. Control and combining the different stages - Jointly Coded by Nupur and Antara
 
 
 
