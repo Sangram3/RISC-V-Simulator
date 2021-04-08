@@ -1,10 +1,3 @@
-# R format - add, and, or, sll, slt, sra, srl, sub, xor, mul, div, rem
-# I format - addi, andi, ori, lb, ld, lh, lw, jalr
-# S format - sb, sw, sd, sh
-# SB format - beq, bne, bge, blt
-# U format - auipc, lui
-# UJ format - jal
-
 def sra(val, n): 
     return (val % 0x100000000) >> n
 
@@ -17,7 +10,6 @@ def bin_to_dec(s): # input in two's compliment form
     else:
         return int(s, 2)
 def execute(fmt,inst,im,registers, l):
-    # PC = 0 #just for sake of convinience
     rs1 = None
     rs2 = None
     rd = None
@@ -34,7 +26,6 @@ def execute(fmt,inst,im,registers, l):
     except:
         pass
     if fmt == 1: #R
-    #register update necessary
         if inst == 'add': # add
             ry = rs1+rs2
             
@@ -93,7 +84,6 @@ def execute(fmt,inst,im,registers, l):
         return ry
             
     elif fmt == 2: #I : addi, andi, ori, lb, lh, lw, jalr
-    #register/memory access necessary
         imm = bin_to_dec(imm)
         l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers.get_rs1()) + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm)) 
         l.append("DECODE: Read registers x" + str(registers.get_rs1()) + " = " + str(rs1)) 
@@ -127,8 +117,6 @@ def execute(fmt,inst,im,registers, l):
             l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm) + " to calculate the effective address.")
         
         if inst == 'jalr': # jalr
-        #rd update necessary rd = PC+4
-            # PC = rs1+imm-PC
             ry = registers.get_PC()
             registers.add_PC(rs1+imm-registers.get_PC())
             l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm)  + " to calculate the effective PC.")
@@ -153,7 +141,6 @@ def execute(fmt,inst,im,registers, l):
         return rs1+imm
         
     elif fmt == 4: # SB : beq, bne, bge, blt 
-    #Memory access not necessary
         imm = bin_to_dec(imm)*2
         l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers.get_rs1()) + ", second operand x" + str(registers.get_rs2()) + ", immediate value is " + str(imm)) 
         l.append("DECODE: Read registers x" + str(registers.get_rs1()) + " = " + str(rs1) + " x" + str(registers.get_rs2()) + " = " + str(rs2))
@@ -177,7 +164,6 @@ def execute(fmt,inst,im,registers, l):
             if rs1 >= rs2:
                 registers.add_PC(imm-4)
                 l.append("EXECUTE: " + str(rs1) + " greater than or equal to " + str(rs2)  + " to calculate the effective PC")   
-                # PC = PC+imm-4
         if inst == 'blt':
             if rs1 < rs2:
                 registers.add_PC(imm-4)
@@ -185,7 +171,6 @@ def execute(fmt,inst,im,registers, l):
                 # PC = PC+imm-4
         
     elif fmt == 5: # U : auipc, lui
-    #Memory access not necessary
         imm = bin_to_dec(imm)
         l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm))
         if imm<-524288  or imm>524287: 
@@ -210,7 +195,6 @@ def execute(fmt,inst,im,registers, l):
             raise ValueError("Immidiate {} out of range immidiate should be between -1048576-1048574".format(imm))
             return
         ry=registers.get_PC()
-        # PC=PC-4+imm 
         k = registers.get_PC() - 4
         l.append("EXECUTE: Add " + str(imm) + "  to the PC = " + str(hex(k)))
         registers.add_PC(imm-4)
@@ -218,5 +202,3 @@ def execute(fmt,inst,im,registers, l):
         
 
     return "No return type"
-    
-# print(execute(3, 'sw', [20, 12, None, '000000000001']))
