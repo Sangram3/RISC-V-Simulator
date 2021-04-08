@@ -79,7 +79,7 @@ U format - auipc, lui
 UJ format - jal
 
 Individual Contributions:
- All Work was done together and it will be hard to tell Individual Contribution.
+ As this was a team project so it is difficult to completely segregate out the work done by each of us.
  But the main focus areas of Team Members were: 
   1. Fetch , Decode, Execute - Jointly Coded by Nupur, Sangram and Himanshi
   2. Main Memory, Memory Access, Writeback - Jointly Coded by Antara and Bharat
