@@ -48,6 +48,7 @@ class Window(QtWidgets.QTabWidget):
       self.bt=QPushButton("",self)
       self.merged = []
       self.out_msg=[]
+      self.out_step=[]
       self.memory={}
       self.register=[]
       self.file_mc=""
@@ -266,7 +267,8 @@ class Window(QtWidgets.QTabWidget):
    def step_code(self):
        if self.code_ended == 0:
            
-           st = step()
+           st,self.out_step = step(self.out_step)
+           #print(self.out_step)
            if st==None:
                self.code_ended = 1
            else:
@@ -276,6 +278,11 @@ class Window(QtWidgets.QTabWidget):
                self.mem_pane_update()
                self.register = reg_mod.get_regs()
                self.reg_pane_update()
+               for i in range(len(self.out_step)):
+                  self.vb.addRow(QLabel(self.out_step[i]))
+                  if(self.out_msg[i][0][0]=="W"):
+                     self.vb.addRow(QLabel(" "))    
+               self.gB.setLayout(self.vb)
        
    def reset_code(self):
 
