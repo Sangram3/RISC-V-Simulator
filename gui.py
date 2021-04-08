@@ -496,7 +496,7 @@ class Window(QtWidgets.QTabWidget):
             val = self.extend_hex(self.register[i],32)
          self.reg_labels[i].setText(val)
 
-   def dec_to_2s(data, digits):
+   def dec_to_2s(self,data, digits):
       return (hex(2**(digits*4) - data))
    
    def extend_hex(self,data, digits):
