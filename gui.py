@@ -41,7 +41,7 @@ class Window(QtWidgets.QTabWidget):
       super().__init__()
       self.setWindowTitle("RISC-V Simulator")
       self.setWindowIcon(QIcon("logo.png"))
-      self.setGeometry(300, 300,300,300)
+      # self.setGeometry(300, 300,300,300)
       self.move(0,0)
       self.setStyleSheet("background: white;")  
       self.setStyleSheet("color: white;background: black")
@@ -313,19 +313,30 @@ class Window(QtWidgets.QTabWidget):
        for i in range(self.formLayout.count()):
             self.formLayout.itemAt(0).widget().close()
             self.formLayout.takeAt(0)
-
-       
    def dump_code(self):
-       dump()
-        
+       path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
+							"Text documents (*.txt);All files (*.*)")
+       if not path:
+          return
+       self._save_to_path(path)
+
+   def _save_to_path(self, path):
+
+       text = mem_mod.code_ends()
+       try:
+           with open(path,'w')  as f:
+               f.write(text)
+       except Exception as e:
+           pass
+       else:
+           self.path = path
+               
    def MemoryTabUI(self):
       memoryTab = QWidget()
       f_lay = QVBoxLayout()
       layout = QGridLayout()
-      
       self.labels=[]
       self.mem_page = 0
-
       for i in range(10):
          t = []
          for j in range(5):
