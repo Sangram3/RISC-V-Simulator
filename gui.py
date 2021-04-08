@@ -504,7 +504,10 @@ class Window(QtWidgets.QTabWidget):
          return hex(data)
 if __name__ == "__main__":
    app = QApplication(sys.argv)
-   app.setStyleSheet("QLabel{font-size: 12pt;font-color: white;}")
+   try:
+    app.setStyleSheet("QLabel{font-size: 12pt;font-color: white;}")
+   except:
+    pass
    app.setStyle("fusion")
    custom_font = QFont()
    custom_font.setWeight(12);
