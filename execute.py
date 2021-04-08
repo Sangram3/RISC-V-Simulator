@@ -131,7 +131,7 @@ def execute(fmt,inst,im,registers, l):
             # PC = rs1+imm-PC
             ry = registers.get_PC()
             registers.add_PC(rs1+imm-registers.get_PC())
-            l.append("EXECUTE: ADD " + rs1 + " and " + imm  + " to calculate the effective PC.")
+            l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm)  + " to calculate the effective PC.")
 
         if ry>2147483647 or ry<-2147483648:
             ry = 0
@@ -140,8 +140,8 @@ def execute(fmt,inst,im,registers, l):
     
     elif fmt == 3: # S : sb, sw, sh
         imm = bin_to_dec(imm)
-        l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + registers.get_rs1() + ", destination register x" + registers.get_rd() + ", immediate value is " + imm) 
-        l.append("DECODE: Read registers x" + registers.get_rs1() + " = " + rs1 + " x" + registers.get_rd() + " = " + rd)
+        l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers.get_rs1()) + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm)) 
+        l.append("DECODE: Read registers x" + str(registers.get_rs1()) + " = " + str(rs1) + " x" + str(registers.get_rd()) + " = " + str(rd))
 
         if imm<0:
             imm//=2
@@ -149,7 +149,7 @@ def execute(fmt,inst,im,registers, l):
             raise ValueError("Immidiate {} out of range immidiate should be between -2048-2047".format(imm))
             return 
 
-        l.append("EXECUTE: ADD " + rs1 + " and " + imm  + " to calculate the effective address.")
+        l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm)  + " to calculate the effective address.")
         return rs1+imm
         
     elif fmt == 4: # SB : beq, bne, bge, blt 
@@ -187,17 +187,17 @@ def execute(fmt,inst,im,registers, l):
     elif fmt == 5: # U : auipc, lui
     #Memory access not necessary
         imm = bin_to_dec(imm)
-        l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + registers.get_rd() + ", immediate value is " + imm)
+        l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm))
         if imm<-524288  or imm>524287: 
             raise ValueError("Immidiate {} out of range immidiate should be between -524288-524287".format(imm))
             return
         if(inst == 'lui'):
             ry = imm*4096
-            l.append("EXECUTE: Shift left " + imm + " by 12 bits")
+            l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits")
         if(inst == 'auipc'):
             ry = imm*4096
             ry = registers.get_PC()+ry-4
-            l.append("EXECUTE: Shift left " + imm + " by 12 bits and add with PC = " + str(hex(registers.get_PC())))
+            l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits and add with PC = " + str(hex(registers.get_PC())))
         # print(ry)
         
         return ry
