@@ -317,12 +317,6 @@ class Window(QtWidgets.QTabWidget):
        
    def dump_code(self):
        dump()
-
-   '''def clearLayout(self,layout):
-      while layout.count():
-         child = layout.takeAt(0)
-         if child.widget():
-            child.widget().deleteLater()'''
         
    def MemoryTabUI(self):
       memoryTab = QWidget()
