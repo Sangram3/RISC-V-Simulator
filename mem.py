@@ -11,17 +11,17 @@ def mem(mem_control, mem_obj, reg_obj, add, l):   #data in hex with 0x
     if(mem_control == 1):
         # sw
         mem_obj.sw(add, hex(reg_obj.load_reg(reg_obj.get_rs2())))
-        l.append("MEMORY : Store word " + hex(reg_obj.load_reg(reg_obj.get_rs2())) + " in " + add)  
+        l.append("MEMORY : Store word " + str(hex(reg_obj.load_reg(reg_obj.get_rs2()))) + " in " + str(add))  
 
     elif(mem_control == 2):
         # sh
         mem_obj.sh(add, hex(reg_obj.load_reg(reg_obj.get_rs2())))
-        l.append("MEMORY : Store half word " + hex(reg_obj.load_reg(reg_obj.get_rs2())) + " in " + add)
+        l.append("MEMORY : Store half word " + str(hex(reg_obj.load_reg(reg_obj.get_rs2()))) + " in " + str(add))
 
     elif(mem_control == 3):
         # sb
         mem_obj.sb(add, hex(reg_obj.load_reg(reg_obj.get_rs2())))   #args[0] is the data in hexwith 0x
-        l.append("MEMORY : Store byte " + hex(reg_obj.load_reg(reg_obj.get_rs2())) + " in " + add)
+        l.append("MEMORY : Store byte " + str(hex(reg_obj.load_reg(reg_obj.get_rs2()))) + " in " + str(add))
 
     elif(mem_control == 4):
         # lw    
@@ -32,7 +32,7 @@ def mem(mem_control, mem_obj, reg_obj, add, l):   #data in hex with 0x
             # print (x)
         else:
             x = int(x, 16)
-        l.append("MEMORY : Load word " + hex(x) + " at " + add)   
+        l.append("MEMORY : Load word " + str(hex(x)) + " at " + str(add))   
 
     elif(mem_control == 5):
         # lh
@@ -43,7 +43,7 @@ def mem(mem_control, mem_obj, reg_obj, add, l):   #data in hex with 0x
             # print (x)
         else:
             x = int(x, 16)
-        l.append("MEMORY : Load half word " + hex(x) + " at " + add)
+        l.append("MEMORY : Load half word " + str(hex(x)) + " at " + str(add))
 
     elif(mem_control == 6):
         x = mem_obj.lb(add)
@@ -53,7 +53,7 @@ def mem(mem_control, mem_obj, reg_obj, add, l):   #data in hex with 0x
             # print (x)
         else:
             x = int(x, 16)
-        l.append("MEMORY : Load byte " + hex(x) + " at " + add) 
+        l.append("MEMORY : Load byte " + str(hex(x)) + " at " + str(add)) 
 
     else:
         l.append("MEMORY : No memory operation")         
