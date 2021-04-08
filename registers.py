@@ -11,7 +11,7 @@ class registers:
 
     def reset_regs(self):
         self.__regs=[0 for i in range(32)]
-        self.__regs[2] =  int("0x7FFFFFFC",16) #stack pointer
+        self.__regs[2] =  int("0x7FFFFFF0",16) #stack pointer
         self.__regs[3] =  int("0x10000000",16) #global pointer
         self.__PC = 0
         self.__IR = 0
