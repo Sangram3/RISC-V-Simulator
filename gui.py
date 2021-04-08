@@ -315,7 +315,7 @@ class Window(QtWidgets.QTabWidget):
             self.formLayout.takeAt(0)
    def dump_code(self):
        path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
-							"Text documents (*.txt);All files (*.*)")
+							"MC documents (*.mc)")
        if not path:
           return
        self._save_to_path(path)
