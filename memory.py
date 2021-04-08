@@ -21,17 +21,18 @@ class memory:
             self.__mem_dict[int(line[0],16) + 2] = line[1][-6:-4]
             self.__mem_dict[int(line[0],16) + 3] = line[1][-8:-6]
 
-    def code_ends(self, mc_output):
-        file = open(mc_output,"w")
+    def code_ends(self):
         done = set()
+        text = ""
         for item in self.__mem_dict:
             item = item - item%4
             if item not in done:
-                file.write(hex(item).upper() + " " + "0x")
+                text+= hex(item).upper() + " " + "0x"
                 for i in range(4):
-                    file.write(self.__mem_dict.get(item + 3 - i, "00"))
-                file.write("\n") 
+                    text+=self.__mem_dict.get(item + 3 - i, "00")
+                text+="\n"
                 done.add(item) 
+        return text
 
     def dic(self):
         #print(__mem_dict)
