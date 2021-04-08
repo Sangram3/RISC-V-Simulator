@@ -468,6 +468,7 @@ class Window(QtWidgets.QTabWidget):
          reg.addWidget(reg_value)
 
          layout.addLayout(reg)
+         layout.addWidget(QLabel(" "))
 
       gb.setLayout(layout)
       scr = QScrollArea()
