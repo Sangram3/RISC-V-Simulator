@@ -78,7 +78,7 @@ def basic_code(dec_out, reg, mem):
     
 #     return dic
 
-mc_file = "test.mc"
+mc_file = "temp.mc"
 mem_mod = memory(mc_file)
 reg_mod = registers()
 
