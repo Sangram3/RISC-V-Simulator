@@ -143,19 +143,4 @@ def decode(ins, memory, registers):
     registers.set_rs2(rs2)
     registers.set_rd(rd)
    
-    #below code is for checking code    
-
-    # print("op: ",op)
-    # print("fmt: ",fmt)
-    # print("func3: ",func3)
-    # print("func7: ",func7)
-    # print("rd: ",rd)
-    # print("rs1: ",rs1)
-    # print("rs2: ",rs2)
-    
     return (fmt, mneumonic, imm)
-        
-    #format of input for decode function = decode('00000001010110100000010010110011')
-
-
-#decode(bin32(0x00A37293))
