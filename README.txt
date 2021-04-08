@@ -20,16 +20,16 @@ Directories:
 RISCV_Simulator
 	|
 	|--- Phase1
-	|	      |--- gui.py
-	|	      |--- RISCV_Sim.py
-	|	      |--- memory.py
-	|	      |--- registers.py
-	|	      |--- fetch.py
-	|	      |--- decode.py
-	|	      |--- execute.py
-	|	      |--- mem.py
-	|	      |--- write_back.py
-	|	      |--- temp.mc
+	|	  |--- gui.py
+	|	  |--- RISCV_Sim.py
+	|	  |--- memory.py
+	|	  |--- registers.py
+	|	  |--- fetch.py
+	|	  |--- decode.py
+	|	  |--- execute.py
+	|	  |--- mem.py
+	|	  |--- write_back.py
+	|	  |--- temp.mc
 	|
 	|--- test
 	|	     |--- bubblesort_recursive.mc
@@ -50,8 +50,8 @@ Installation:
  2. Run the Simulator.bat in RISCV_Simulator or Run gui.py in Phase1 with Python.
 
 Requirements:
-  1. Python installed
-  2. PyQt5 installed
+  1. Python 3.9.4 installed
+  2. PyQt5 5.11.3 installed
 
 How to Run:
  1. Run the Simulator.bat in RISCV_Simulator or Run gui.py in Phase1 with Python.
