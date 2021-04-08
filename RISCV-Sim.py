@@ -90,7 +90,7 @@ def run(li):
     while(1):
         fetch(mem_mod,  reg_mod, l)
         if(reg_mod.get_IR() == '0xEF000011'):
-            mem_mod.code_ends('output.mc')
+            # mem_mod.code_ends('output.mc')
             break
         ins = reg_mod.get_IR()
         return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
@@ -116,7 +116,7 @@ def step(ll):
     l = []
     fetch(mem_mod,  reg_mod, l)
     if(reg_mod.get_IR() == '0xEF000011'):
-        mem_mod.code_ends('output.mc')
+        # mem_mod.code_ends('output.mc')
         return
     else:
         ins = reg_mod.get_IR()
