@@ -149,7 +149,7 @@ def reset():
 
 
 def dump():
-    pass
+    mem_mod.code_ends()
 
 
 
