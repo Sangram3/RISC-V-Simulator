@@ -106,8 +106,6 @@ def reset():
     
 
 
-def dump():
-    mem_mod.code_ends("output.mc")
 
 
 
