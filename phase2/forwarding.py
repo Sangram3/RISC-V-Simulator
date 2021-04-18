@@ -1,4 +1,4 @@
-l= [[mne, rd], [mne, rd], [mne, rs1, rs2]]
+#l= [[mne, rd], [mne, rd], [mne, rs1, rs2]]
 def forwarding(l, all other buffers as parameters):
 
     f_reg = None
