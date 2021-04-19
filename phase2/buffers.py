@@ -35,7 +35,7 @@ class BTB():
     table = {}
     
     def newKey(self, PC, Target_add):  #FNTBT satic predictor
-        if(Target_add>=0):  #forward branch not taken
+        if(Target_add>=PC):  #forward branch not taken  #Imm is >= 0
             self.table[str(PC)] = [False,Target_add]
         else:
             self.table[str(PC)] = [True,Target_add]
