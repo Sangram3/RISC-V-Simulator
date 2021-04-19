@@ -25,5 +25,37 @@ class InterStateBuffer:
     #     print(self.rd)
 
 # buffers = [InterStateBuffer() for i in range(4)]   #this buffer list consists of 4 buffers, FD, DE, EM, MW.
-
+# buffers[3].RZ = 3
+# buffers[3].printbuf()
 # print(len(buffers))  
+
+
+class BTB():
+
+    table = {}
+    
+    def newKey(self, PC, Target_add):  #FNTBT satic predictor
+        if(Target_add>=0):  #forward branch not taken
+            self.table[str(PC)] = [False,Target_add]
+        else:
+            self.table[str(PC)] = [True,Target_add]
+
+    def prediction(self, PC):
+        return self.table[str(PC)][0]
+
+    def getTarget(self, PC):
+        return self.table[str(PC)][1]
+
+    def ifPresent(self,PC):
+        if(str(PC) in self.table.keys()):
+            return True
+        else:
+            return False        
+
+# dic = BTB()
+# print(dic)
+# dic.newKey(12, 84)
+# dic.newKey(14, -32)
+# print(dic.prediction(14))
+# print(dic.getTarget(18))
+# print(dic.ifPresent(12))
