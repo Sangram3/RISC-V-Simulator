@@ -24,7 +24,6 @@ class InterStateBuffer:
     #     print(self.RZ)
     #     print(self.rd)
 
-buffers = [InterStateBuffer() for i in range(4)]   #this buffer list consists of 4 buffers, FD, DE, EM, MW.
-# buffers[3].RZ = 3
-# buffers[3].printbuf()
+# buffers = [InterStateBuffer() for i in range(4)]   #this buffer list consists of 4 buffers, FD, DE, EM, MW.
+
 # print(len(buffers))  
