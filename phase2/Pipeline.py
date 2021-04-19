@@ -8,13 +8,16 @@ class PipeLine():
         self.master_store = [[] for i in range(32)]
         
 
+    def clear_pipeline(self):
+        self.__init__()
+        
     def data_forwarding(self):
         pass
     
     def update_pipeline(self,cycle):
         pass
     
-    def call_stall(self): # stall the pipeline by one cycle
+    def call_stalling(self): # stall the pipeline by one cycle
     
         self.pipeline.insert(self.cycle,[]) # inserting bubble
         self.cycle+=1
