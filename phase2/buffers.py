@@ -19,6 +19,7 @@ class InterStateBuffer:
         self.IR = 0 
         self.operand1 = 0  #operand1 value
         self.operand2 = 0  #operand2 value
+        self.predict = False
 
     # def printbuf(self):
     #     print(self.RZ)
