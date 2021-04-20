@@ -20,6 +20,9 @@ class InterStateBuffer:
         self.operand1 = 0  #operand1 value
         self.operand2 = 0  #operand2 value
         self.predict = False
+        self.fmt = None
+        self.mne = None
+        self.imm = 0
 
     # def printbuf(self):
     #     print(self.RZ)
