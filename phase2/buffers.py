@@ -4,21 +4,21 @@ class InterStateBuffer:
 
     #These variables are not protected.
     def ResetBuffer(self):
-        self.RZ = 0 
-        self.RM = 0 
-        self.RY = 0 
-        self.rs1 = -1 
+        self.RZ = 0   #Output of the ALU. It can be used in data forwarding.
+        self.RM = 0   #It has the value for the store ins. This is forwarded to MDR in stage 4(memory access).
+        self.RY = 0   #The value which is to be written in the writeback stage.
+        self.rs1 = -1  
         self.rs2 = -1 
         self.rd = -1 
         self.opcode = 0 
         self.PC = 0 
-        self.RA = 0 
-        self.RB = 0 
-        self.MAR = 0 
-        self.MDR = 0 
+        self.RA = 0    # contains the value in rs1
+        self.RB = 0    # contains the value in rs2
+        self.MAR = 0   #Memory address register
+        self.MDR = 0   #Memory data register
         self.IR = 0 
-        self.operand1 = 0 
-        self.operand2 = 0 
+        self.operand1 = 0  #operand1 value
+        self.operand2 = 0  #operand2 value
 
     # def printbuf(self):
     #     print(self.RZ)
