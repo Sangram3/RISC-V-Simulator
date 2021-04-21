@@ -8,7 +8,7 @@ def bin32(num):
     return '{0:032b}'.format(num)
 
                                        # extra arguments
-def decode( memory, registers ,pipeline_obj ,buffers , index):
+def decode(memory, registers ,pipeline_obj ,buffers , index, forw_d):
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -24,6 +24,8 @@ def decode( memory, registers ,pipeline_obj ,buffers , index):
     mneumonic = None
 
     inst = buffers[0].IR # instruction inside the F-D buffer
+    inst = bin32(inst)
+
     #opcode extraction
     op = inst[25:]
     #fmt check
@@ -152,18 +154,69 @@ def decode( memory, registers ,pipeline_obj ,buffers , index):
     # registers.set_name_rd(rd)
     
     # FOR CHECKING DATA DEPENDENCY
-    dh = pipeline_obj.check_data_hazard(rs1,rs2)
-    if dh == 1:
-        if pipeline_obj.data_forwarding_knob ==0:
+    # dh = pipeline_obj.check_data_hazard(rs1,rs2)
+    # if dh == 1:
+    #     if pipeline_obj.data_forwarding_knob ==0:
+    #         pipeline_obj.call_stalling(index) # index is the at what index this instruction is present in the cycle
+    #                                           # like ["E" ,"D" ] index of decode in this case is 1
+    #     else:
+    #         # handle by data forwarding
+
+    #         pass
+    #     return 
+    # else:
+    #     # buffers[1] = D-E BUFFER
+        
+    #     buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
+    #     buffers[1].rs2 = rs2
+    #     buffers[1].rd  = rd 
+        
+    #     if rs1:
+    #         buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
+    #     if rs2:
+    #         buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
+    #     if imm:
+    #         buffers[1].imm = imm # setting immediate in buffer
+            
+    #     buffers[1].mne = mneumonic
+    #     buffers[1].fmt = fmt
+    #     # UPDATE MASTER_STORE
+    #     if rd:
+    #         pipeline_obj.master_store[rd] = pipeline_obj.cycle+3
+            
+    #     pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E") # Execute this instruction in the next cycle at the same index
+    #     return (fmt, mneumonic, imm)
+
+    if pipeline_obj.data_forwarding_knob == 0:
+        dh = pipeline_obj.check_data_hazard(rs1,rs2)
+        if dh == 1:
             pipeline_obj.call_stalling(index) # index is the at what index this instruction is present in the cycle
                                               # like ["E" ,"D" ] index of decode in this case is 1
+            return
         else:
-            # handle by data forwarding
-            pass
-        return 
+            # buffers[1] = D-E BUFFER
+            
+            buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
+            buffers[1].rs2 = rs2
+            buffers[1].rd  = rd 
+            
+            if rs1:
+                buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
+            if rs2:
+                buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
+            if imm:
+                buffers[1].imm = imm # setting immediate in buffer
+                
+            buffers[1].mne = mneumonic
+            buffers[1].fmt = fmt
+            # UPDATE MASTER_STORE
+            if rd:
+                pipeline_obj.master_store[rd] = pipeline_obj.cycle+3
+                
+            pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E") # Execute this instruction in the next cycle at the same index
+            return
+
     else:
-        # buffers[1] = D-E BUFFER
-        
         buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
         buffers[1].rs2 = rs2
         buffers[1].rd  = rd 
@@ -177,14 +230,27 @@ def decode( memory, registers ,pipeline_obj ,buffers , index):
             
         buffers[1].mne = mneumonic
         buffers[1].fmt = fmt
-        # UPDATE MASTER_STORE
-        if rd:
-            pipeline_obj.master_store[rd] = pipeline_obj.cycle+3
-            
-        pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E") # Execute this instruction in the next cycle at the same index
-        return (fmt, mneumonic, imm)
+
+        if(forw_d["MES"][0] == 1):
+            data_forw(2, forw_d["MES"][1], buffers)
+            forw_d["MES"][0] = 0
+            forw_d["MES"][1] = None
+            pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E")
+            return
         
+        # here code to check for data_hazard using HDU unit
+        # if there is data hazard then:
+            if (forw_d["ME"][0] == 1):
+                data_forw(2, forw_d["ME"][1], buffers)
+                forw_d["ME"][0] = 0
+                forw_d["ME"][1] = None
+            if (forw_d["EE"][0] == 1):
+                data_forw(1, forw_d["EE"][1], buffers)
+                forw_d["EE"][0] = 0
+                forw_d["EE"][1] = None
+            if (forw_d["MES"][0] == 1):
+                pipeline_obj.call_stalling(index)
+                return
         
-            
-    
-   
+        pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E")
+        return
