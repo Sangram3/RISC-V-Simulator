@@ -6,7 +6,9 @@ class PipeLine():
         self.pipeline = []
         self.cycle = 0
         self.master_store = [[] for i in range(32)]
-        
+        self.to_stall = 0
+        self.data_forawarding_knob = 0
+        self.disable_PC = 0
 
     def clear_pipeline(self):
         self.__init__()
@@ -17,27 +19,25 @@ class PipeLine():
     def update_pipeline(self,cycle):
         pass
     
-    def call_stalling(self): # stall the pipeline by one cycle
-    
-        self.pipeline.insert(self.cycle,[]) # inserting bubble
-        self.cycle+=1
+    def call_stalling(self,index): # stall the pipeline by one cycle
+        self.disable_PC = 1 # PC update stopped
+        self.pipeline[self.cycle+1].insert(index,self.pipeline[self.cycle][index]) # inserting the same instruction in the next cycle too
+        
         return 
         
-    def check_data_hazard(self,fmt):
-         if fmt == 1 or fmt == 4: 
-              rs1_name = registers.get_name_rs1()
-              rs2_name = registers.get_name_rs2()
-              if master_store[rs1_name] >= self.cycle or master_store[rs2_name]>= self.cycle:
-                  return 1 # data hazard case
-         
-         if fmt == 2 or fmt == 3 : 
-              rs1_name = registers.get_name_rs1()
-              if self.master_store[rs1_name] >= self.cycle:
+    def check_data_hazard(self,name_rs1,name_rs2):
+        if name_rs1:
+              if self.master_store[name_rs2] >= self.cycle:
                   return 1
-         return 0 # no data hazard case
+        if name_rs2: 
+              if self.master_store[name_rs2] >= self.cycle:
+                  return 1
+        return 0 # no data hazard case
 
 pipeline_obj = PipeLine()
 
+
+#pipe = [  [ "Fetch"] ["Fetch" , "Decode" ] [ "Fetch", "Decode" , "Execute"]       ]
 
 def execute_cycle_util():
     while True:
@@ -45,31 +45,32 @@ def execute_cycle_util():
 
 def execute_cycle():
     global pipeline_obj
-    flag = 0
-    for stage in pipeline_obj.pipeline:
-        if stage[0] == "Execute":
-            flag = pipeline_obj.check_data_hazard()
-            if flag == 1:
-                break
-    if flag == 1:
-        pipeline_obj.call_stalling()
-    else:
-        for stage in pipeline_obj.pipeline:
+    
+    for index in range(len(pipeline_obj.pipeline[pipeline_obj.cycle])):
+
+        if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'D':
+            decode( memory, registers ,pipeline_obj ,buffers ,index)
                 
-            if stage[0] == "Execute":
-                pass
-                # execute()
-            if stage[0] == "Decode":
-                pass
-                # decode()
-            if stage[0]  == "MemoryAccess":
-                pass
-                # memory()
-            if stage[0] == "WriteBack":
-                pass
-                # writeback()
-                
+        if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'F':
+            fetch(registers, memory, btb, pipeline_obj,buffers,index)
             
+        if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'E':
+            execute()
+            # NOT DONE YET
+            
+        if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
+            memory()
+            #NOT DONE YET
+            
+        if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
+            writeback()
+            #NOT DONE YET
+                
+        # if pipeline_obj.to_stall == 0:
+        #     pipeline_obj[pipeline_obj.cycle+1].append("F")
+        # pipeline_obj.cycle+=1
+                
+
             
         
         
