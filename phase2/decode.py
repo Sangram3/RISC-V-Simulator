@@ -8,7 +8,7 @@ def bin32(num):
     return '{0:032b}'.format(num)
 
                                        # extra arguments
-def decode(ins, memory, registers ,pipeline_obj ,buffers , index):
+def decode( memory, registers ,pipeline_obj ,buffers , index):
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -23,7 +23,7 @@ def decode(ins, memory, registers ,pipeline_obj ,buffers , index):
     fmt = None
     mneumonic = None
 
-    inst = ins
+    inst = buffers[0].IR # instruction inside the F-D buffer
     #opcode extraction
     op = inst[25:]
     #fmt check
