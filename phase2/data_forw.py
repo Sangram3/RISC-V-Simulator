@@ -1,5 +1,5 @@
-#  d = [EE:0, ME:0, MM:0, MES: 0]
-# EE = 1, ME = 2, MM = 3, MES = 4
+#  d = [EE:0, ME:0, MM:0, MES: 0, ED:0, MD:0, EDS:0, MDS:0]
+# EE = 1, ME = 2, MM = 3, ED = 4, MD = 5, MES = 6, EDS = 7, MDS = 8
 # reg = which register acts as hazard, that is rs1 or rs2 or both # 1 for rs1, 2 for rs2, 3 for both
 # in below example both rs1 and rs2 acts as a hazard :
 # addi x12 x1 x0
@@ -37,6 +37,28 @@ def data_forw(forw_type, reg, buffers):
             buffers[2].operand1 = buffers[3].RY
             buffers[2].operand2 = buffers[3].RY
         buffers[2].MDR = buffers[3].RY
+
+    # E-D
+    elif(forw_type == 4):
+        if(reg == 1):
+            buffers[0].operand1 = buffers[2].RZ 
+        elif(reg == 2):
+            buffers[0].operand2 = buffers[2].RZ
+        elif(reg == 3):
+            buffers[0].operand1 = buffers[2].RZ
+            buffers[0].operand2 = buffers[2].RZ
+
+    # M-D
+    elif(forw_type == 5):
+        if(reg == 1):
+            buffers[0].operand1 = buffers[3].RY 
+        elif(reg == 2):
+            buffers[0].operand2 = buffers[3].RY
+        elif(reg == 3):
+            buffers[0].operand1 = buffers[3].RY
+            buffers[0].operand2 = buffers[3].RY
+
+    
         
 
 # in execute step:
@@ -56,3 +78,6 @@ def data_forw(forw_type, reg, buffers):
 #         if(d[EE] == 1):
 #             data_forw(EE)
 #             d[EE] = 0
+#         if(d[MES] == 1):
+#             stall by one cycle accordingly
+#             d[MES] = 0
