@@ -8,8 +8,8 @@ class InterStateBuffer:
         self.RM = 0   #It has the value for the store ins. This is forwarded to MDR in stage 4(memory access).
         self.RY = 0   #The value which is to be written in the writeback stage.
         self.rs1 = -1  
-        self.rs2 = -1 
-        self.rd = -1 
+        self.rs2 = -2 
+        self.rd = -3 
         self.opcode = 0 
         self.PC = 0 
         self.RA = 0    # contains the value in rs1
