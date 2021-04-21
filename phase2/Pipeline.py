@@ -5,6 +5,7 @@ class PipeLine():
     def __init__(self):
         self.pipeline = []
         self.cycle = 0
+        self.d = {"EE": [0,None], "ME": [0,None], "MM": [0,None], "MES": [0,None], "ED": [0,None], "MD": [0,None], "EDS": [0,None], "MDS": [0,None]}
         self.master_store = [[] for i in range(32)]
         self.to_stall = 0
         self.data_forawarding_knob = 0
