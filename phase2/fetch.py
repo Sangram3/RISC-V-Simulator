@@ -1,4 +1,4 @@
-def fetch(reg_mod, mem_mod, btb, buffers, forw_d):
+def fetch(reg_mod, mem_mod, btb, buffers, forw_d, index):
     
     PC = reg_mod.get_PC()
     inst = mem_mod.lw(PC)
@@ -11,31 +11,41 @@ def fetch(reg_mod, mem_mod, btb, buffers, forw_d):
     if(opcode == 99): # SB type
         buffers[0].operand1 = registers.__regs[rs1]
         buffers[0].operand2 = registers.__regs[rs2]
-        #check data hazard using HDU Unit
-        if(forw_d["ED"][0] == 1 and forw_d["EDS"][0] == 0):
-            data_forw(4, forw_d["ED"][1], buffers)
-            forw_d["ED"][0] = 0
-            forw_d["ED"][1] = None 
-
-        elif(forw_d["MD"][0] == 1 and forw_d["MDS"][0] == 0):
-            data_forw(5, forw_d["MD"][1], buffers)
-            forw_d["MD"][0] = 0
-            forw_d["MD"][1] = None 
-
-            
-
     elif(opcode == 103): # jalr
         buffers[0].operand1 = registers.__regs[rs1]
-        #check data hazard using HDU Unit
-        if(forw_d["ED"][0] == 1 and forw_d["EDS"][0] == 0):
-            data_forw(4, forw_d["ED"][1], buffers)
-            forw_d["ED"][0] = 0
-            forw_d["ED"][1] = None 
 
-        elif(forw_d["MD"][0] == 1 and forw_d["MDS"][0] == 0):
-            data_forw(5, forw_d["MD"][1], buffers)
-            forw_d["MD"][0] = 0
-            forw_d["MD"][1] = None
+    if(opcode == 99 or opcode == 103):
+
+        if(forw_d["MDS"][0] == 1 ):
+            data_forw(5, forw_d["MDS"][1], buffers)
+            forw_d["MDS"][0] = 0
+            forw_d["MDS"][1] = None
+
+        elif(forw_d["EDS"][0] == 1):
+            if(forw_d["MD"][0] == 1):
+                data_forw(5, forw_d["MD"][1], buffers)
+                forw_d["MD"][0] = 0
+                forw_d["MD"][1] = None
+            data_forw(4, forw_d["EDS"][1], buffers)
+            forw_d["EDS"][0] = 0
+            forw_d["EDS"][1] = None
+
+        else:
+            #check data hazard using HDU Unit
+            if(forw_d["MDS"][0] == 1 or forw_d["EDS"][0] == 1):
+                pipeline_obj.call_stalling(index)
+                return
+                
+            if(forw_d["MD"][0] == 1 and forw_d["MDS"][0] == 0):
+                data_forw(5, forw_d["MD"][1], buffers)
+                forw_d["MD"][0] = 0
+                forw_d["MD"][1] = None
+
+            if(forw_d["ED"][0] == 1 and forw_d["EDS"][0] == 0):
+                data_forw(4, forw_d["ED"][1], buffers)
+                forw_d["ED"][0] = 0
+                forw_d["ED"][1] = None          
+
 
     # predicting 
 	if (opcode == 103 or opcode == 99 or opcode == 111):
