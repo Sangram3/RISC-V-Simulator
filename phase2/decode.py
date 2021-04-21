@@ -220,11 +220,18 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, forw_d):
         buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
         buffers[1].rs2 = rs2
         buffers[1].rd  = rd 
-        
-        if rs1:
-            buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
-        if rs2:
-            buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
+
+        if(mneumonic == 'beq' or mneumonic == 'bge' or mneumonic == 'bne' or mneumonic == 'blt' or mneumonic == 'jalr'):
+            if rs1:
+                buffers[1].operand1 = buffers[0].operand1 # setting value of rs1 in buffer
+            if rs2:
+                buffers[1].operand2 = buffers[0].operand2 # setting value of rs2 in buffer 
+        else:   
+            if rs1:
+                buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
+            if rs2:
+                buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
+
         if imm:
             buffers[1].imm = imm # setting immediate in buffer
             
