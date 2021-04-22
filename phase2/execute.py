@@ -185,7 +185,7 @@ def execute(fmt,inst,im,registers, l,pipeline_obj,buffers,index ):
             l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits and add with PC = " + str(hex(registers.get_PC())))
         # print(ry)
         
-        return ry
+        #return ry
     
     elif fmt == 6: #UJ : jal
         imm = bin_to_dec(imm)
@@ -200,8 +200,13 @@ def execute(fmt,inst,im,registers, l,pipeline_obj,buffers,index ):
         registers.add_PC(imm-4)
         #return ry
 
-              
+        
     if ry!= None:
+        buffers[2].RZ = ry
+        if(forw_d["MM"][0] == 1 and pipeline_obj.data_forwarding_knob == 1):
+            data_forw(3, forw_d["MM"][1], buffers)
+            forw_d["MM"][0] = 0
+            forw_d["MM"][1] = None
         return ry
     
     return "No return type"
