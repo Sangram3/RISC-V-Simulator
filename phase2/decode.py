@@ -4,8 +4,6 @@ from HDU import *
 #decode function
 #all extractions and decode done in string format and at the end converted everything to decimal, example rs1 = '00110' then rs1 becomes 6 at the end.
 from collections import defaultdict
-from Pipeline import *
-from buffers import *
 
 def bin32(num):
     return '{0:032b}'.format(num)
@@ -27,7 +25,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
     mneumonic = None
 
     inst = buffers[0].IR # instruction inside the F-D buffer
-    inst = bin32(inst)
+    inst = bin32(int(inst,16))
 
     #opcode extraction
     op = inst[25:]
@@ -250,7 +248,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
         
         # here code to check for data_hazard using HDU unit
         # if there is data hazard then:
-        if(fmt != 4 and mneumonic != 'jalr')
+        if(fmt != 4 and mneumonic != 'jalr'):
             HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d)
         if (pipeline_obj.forw_d["ME"][0] == 1):
             data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
