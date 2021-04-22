@@ -203,10 +203,14 @@ def execute(fmt,inst,im,registers, l,pipeline_obj,buffers,index ):
         
     if ry!= None:
         buffers[2].RZ = ry
+        buffers[2].RY = ry
+        if(fmt == 3 or mneumonic == 'lw' or mneumonic == 'lb' or mneumonic == 'lh'):
+            buffers[2].MAR = ry
+        if(fmt == 3):
+            buffers[2].RM = rs2
         if(forw_d["MM"][0] == 1 and pipeline_obj.data_forwarding_knob == 1):
             data_forw(3, forw_d["MM"][1], buffers)
             forw_d["MM"][0] = 0
             forw_d["MM"][1] = None
-        return ry
     
     return "No return type"
