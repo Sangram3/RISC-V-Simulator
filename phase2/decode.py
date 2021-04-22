@@ -11,7 +11,7 @@ def bin32(num):
     return '{0:032b}'.format(num)
 
                                        # extra arguments
-def decode(memory, registers ,pipeline_obj ,buffers , index, forw_d, prevInsList):
+def decode(memory, registers ,pipeline_obj ,buffers , index, prevInsList):
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -241,26 +241,26 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, forw_d, prevInsList
         buffers[1].mne = mneumonic
         buffers[1].fmt = fmt
 
-        if(forw_d["MES"][0] == 1):
-            data_forw(2, forw_d["MES"][1], buffers)
-            forw_d["MES"][0] = 0
-            forw_d["MES"][1] = None
+        if(pipeline_obj.forw_d["MES"][0] == 1):
+            data_forw(2, pipeline_obj.forw_d["MES"][1], buffers)
+            pipeline_obj.forw_d["MES"][0] = 0
+            pipeline_obj.forw_d["MES"][1] = None
             pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E")
             return
         
         # here code to check for data_hazard using HDU unit
         # if there is data hazard then:
         if(fmt != 4 and mneumonic != 'jalr')
-            HDU(buffers, 1, prevInsList, forw_d)
-        if (forw_d["ME"][0] == 1):
-            data_forw(2, forw_d["ME"][1], buffers)
-            forw_d["ME"][0] = 0
-            forw_d["ME"][1] = None
-        if (forw_d["EE"][0] == 1):
-            data_forw(1, forw_d["EE"][1], buffers)
-            forw_d["EE"][0] = 0
-            forw_d["EE"][1] = None
-        if (forw_d["MES"][0] == 1):
+            HDU(buffers, 1, prevInsList, pipeline_obj.forw_d)
+        if (pipeline_obj.forw_d["ME"][0] == 1):
+            data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
+            pipeline_obj.forw_d["ME"][0] = 0
+            pipeline_obj.forw_d["ME"][1] = None
+        if (pipeline_obj.forw_d["EE"][0] == 1):
+            data_forw(1, pipeline_obj.forw_d["EE"][1], buffers)
+            pipeline_obj.forw_d["EE"][0] = 0
+            pipeline_obj.forw_d["EE"][1] = None
+        if (pipeline_obj.forw_d["MES"][0] == 1):
             pipeline_obj.call_stalling(index)
             return
         
