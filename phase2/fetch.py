@@ -6,6 +6,10 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
     PC = reg_mod.get_PC()
     inst = mem_mod.lw(PC)
     reg_mod.add_PC(4)
+
+    if(inst == "0xEF000011"):
+        pipeline_obj.finish = 1
+        return
     
     IR = int(inst, 16)
     opcode = IR & (0x7F)
@@ -75,9 +79,10 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
 
 
     # predicting 
-    if (opcode == 103 or opcode == 99 or opcode == 111):
-	if (btb.ifPresent(PC) and btb.prediction(PC)):
-		buffers[0].predict = True
+	# if(opcode == 103 or opcode == 99 or opcode == 111):
+	# 	if (btb.ifPresent(PC) and btb.prediction(PC)):
+	# 		buffers[0].predict = True
 		
     buffers[0].PC = PC
     buffers[0].IR = inst
+    pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"D")
