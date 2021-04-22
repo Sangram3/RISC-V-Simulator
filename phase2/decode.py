@@ -10,6 +10,7 @@ def bin32(num):
 
                                        # extra arguments
 def decode(memory, registers ,pipeline_obj ,buffers , index):
+    # print(registers.print_reg())
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -26,7 +27,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
 
     inst = buffers[0].IR # instruction inside the F-D buffer
     inst = bin32(int(inst,16))
-
+    # print(inst,"inside decode")
     #opcode extraction
     op = inst[25:]
     #fmt check
@@ -187,14 +188,17 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
             
     #     pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E") # Execute this instruction in the next cycle at the same index
     #     return (fmt, mneumonic, imm)
-
+    # print(pipeline_obj.data_forwarding_knob," its knob")
     if pipeline_obj.data_forwarding_knob == 0:
         dh = pipeline_obj.check_data_hazard(rs1,rs2)
+        # print(rs1,rs2," rs1 rs2")
         if dh == 1:
+            # print(pipeline_obj.master_store)
             pipeline_obj.call_stalling(index) # index is the at what index this instruction is present in the cycle
                                               # like ["E" ,"D" ] index of decode in this case is 1
             return
         else:
+            pipeline_obj.disable_PC = 0
             # buffers[1] = D-E BUFFER
             
             buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
@@ -202,12 +206,13 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
             buffers[1].rd  = rd 
             
             if rs1:
-                buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
+                buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
             if rs2:
-                buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
+                buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
             if imm:
                 buffers[1].imm = imm # setting immediate in buffer
-                
+            # print(buffers[1].imm,buffers[1].operand1,buffers[1].operand2," operands") 
+            
             buffers[1].mne = mneumonic
             buffers[1].fmt = fmt
             # UPDATE MASTER_STORE
