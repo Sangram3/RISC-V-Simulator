@@ -1,4 +1,4 @@
-def fetch(reg_mod, mem_mod, btb, buffers, forw_d, index):
+def fetch(reg_mod, mem_mod, btb, buffers, forw_d, index, pipeline_obj):
     
     PC = reg_mod.get_PC()
     inst = mem_mod.lw(PC)
@@ -8,13 +8,13 @@ def fetch(reg_mod, mem_mod, btb, buffers, forw_d, index):
     opcode = IR & (0x7F)
 
     # data-forwarding = M-D and E-D
-    if(opcode == 99): # SB type
+    if(opcode == 99 and pipeline_obj.data_forwarding_knob == 1): # SB type
         buffers[0].operand1 = registers.__regs[rs1]
         buffers[0].operand2 = registers.__regs[rs2]
     elif(opcode == 103): # jalr
         buffers[0].operand1 = registers.__regs[rs1]
 
-    if(opcode == 99 or opcode == 103):
+    if(opcode == 99 or opcode == 103 and pipeline_obj.data_forwarding_knob == 1):
 
         if(forw_d["MDS"][0] == 1 ):
             data_forw(5, forw_d["MDS"][1], buffers)
