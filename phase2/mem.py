@@ -1,7 +1,7 @@
 def Twos_to_dec(hex):
     return -(2**((len(hex)-2)*4) - int(hex, 16))
 
-def mem(mem_obj, reg_obj, buffers):   #data in hex with 0x 
+def mem(mem_obj, reg_obj, buffers, index, pipeline_obj):   #data in hex with 0x 
 
     # copying all the values of buffer between execute and memory to buffer between memory and execute stages so that the required information for the instruction which is in memory stage in this cycle and will go to writeback stage in next cycle gets passed
     buffers[3].RZ = buffers[2].RZ   #Output of the ALU. It can be used in data forwarding.
