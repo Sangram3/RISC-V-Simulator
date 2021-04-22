@@ -10,7 +10,11 @@ def bin_to_dec(s): # input in two's compliment form
     else:
         return int(s, 2)    
                                       
-def execute(fmt,inst,im,registers, l,pipeline_obj,buffers,index ):
+def execute(registers, pipeline_obj,buffers,index ):
+    l=[]
+    fmt = buffers[1].fmt
+    inst = buffers[1].mne
+    im = buffers[1].imm
     rs1 = None
     rs2 = None
     rd = None
@@ -204,13 +208,13 @@ def execute(fmt,inst,im,registers, l,pipeline_obj,buffers,index ):
     if ry!= None:
         buffers[2].RZ = ry
         buffers[2].RY = ry
-        if(fmt == 3 or mneumonic == 'lw' or mneumonic == 'lb' or mneumonic == 'lh'):
+        if(fmt == 3 or inst == 'lw' or inst == 'lb' or inst == 'lh'):
             buffers[2].MAR = ry
         if(fmt == 3):
             buffers[2].RM = rs2
-        if(forw_d["MM"][0] == 1 and pipeline_obj.data_forwarding_knob == 1):
-            data_forw(3, forw_d["MM"][1], buffers)
-            forw_d["MM"][0] = 0
-            forw_d["MM"][1] = None
+        if(pipeline_obj.forw_d["MM"][0] == 1 and pipeline_obj.data_forwarding_knob == 1):
+            data_forw(3, pipeline_obj.forw_d["MM"][1], buffers)
+            pipeline_obj.forw_d["MM"][0] = 0
+            pipeline_obj.forw_d["MM"][1] = None
     
-    return "No return type"
+    pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"M")
