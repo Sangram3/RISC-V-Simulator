@@ -37,7 +37,8 @@ def data_forw(forw_type, reg, buffers):
             buffers[2].operand1 = buffers[3].RY
             buffers[2].operand2 = buffers[3].RY
         buffers[2].MDR = buffers[3].RY
-
+        buffers[2].RM = buffers[3].RY
+ 
     # E-D
     elif(forw_type == 4):
         if(reg == 1):
@@ -57,13 +58,3 @@ def data_forw(forw_type, reg, buffers):
         elif(reg == 3):
             buffers[0].operand1 = buffers[3].RY
             buffers[0].operand2 = buffers[3].RY
-
-    
-        
-
-# in execute step:
-#     execute()
-#     then if data_forwarding is to be done:
-#         if(d[MM] == 1):
-#             data_forw(MM)
-#             d[MM] = 0
