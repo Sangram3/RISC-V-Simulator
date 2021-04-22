@@ -26,12 +26,12 @@ def HDU(buffers, knob_forwarding, prevInsList, d):
             if(this[2] == prevInsList[-3][4]):
                 # d["ME"] = [1,1,0]
                 d["ME"] = [1,1]
-                if(this[3] == prevInsList[-3][4])):
+                if(this[3] == prevInsList[-3][4]):
                     # d["ME"] = [1,1,1]
                     d["ME"] = [1,3]
 
 
-            elif(this[3] == prevInsList[-3][4])):
+            elif(this[3] == prevInsList[-3][4]):
                 # d["ME"] = [1,0,1]
                 d["ME"] = [1,2]
 
@@ -55,11 +55,11 @@ def HDU(buffers, knob_forwarding, prevInsList, d):
             if(this[2] == prevInsList[-2][4]):
                 # d["MES"] = [1,1,0]
                 d["MES"] = [1,1]
-                if(this[3] == prevInsList[-2][4])):
+                if(this[3] == prevInsList[-2][4]):
                     # d["MES"] = [1,1,1]
                     d["MES"] = [1,3]
 
-            elif(this[3] == prevInsList[-2][4])):
+            elif(this[3] == prevInsList[-2][4]):
                 # d["MES"] = [1,0,1]
                 d["MES"] = [1,2]
         
@@ -132,4 +132,3 @@ def check_control_hazard(buffers, prevInsList, d):
             d["MDSS"] = [2,1]
         elif(prevInsList[-2][4] == this[3]):
             d["MDSS"] = [2,2]
-                
