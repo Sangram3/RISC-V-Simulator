@@ -53,3 +53,5 @@ def mem(mem_obj, reg_obj, buffers, index, pipeline_obj):   #data in hex with 0x
             x = int(x, 16)
         buffers[3].RY = x   
         buffers[3].MDR = x
+
+    pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"W")
