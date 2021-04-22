@@ -11,7 +11,7 @@ def bin32(num):
     return '{0:032b}'.format(num)
 
                                        # extra arguments
-def decode(memory, registers ,pipeline_obj ,buffers , index, prevInsList):
+def decode(memory, registers ,pipeline_obj ,buffers , index):
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -251,7 +251,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, prevInsList):
         # here code to check for data_hazard using HDU unit
         # if there is data hazard then:
         if(fmt != 4 and mneumonic != 'jalr')
-            HDU(buffers, 1, prevInsList, pipeline_obj.forw_d)
+            HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d)
         if (pipeline_obj.forw_d["ME"][0] == 1):
             data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
             pipeline_obj.forw_d["ME"][0] = 0
