@@ -49,7 +49,7 @@ def fetch(reg_mod, mem_mod, btb, buffers, forw_d, index):
 
     # predicting 
 	if (opcode == 103 or opcode == 99 or opcode == 111):
-		if (btb.ifPresent() and btb.prediction(PC)):
+		if (btb.ifPresent(PC) and btb.prediction(PC)):
 			buffers[0].predict = True
 		
     buffers[0].PC = PC
