@@ -14,7 +14,7 @@ class PipeLine():
         self.cycle = 0
         self.forw_d = {"EE": [0,None], "ME": [0,None], "MM": [0,None], "MES": [0,None], "ED": [0,None], "MD": [0,None], "EDS": [0,None], "MDS": [0,None]}
         self.prevInsList = []
-        self.master_store = [[] for i in range(32)]
+        self.master_store = [-1 for i in range(32)]
         self.to_stall = 0
         self.data_forwarding_knob = 0
         self.disable_PC = 0
@@ -36,10 +36,10 @@ class PipeLine():
         return 
         
     def check_data_hazard(self,name_rs1,name_rs2):
-        if name_rs1:
-              if self.master_store[name_rs2] >= self.cycle:
+        if name_rs1!=None:
+              if self.master_store[name_rs1] >= self.cycle:
                   return 1
-        if name_rs2: 
+        if name_rs2!=None: 
               if self.master_store[name_rs2] >= self.cycle:
                   return 1
         return 0 # no data hazard case
@@ -55,6 +55,7 @@ btb = BTB()
 #pipe = [  [ "Fetch"] ["Fetch" , "Decode" ] [ "Fetch", "Decode" , "Execute"]       ]
 
 def execute_cycle_util():
+    
     while (pipeline_obj.pipeline[pipeline_obj.cycle] != []):
         execute_cycle()
 
@@ -81,7 +82,7 @@ def execute_cycle():
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
             write_back(reg_mod, buffers)
                 
-    if pipeline_obj.to_stall == 0 and pipeline_obj.finish == 0:
+    if pipeline_obj.to_stall == 0 and pipeline_obj.finish == 0 and pipeline_obj.disable_PC == 0:
         pipeline_obj.pipeline[pipeline_obj.cycle+1].append("F")
     pipeline_obj.cycle+=1
 
