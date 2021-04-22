@@ -250,7 +250,8 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, forw_d, prevInsList
         
         # here code to check for data_hazard using HDU unit
         # if there is data hazard then:
-        HDU(buffers, 1, prevInsList, forw_d)
+        if(fmt != 4 and mneumonic != 'jalr')
+            HDU(buffers, 1, prevInsList, forw_d)
         if (forw_d["ME"][0] == 1):
             data_forw(2, forw_d["ME"][1], buffers)
             forw_d["ME"][0] = 0
