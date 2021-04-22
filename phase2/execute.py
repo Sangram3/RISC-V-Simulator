@@ -1,3 +1,4 @@
+from data_forw import *
 def sra(val, n): 
     return (val % 0x100000000) >> n
 
@@ -11,10 +12,12 @@ def bin_to_dec(s): # input in two's compliment form
         return int(s, 2)    
                                       
 def execute(registers, pipeline_obj,buffers,index ):
+    # print("execute calling",index)
     l=[]
     fmt = buffers[1].fmt
     inst = buffers[1].mne
     im = buffers[1].imm
+    # print(fmt,inst,im)
     rs1 = None
     rs2 = None
     rd = None
@@ -98,6 +101,7 @@ def execute(registers, pipeline_obj,buffers,index ):
 
         if inst == 'addi' : # addi
             ry =  rs1+imm
+            # print(rs1,imm," rs imm")
             l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm))
 
         if inst == 'ori': # ori
@@ -208,6 +212,7 @@ def execute(registers, pipeline_obj,buffers,index ):
     if ry!= None:
         buffers[2].RZ = ry
         buffers[2].RY = ry
+        buffers[2].rd = rd
         if(fmt == 3 or inst == 'lw' or inst == 'lb' or inst == 'lh'):
             buffers[2].MAR = ry
         if(fmt == 3):
