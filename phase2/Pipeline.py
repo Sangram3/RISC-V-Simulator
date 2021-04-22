@@ -1,16 +1,24 @@
+from memory import *
 from registers import *
+from fetch import *
+from decode import *
+from execute import *
+from mem import *
+from write_back import *
+from buffers import *
 
 class PipeLine():
     
     def __init__(self):
-        self.pipeline = []
+        self.pipeline = [["F"]]
         self.cycle = 0
         self.forw_d = {"EE": [0,None], "ME": [0,None], "MM": [0,None], "MES": [0,None], "ED": [0,None], "MD": [0,None], "EDS": [0,None], "MDS": [0,None]}
-        self.prevInsList = [] 
+        self.prevInsList = []
         self.master_store = [[] for i in range(32)]
         self.to_stall = 0
-        self.data_forawarding_knob = 0
+        self.data_forwarding_knob = 0
         self.disable_PC = 0
+        self.finish = 0
 
     def clear_pipeline(self):
         self.__init__()
@@ -37,44 +45,46 @@ class PipeLine():
         return 0 # no data hazard case
 
 pipeline_obj = PipeLine()
+mc_file = "test.mc"
+mem_mod = memory(mc_file)
+reg_mod = registers()
+buffers = [InterStateBuffer() for i in range(4)]
+btb = BTB()
 
 
 #pipe = [  [ "Fetch"] ["Fetch" , "Decode" ] [ "Fetch", "Decode" , "Execute"]       ]
 
 def execute_cycle_util():
-    while True:
+    while (pipeline_obj.pipeline[pipeline_obj.cycle] != []):
         execute_cycle()
 
 def execute_cycle():
     global pipeline_obj
-    
+
+    print ("cycle no.=", pipeline_obj.cycle,  ":" , pipeline_obj.pipeline[pipeline_obj.cycle])
+    pipeline_obj.pipeline.append([])
+
     for index in range(len(pipeline_obj.pipeline[pipeline_obj.cycle])):
 
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'D':
-            decode( memory, registers ,pipeline_obj ,buffers ,index)
+            decode(mem_mod, reg_mod ,pipeline_obj ,buffers , index)
                 
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'F':
-            fetch(registers, memory, btb, pipeline_obj,buffers,index)
+            fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'E':
-            execute()
-            # NOT DONE YET
+            execute(reg_mod, pipeline_obj, buffers,index )
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
-            memory()
-            #NOT DONE YET
+            mem(mem_mod, reg_mod, buffers, index, pipeline_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
-            writeback()
-            #NOT DONE YET
+            write_back(reg_mod, buffers)
                 
-        # if pipeline_obj.to_stall == 0:
-        #     pipeline_obj[pipeline_obj.cycle+1].append("F")
-        # pipeline_obj.cycle+=1
-                
+    if pipeline_obj.to_stall == 0 and pipeline_obj.finish == 0:
+        pipeline_obj.pipeline[pipeline_obj.cycle+1].append("F")
+    pipeline_obj.cycle+=1
 
-            
-        
-        
-    
-        
+
+execute_cycle_util()
+print(reg_mod.get_regs())
