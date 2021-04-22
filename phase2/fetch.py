@@ -48,9 +48,9 @@ def fetch(reg_mod, mem_mod, btb, buffers, forw_d, index, pipeline_obj):
 
 
     # predicting 
-	if (opcode == 103 or opcode == 99 or opcode == 111):
-		if (btb.ifPresent(PC) and btb.prediction(PC)):
-			buffers[0].predict = True
+    if (opcode == 103 or opcode == 99 or opcode == 111):
+	    if (btb.ifPresent(PC) and btb.prediction(PC)):
+	        buffers[0].predict = True
 		
     buffers[0].PC = PC
     buffers[0].IR = inst
