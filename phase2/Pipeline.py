@@ -89,3 +89,4 @@ def execute_cycle():
 
 execute_cycle_util()
 print(reg_mod.get_regs())
+print(mem_mod.print_mem())
