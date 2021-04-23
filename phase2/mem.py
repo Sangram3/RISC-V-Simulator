@@ -3,13 +3,8 @@ def Twos_to_dec(hex):
 
 def mem(mem_obj, reg_obj, buffers, index, pipeline_obj):   #data in hex with 0x 
 
-    # copying all the values of buffer between execute and memory to buffer between memory and execute stages so that the required information for the instruction which is in memory stage in this cycle and will go to writeback stage in next cycle gets passed
-    buffers[3].RZ = buffers[2].RZ   #Output of the ALU. It can be used in data forwarding.
-    buffers[3].RY = buffers[2].RY   #The value which is to be written in the writeback stage.
-    buffers[3].rs1 = buffers[2].rs1  
-    buffers[3].rs2 = buffers[2].rs2 
-    buffers[3].rd = buffers[2].rd 
-    buffers[3].mne = buffers[2].mne
+    buffers[3] = buffers[2]
+    print("mne:", buffers[3].mne, buffers[3].rd)
 
     x = 0
     if(buffers[2].mne == "sw"):
