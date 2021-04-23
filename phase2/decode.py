@@ -234,9 +234,9 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
                 buffers[1].operand2 = buffers[0].operand2 # setting value of rs2 in buffer 
         else:   
             if rs1:
-                buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
+                buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
             if rs2:
-                buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
+                buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
 
         if imm:
             buffers[1].imm = imm # setting immediate in buffer
