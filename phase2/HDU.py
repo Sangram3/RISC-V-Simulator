@@ -37,7 +37,7 @@ def HDU(buffers, knob_forwarding, prevInsList, d):
 
 
         #EE
-        if(len(prevInsList) >=2 and (this[0] == 1 and this[0] == 2 and this[0] == 3)):
+        if(len(prevInsList) >=2 and (this[0] == 1 or this[0] == 2 or this[0] == 3)):
             # if(prevInsList[-2][1] != "lh" and prevInsList[-2][1] != "lw" and prevInsList[-2][1] != "lb"):
                 if(this[2] == prevInsList[-2][4]): #rs1 == rd
                     # d["EE"] = [1,1,0]
@@ -51,7 +51,7 @@ def HDU(buffers, knob_forwarding, prevInsList, d):
 
 
         #MES 
-        if(len(prevInsList) >=2 and (this[0] == 1 or this[0] == 2 or this[0] == 3)):
+        if(len(prevInsList) >=2 and (this[0] == 1 or this[0] == 2 or this[0] == 3) and(prevInsList[-2][1] == 'lb' or prevInsList[-2][1] == 'lh' or prevInsList[-2][1] == 'lw')):
             if(this[2] == prevInsList[-2][4]):
                 # d["MES"] = [1,1,0]
                 d["MES"] = [1,1]
