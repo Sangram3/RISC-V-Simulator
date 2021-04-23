@@ -19,7 +19,6 @@ def execute(registers, pipeline_obj,buffers,index ):
     im = buffers[1].imm
     buffers[2].mne = buffers[1].mne
     buffers[2].fmt = buffers[1].fmt
-    # print(fmt,inst,im)
     rs1 = None
     rs2 = None
     rd = None
@@ -209,7 +208,7 @@ def execute(registers, pipeline_obj,buffers,index ):
         l.append("EXECUTE: Add " + str(imm) + "  to the PC = " + str(hex(k)))
         registers.add_PC(imm-4)
         #return ry
-
+    
         
     if ry!= None:
         buffers[2].RZ = ry
@@ -219,9 +218,10 @@ def execute(registers, pipeline_obj,buffers,index ):
             buffers[2].MAR = ry
         if(fmt == 3):
             buffers[2].RM = rs2
-        if(pipeline_obj.forw_d["MM"][0] == 1 and pipeline_obj.data_forwarding_knob == 1):
-            data_forw(3, pipeline_obj.forw_d["MM"][1], buffers)
-            pipeline_obj.forw_d["MM"][0] = 0
-            pipeline_obj.forw_d["MM"][1] = None
+
+    if(pipeline_obj.forw_d["MM"][0] == 1 and pipeline_obj.data_forwarding_knob == 1):
+        data_forw(3, pipeline_obj.forw_d["MM"][1], buffers)
+        pipeline_obj.forw_d["MM"][0] = 0
+        pipeline_obj.forw_d["MM"][1] = None
     
     pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"M")
