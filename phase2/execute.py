@@ -190,7 +190,7 @@ def execute(registers, pipeline_obj,buffers,index ):
             l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits")
         if(inst == 'auipc'):
             ry = imm*4096
-            ry = registers.get_PC()+ry-4
+            ry = buffers[1].PC+ry
             l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits and add with PC = " + str(hex(registers.get_PC())))
         # print(ry)
         
@@ -203,8 +203,8 @@ def execute(registers, pipeline_obj,buffers,index ):
         if imm<-1048576  or imm>1048574: 
             raise ValueError("Immidiate {} out of range immidiate should be between -1048576-1048574".format(imm))
             return
-        ry=registers.get_PC()
-        k = registers.get_PC() - 4
+        ry = buffers[1].PC+ry
+        k = buffers[1].PC
         l.append("EXECUTE: Add " + str(imm) + "  to the PC = " + str(hex(k)))
         registers.add_PC(imm-4)
         #return ry
