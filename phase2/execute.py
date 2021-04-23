@@ -17,6 +17,8 @@ def execute(registers, pipeline_obj,buffers,index ):
     fmt = buffers[1].fmt
     inst = buffers[1].mne
     im = buffers[1].imm
+    buffers[2].mne = buffers[1].mne
+    buffers[2].fmt = buffers[1].fmt
     # print(fmt,inst,im)
     rs1 = None
     rs2 = None
@@ -31,6 +33,7 @@ def execute(registers, pipeline_obj,buffers,index ):
         
     except:
         pass
+
     
     if fmt == 1: #R
         if inst == 'add': # add
@@ -89,7 +92,7 @@ def execute(registers, pipeline_obj,buffers,index ):
         l.append("DECODE: Read registers x" + str(registers.get_rs1()) + " = " + str(rs1) + ", " + str(registers.get_rs2()) + " = " + str(rs2)) 
         l.append("EXECUTE: " + inst.upper() + " " + str(rs1) + " and " + str(rs2))
         # return ry
-            
+           
     elif fmt == 2: #I : addi, andi, ori, lb, lh, lw, jalr
         imm = bin_to_dec(imm)
         l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers.get_rs1()) + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm)) 
@@ -101,7 +104,6 @@ def execute(registers, pipeline_obj,buffers,index ):
 
         if inst == 'addi' : # addi
             ry =  rs1+imm
-            # print(rs1,imm," rs imm")
             l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm))
 
         if inst == 'ori': # ori
@@ -146,7 +148,7 @@ def execute(registers, pipeline_obj,buffers,index ):
             return 
 
         l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm)  + " to calculate the effective address.")
-        return rs1+imm
+        ry = rs1+imm
         
     elif fmt == 4: # SB : beq, bne, bge, blt 
         imm = bin_to_dec(imm)*2
@@ -213,7 +215,7 @@ def execute(registers, pipeline_obj,buffers,index ):
         buffers[2].RZ = ry
         buffers[2].RY = ry
         buffers[2].rd = rd
-        if(fmt == 3 or inst == 'lw' or inst == 'lb' or inst == 'lh'):
+        if(inst=="sw" or inst=="sh" or inst =="sb" or inst == 'lw' or inst == 'lb' or inst == 'lh'):
             buffers[2].MAR = ry
         if(fmt == 3):
             buffers[2].RM = rs2
