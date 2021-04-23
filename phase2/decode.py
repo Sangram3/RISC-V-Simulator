@@ -25,6 +25,8 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
     fmt = None
     mneumonic = None
 
+    buffers[1].PC = buffers[0].PC
+
     inst = buffers[0].IR # instruction inside the F-D buffer
     inst = bin32(int(inst,16))
     # print(inst,"inside decode")
