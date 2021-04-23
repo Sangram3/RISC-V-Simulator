@@ -1,7 +1,5 @@
 def write_back(reg_obj, buffers):      # data is in hex (with 0x)
 
-    print("mne:", buffers[3].mne, buffers[3].rd)
-
     if(buffers[3].rd != -3):   
         reg_no = buffers[3].rd 
         data = buffers[3].RY                        
