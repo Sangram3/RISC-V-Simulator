@@ -18,9 +18,9 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
     op = None
     func3 = None
     func7 = None
-    rd = None
-    rs1 = None
-    rs2 = None
+    rd = -3
+    rs1 = -1
+    rs2 = -2
     imm = None
     fmt = None
     mneumonic = None
@@ -125,11 +125,11 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
         func3 = int(func3, base=2)
     if func7:
         func7 = int(func7, base=2)
-    if rd:
+    if rd != -3:
         rd = int(rd, base=2)
-    if rs1:
+    if rs1 != -1:
         rs1 = int(rs1, base=2)
-    if rs2:
+    if rs2 != -2:
         rs2 = int(rs2, base=2)
         
     if(fmt==2): #I
@@ -147,48 +147,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
     elif(fmt==6): #UJ
         imm=(inst[0]+inst[12:20]+inst[11]+inst[1:11])
 
-    # registers.set_rs1(rs1)
-    # registers.set_rs2(rs2)
-    # registers.set_rd(rd)
     
-    # registers.set_name_rs1(rs1)
-    # registers.set_name_rs2(rs2)
-    # registers.set_name_rd(rd)
-    
-    # FOR CHECKING DATA DEPENDENCY
-    # dh = pipeline_obj.check_data_hazard(rs1,rs2)
-    # if dh == 1:
-    #     if pipeline_obj.data_forwarding_knob ==0:
-    #         pipeline_obj.call_stalling(index) # index is the at what index this instruction is present in the cycle
-    #                                           # like ["E" ,"D" ] index of decode in this case is 1
-    #     else:
-    #         # handle by data forwarding
-
-    #         pass
-    #     return 
-    # else:
-    #     # buffers[1] = D-E BUFFER
-        
-    #     buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
-    #     buffers[1].rs2 = rs2
-    #     buffers[1].rd  = rd 
-        
-    #     if rs1:
-    #         buffers[1].operand1 = registers.__regs[rs1] # setting value of rs1 in buffer
-    #     if rs2:
-    #         buffers[1].operand2 = registers.__regs[rs2] # setting value of rs2 in buffer
-    #     if imm:
-    #         buffers[1].imm = imm # setting immediate in buffer
-            
-    #     buffers[1].mne = mneumonic
-    #     buffers[1].fmt = fmt
-    #     # UPDATE MASTER_STORE
-    #     if rd:
-    #         pipeline_obj.master_store[rd] = pipeline_obj.cycle+3
-            
-    #     pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E") # Execute this instruction in the next cycle at the same index
-    #     return (fmt, mneumonic, imm)
-    # print(pipeline_obj.data_forwarding_knob," its knob")
     if pipeline_obj.data_forwarding_knob == 0:
         dh = pipeline_obj.check_data_hazard(rs1,rs2)
         # print(rs1,rs2," rs1 rs2")
@@ -205,11 +164,11 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
             buffers[1].rs2 = rs2
             buffers[1].rd  = rd 
             
-            if rs1:
+            if rs1 != -1:
                 buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
-            if rs2:
+            if rs2 != -2:
                 buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
-            if imm:
+            if imm != None:
                 buffers[1].imm = imm # setting immediate in buffer
             # print(buffers[1].imm,buffers[1].operand1,buffers[1].operand2," operands") 
             
@@ -226,6 +185,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
         buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
         buffers[1].rs2 = rs2
         buffers[1].rd  = rd 
+        
 
         if(mneumonic == 'beq' or mneumonic == 'bge' or mneumonic == 'bne' or mneumonic == 'blt' or mneumonic == 'jalr'):
             if rs1:
@@ -233,9 +193,9 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
             if rs2:
                 buffers[1].operand2 = buffers[0].operand2 # setting value of rs2 in buffer 
         else:   
-            if rs1:
+            if rs1 != -1:
                 buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
-            if rs2:
+            if rs2 != -2:
                 buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
 
         if imm:
@@ -255,17 +215,17 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
         # if there is data hazard then:
         if(fmt != 4 and mneumonic != 'jalr'):
             HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d)
-        if (pipeline_obj.forw_d["ME"][0] == 1):
-            data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
-            pipeline_obj.forw_d["ME"][0] = 0
-            pipeline_obj.forw_d["ME"][1] = None
-        if (pipeline_obj.forw_d["EE"][0] == 1):
-            data_forw(1, pipeline_obj.forw_d["EE"][1], buffers)
-            pipeline_obj.forw_d["EE"][0] = 0
-            pipeline_obj.forw_d["EE"][1] = None
-        if (pipeline_obj.forw_d["MES"][0] == 1):
-            pipeline_obj.call_stalling(index)
-            return
+            if (pipeline_obj.forw_d["ME"][0] == 1):
+                data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
+                pipeline_obj.forw_d["ME"][0] = 0
+                pipeline_obj.forw_d["ME"][1] = None
+            if (pipeline_obj.forw_d["EE"][0] == 1):
+                data_forw(1, pipeline_obj.forw_d["EE"][1], buffers)
+                pipeline_obj.forw_d["EE"][0] = 0
+                pipeline_obj.forw_d["EE"][1] = None
+            if (pipeline_obj.forw_d["MES"][0] == 1):
+                pipeline_obj.call_stalling(index)
+                return
         
         pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E")
         return
