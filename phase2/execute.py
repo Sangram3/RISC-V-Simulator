@@ -127,7 +127,7 @@ def execute(registers, pipeline_obj,buffers,index ):
             l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm) + " to calculate the effective address.")
         
 
-        if ry>2147483647 or ry<-2147483648:
+        if ( ry != None and (ry>2147483647 or ry<-2147483648)):
             ry = 0
 
         # return ry
