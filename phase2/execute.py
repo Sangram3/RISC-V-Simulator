@@ -13,6 +13,7 @@ def bin_to_dec(s): # input in two's compliment form
                                       
 def execute(registers, pipeline_obj,buffers,index ):
     # print("execute calling",index)
+    buffers[2].RA = buffers[2].RZ
     l=[]
     fmt = buffers[1].fmt
     inst = buffers[1].mne
