@@ -8,8 +8,10 @@ def HDU(buffers, knob_forwarding, prevInsList, d):
         if(this[0] == 5 or this[0] == 6):
             return
 
-        if(this[0] == 4): #branch ins
+        if(this[0] == 4 or this[1] == 'jalr'): #branch ins
             check_control_hazard(buffers, prevInsList, d)
+            prevInsList = prevInsList[-3:]
+            return
 
         #M to M
         if(len(prevInsList) >=2 and (this[0] == 3 and (prevInsList[-2][0] == 1 or prevInsList[-2][0] == 2))): #store after Rtype/Itype/load/jalr  
