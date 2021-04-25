@@ -6,7 +6,13 @@ from execute import *
 from mem import *
 from write_back import *
 from buffers import *
+import sys
 
+# if not sys.warnoptions:
+#     import warnings
+#     warnings.simplefilter("ignore")
+    
+    
 class PipeLine():
     
     def __init__(self):
@@ -19,6 +25,7 @@ class PipeLine():
         self.data_forwarding_knob = 0
         self.disable_PC = 0
         self.finish = 0
+
 
     def clear_pipeline(self):
         self.__init__()
@@ -34,6 +41,15 @@ class PipeLine():
         self.pipeline[self.cycle+1].insert(index,self.pipeline[self.cycle][index]) # inserting the same instruction in the next cycle too
         
         return 
+    
+    
+    def flush(self):
+        # make previously fetched instruction NOP
+        for i in range(len(self.pipeline[self.cycle])):
+            if self.pipeline[self.cycle][i] == 'F':
+                self.pipeline[self.cycle][i] ='NOP'
+                
+    
         
     def check_data_hazard(self,name_rs1,name_rs2):
         if name_rs1!=None:
