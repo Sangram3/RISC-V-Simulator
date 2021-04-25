@@ -201,19 +201,19 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
                     imm//=2
                 taken = 0
                 if ins =='beq':
-                    if rs1 == rs2:
+                    if buffers[1].operand1 == buffers[1].operand2:
                         taken = 1
                         
                 if ins == 'bne':
-                    if rs1 != rs2:
+                    if buffers[1].operand1 != buffers[1].operand2:
                         taken = 1 
                             
                 if ins =='bge':
-                    if rs1 >= rs2:
+                    if buffers[1].operand1 >= buffers[1].operand2:
                         taken = 1
                             
                 if ins == 'blt':
-                    if rs1 < rs2:
+                    if buffers[1].operand1 < buffers[1].operand2:
                         taken = 1
                         
                 if taken == 1: # taken 
