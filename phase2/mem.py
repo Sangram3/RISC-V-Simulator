@@ -3,6 +3,8 @@ def Twos_to_dec(hex):
 
 def mem(mem_obj, reg_obj, buffers, index, pipeline_obj):   #data in hex with 0x 
 
+    buffers[3].RB = buffers[3].RY
+
     buffers[3].RZ = buffers[2].RZ   #Output of the ALU. It can be used in data forwarding.
     buffers[3].RM = buffers[2].RM   #It has the value for the store ins. This is forwarded to MDR in stage 4(memory access).
     buffers[3].RY = buffers[2].RY   #The value which is to be written in the writeback stage.
