@@ -229,7 +229,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
                             pipeline_obj.flush(buffers)
                     
                     
-                elif flag == 0: # not taken
+                elif taken == 0: # not taken
                      if btb.ifPresent(PC) == False: 
                         # btb does not contain this instruction so need to update BTB
                         btb.newKey(PC,registers.get_PC()+imm - 4,0)
