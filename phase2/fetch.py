@@ -5,8 +5,13 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
     
     PC = reg_mod.get_PC()
     inst = mem_mod.lw(PC)
+    
     if pipeline_obj.disable_PC == 0:
-        reg_mod.add_PC(4)
+        if btb.ifPresent(PC) == False:
+            
+            reg_mod.add_PC(4)
+        else:
+            reg_mod.update_PC(btb.table[PC][1] )
     else:
         return
     # print(inst,PC)
@@ -80,11 +85,6 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
                 pipeline_obj.forw_d["ED"][0] = 0
                 pipeline_obj.forw_d["ED"][1] = None          
 
-
-    # predicting 
-	# if(opcode == 103 or opcode == 99 or opcode == 111):
-	# 	if (btb.ifPresent(PC) and btb.prediction(PC)):
-	# 		buffers[0].predict = True
 		
     buffers[0].PC = PC
     buffers[0].IR = inst
