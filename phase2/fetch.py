@@ -11,7 +11,7 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
             
             reg_mod.add_PC(4)
         else:
-            reg_mod.update_PC(btb.table[PC][1] )
+            reg_mod.update_PC(btb.table[str(PC)][1] )
     else:
         return
     # print(inst,PC)
