@@ -42,19 +42,19 @@ def data_forw(forw_type, reg, buffers):
     # E-D
     elif(forw_type == 4):
         if(reg == 1):
-            buffers[0].operand1 = buffers[2].RZ 
+            buffers[0].operand1 = buffers[2].RA 
         elif(reg == 2):
-            buffers[0].operand2 = buffers[2].RZ
+            buffers[0].operand2 = buffers[2].RA
         elif(reg == 3):
-            buffers[0].operand1 = buffers[2].RZ
-            buffers[0].operand2 = buffers[2].RZ
+            buffers[0].operand1 = buffers[2].RA
+            buffers[0].operand2 = buffers[2].RA
 
     # M-D
     elif(forw_type == 5):
         if(reg == 1):
-            buffers[0].operand1 = buffers[3].RY 
+            buffers[0].operand1 = buffers[3].RB 
         elif(reg == 2):
-            buffers[0].operand2 = buffers[3].RY
+            buffers[0].operand2 = buffers[3].RB
         elif(reg == 3):
-            buffers[0].operand1 = buffers[3].RY
-            buffers[0].operand2 = buffers[3].RY
+            buffers[0].operand1 = buffers[3].RB
+            buffers[0].operand2 = buffers[3].RB
