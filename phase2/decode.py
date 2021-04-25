@@ -17,7 +17,7 @@ def bin_to_dec(s): # input in two's compliment form
 
 
                           # extra arguments
-def decode(memory, registers ,pipeline_obj ,buffers , index):
+def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
     # print(registers.print_reg())
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
@@ -280,11 +280,17 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
         buffers[1].rs1 = rs1 # THESE ARE JUST ADDRESSES NOT VALUES
         buffers[1].rs2 = rs2
         buffers[1].rd  = rd 
-         
-        if rs1 != -1:
-            buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
-        if rs2 != -2:
-            buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
+
+        if(fmt == 4 or mneumonic == 'jalr'):
+            if rs1 != -1:
+                buffers[0].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
+            if rs2 != -2:
+                buffers[0].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
+        else:
+            if rs1 != -1:
+                buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
+            if rs2 != -2:
+                buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
 
         if imm:
             buffers[1].imm = imm # setting immediate in buffer
@@ -353,17 +359,14 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
                 pipeline_obj.forw_d["ED"][0] = 0
                 pipeline_obj.forw_d["ED"][1] = None
         
-        
         #change1
-        if rd:
-            pipeline_obj.master_store[rd] = pipeline_obj.cycle+3
-                
+       
         # add_comparator here
-        if op == '0100011': # SB : beq, bne, bge, blt 
+        if fmt == 4: # SB : beq, bne, bge, blt 
+                rs1 = buffers[0].operand1
+                rs2 = buffers[0].operand2
                 imm = bin_to_dec(imm)*2
                 
-                if imm<0:
-                    imm//=2
                 taken = 0
                 if ins =='beq':
                     if rs1 == rs2:
@@ -376,66 +379,66 @@ def decode(memory, registers ,pipeline_obj ,buffers , index):
                 if ins =='bge':
                     if rs1 >= rs2:
                         taken = 1
-                            
+                        
                 if ins == 'blt':
                     if rs1 < rs2:
                         taken = 1
                         
                 if taken == 1: # taken 
                     registers.add_PC(imm-4) # update PC here don't do it in execute
-                    if btb.ifPresent(PC) == False: 
+                    if btb.ifPresent(buffers[0].PC) == False: 
          # btb does not contain this instruction it means
          # guaranteed wrong instructions are fetched-> we need to flush
             
-                        btb.newKey(PC,registers.get_PC(),0)
-                        pipeline_obj.flush(buffers)
+                        btb.newKey(buffers[0].PC,registers.get_PC(),0)
+                        pipeline_obj.flush()
                     else:
-                        if btb.table[PC][0] == False:
+                        if btb.table[buffers[0].PC][0] == False:
                     # again this PC was present but
                     # prediction made by BTB was wrong so need to flush
-                            pipeline_obj.flush(buffers)
+                            pipeline_obj.flush()
                     
                     
                 elif taken == 0: # not taken
-                     if btb.ifPresent(PC) == False: 
+                     if btb.ifPresent(buffers[0].PC) == False: 
                         # btb does not contain this instruction so need to update BTB
-                        btb.newKey(PC,registers.get_PC()+imm - 4,0)
+                        btb.newKey(buffers[0].PC,registers.get_PC()+imm-4,0)
                      else:
-                         if btb.table[PC][0] == True:
+                         if btb.table[buffers[0].PC][0] == True:
                          # again this PC was present but prediction made by BTB was wrong so need to flush
-                             pipeline_obj.flush(buffers)
+                             pipeline_obj.flush()
                         
                         
-            elif ins == 'jal' :# jal
-                imm = bin_to_dec(imm)
-                imm=imm*2   #omit imm[0]
-                registers.add_PC(imm-4)
+        elif ins == 'jal':# jal
+            imm = bin_to_dec(imm)
+            imm=imm*2   #omit imm[0]
+            registers.add_PC(imm-4)
+            
+            if btb.ifPresent(buffers[0].PC) == False:
+                btb.newKey(buffers[0].PC,registers.get_PC(),1)
+                # as always wrong PC is fetched in the subsequent cycles need to flush
+                pipeline_obj.flush()  
+            else:
+                # if it is already present in the BTB accurate
+                # prediction was made in FETCH STAGE
+                # no need to flush
+                pass
+            
+        elif ins == 'jalr':# jalr
+            imm = bin_to_dec(imm)
+            # ry = registers.get_PC()
+            rs1 = buffers[0].operand1
+            registers.add_PC(rs1+imm-registers.get_PC())
+            
+            if btb.ifPresent(buffers[0].PC) == False:
+                btb.newKey(buffers[0].PC, registers.get_PC() ,1)
+                pipeline_obj.flush()
                 
-                if btb.ifPresent(PC) == False:
-                    btb.newKey(PC,registers.get_PC(),1)
-                    # as always wrong PC is fetched in the subsequent cycles need to flush
-                    pipeline_obj.flush()  
-                else:
-                    # if it is already present in the BTB accurate
-                    # prediction was made in FETCH STAGE
-                    # no need to flush
-                    pass
-                
-            elif ins == 'jalr':# jalr
-                imm = bin_to_dec(imm)
-                # ry = registers.get_PC()
-                rs1 = buffers[1].operand1
-                registers.add_PC(rs1+imm-registers.get_PC())
-                
-                if btb.ifPresent(PC) == False:
-                    btb.newKey(PC, registers.get_PC() ,1)
-                    pipeline_obj.flush()
-                    
-                else:
-                    # if it is already present in the BTB accurate
-                    # prediction was made in FETCH STAGE
-                    # no need to flush
-                    pass
+            else:
+                # if it is already present in the BTB accurate
+                # prediction was made in FETCH STAGE
+                # no need to flush
+                pass
         
         
         pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E")
