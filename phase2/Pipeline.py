@@ -8,9 +8,9 @@ from write_back import *
 from buffers import *
 import sys
 
-# if not sys.warnoptions:
-#     import warnings
-#     warnings.simplefilter("ignore")
+if not sys.warnoptions:
+    import warnings
+    warnings.simplefilter("ignore")
     
     
 class PipeLine():
@@ -22,7 +22,7 @@ class PipeLine():
         self.prevInsList = []
         self.master_store = [-1 for i in range(32)]
         self.to_stall = 0
-        self.data_forwarding_knob = 1
+        self.data_forwarding_knob = 0
         self.disable_PC = 0
         self.finish = 0
 
@@ -61,6 +61,7 @@ class PipeLine():
         return 0 # no data hazard case
 
 pipeline_obj = PipeLine()
+# pipeline_obj.data_forwarding_knob = 0
 mc_file = "test.mc"
 mem_mod = memory(mc_file)
 reg_mod = registers()
@@ -72,7 +73,7 @@ btb = BTB()
 
 def execute_cycle_util():
     
-    while (pipeline_obj.pipeline[pipeline_obj.cycle] != []):
+    while (pipeline_obj.pipeline[pipeline_obj.cycle] != [] and pipeline_obj.cycle!=60 ):
         execute_cycle()
 
 def execute_cycle():
@@ -82,7 +83,6 @@ def execute_cycle():
     pipeline_obj.pipeline.append([])
 
     for index in range(len(pipeline_obj.pipeline[pipeline_obj.cycle])):
-
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'D':
             decode(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb)
                 
@@ -106,3 +106,4 @@ def execute_cycle():
 execute_cycle_util()
 print(reg_mod.get_regs())
 print(mem_mod.print_mem())
+print(btb.table)
