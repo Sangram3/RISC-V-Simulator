@@ -23,6 +23,7 @@ class InterStateBuffer:
         self.fmt = None
         self.mne = None
         self.imm = 0
+        
 
     # def printbuf(self):
     #     print(self.RZ)
@@ -38,7 +39,10 @@ class BTB():
 
     table = {}
     
-    def newKey(self, PC, Target_add):  #FNTBT satic predictor
+    def newKey(self, PC, Target_add,is_jal_jalr):  #FNTBT satic predictor
+        if is_jal_jalr == 1:
+            self.table[str(PC)] = [True,Target_add]
+            return
         if(Target_add>=PC):  #forward branch not taken  #Imm is >= 0
             self.table[str(PC)] = [False,Target_add]
         else:
@@ -51,10 +55,13 @@ class BTB():
         return self.table[str(PC)][1]
 
     def ifPresent(self,PC):
-        if(str(PC) in self.table.keys()):
+        if str(PC) in self.table:
+            print(self.table[str(PC)])
             return True
-        else:
-            return False        
+        return False
+        # if(str(PC) in self.table.keys()):
+            # return True
+        # return False        
 
 # dic = BTB()
 # print(dic)
