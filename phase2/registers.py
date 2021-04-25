@@ -25,6 +25,8 @@ class registers:
     def get_clock(self):
         return self.clock
 
+    def update_PC(self,new_value):
+        self.__PC = new_value
     def add_clock(self):
         self.clock = self.clock+1  
 
