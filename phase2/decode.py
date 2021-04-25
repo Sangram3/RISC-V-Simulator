@@ -393,7 +393,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
                         btb.newKey(buffers[0].PC,registers.get_PC(),0)
                         pipeline_obj.flush()
                     else:
-                        if btb.table[buffers[0].PC][0] == False:
+                        if btb.table[str(buffers[0].PC)][0] == False:
                     # again this PC was present but
                     # prediction made by BTB was wrong so need to flush
                             pipeline_obj.flush()
@@ -404,7 +404,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
                         # btb does not contain this instruction so need to update BTB
                         btb.newKey(buffers[0].PC,registers.get_PC()+imm-4,0)
                      else:
-                         if btb.table[buffers[0].PC][0] == True:
+                         if btb.table[str(buffers[0].PC)][0] == True:
                          # again this PC was present but prediction made by BTB was wrong so need to flush
                              pipeline_obj.flush()
                         
