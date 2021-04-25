@@ -87,11 +87,11 @@ def check_control_hazard(buffers, prevInsList, d):
     this = prevInsList[-1]
 
     #MD
-    if(len(prevInsList) >= 4 and (prevInsList[-4][0] == 1 or prevInsList[-4][0] == 2)): #load or R or I type
+    if(len(prevInsList) >= 3 and (prevInsList[-4][0] == 1 or prevInsList[-4][0] == 2)): #load or R or I type
         if(prevInsList[-4][4] == this[2]): #rs1 same
             d["MD"] = [1,1]
-            # if(prevInsList[-4][4] == this[3]): #rs2 and rs1 same
-            #     d["MD"] = [1,3]
+            if(prevInsList[-4][4] == this[3]): #rs2 and rs1 same
+                d["MD"] = [1,3]
         elif(prevInsList[-4][4] == this[3]): #rs2 same            
             d["MD"] = [1,2]
 
@@ -99,17 +99,21 @@ def check_control_hazard(buffers, prevInsList, d):
     if(len(prevInsList) >= 3 and (prevInsList[-3][0] == 1 or prevInsList[-3][0] == 2 and(prevInsList[-3][1] != "lw" and prevInsList[-3][1] != "lh" and prevInsList[-3][1] != "lb"))):
         if(prevInsList[-3][4] == this[2]): #rs1 same
             d["ED"] = [1,1]
-            # if(prevInsList[-3][4] == this[3]): #rs2 and rs1 same
-            #     d["ED"] = [1,3]
+            if(prevInsList[-3][4] == this[3]): #rs2 and rs1 same
+                d["ED"] = [1,3]
         elif(prevInsList[-3][4] == this[3]): #rs2 same            
             d["ED"] = [1,2]
 
     #MDS
-    if(len(prevInsList) >= 3 and (prevInsList[-3][1] == "lw" or prevInsList[-3][1] == "lh" or prevInsList[-3][1] != "lb")):
+    if(len(prevInsList) >= 3 and (prevInsList[-3][1] == "lw" or prevInsList[-3][1] == "lh" or prevInsList[-3][1] == "lb")):
         if(prevInsList[-3][4] == this[2]): #rs1 same
             d["MDS"] = [1,1]
             if(d["MD"][0] ==1): #bec this would have already been written back
                 d["MD"] = [0,0]
+            if(prevInsList[-3][4] == this[3]): #rs2 same            
+                d["MDS"] = [1,3]
+                if(d["MD"][0] ==1): #bec this would have already been written back
+                    d["MD"] = [0,0]
         elif(prevInsList[-3][4] == this[3]): #rs2 same            
             d["MDS"] = [1,2]
             if(d["MD"][0] ==1): #bec this would have already been written back
@@ -121,7 +125,12 @@ def check_control_hazard(buffers, prevInsList, d):
             d["EDS"] = [1,1]
             if(d["ED"][0] == 1):
                 d["MD"] = d["ED"]
-                d["ED"] = [0,0]    
+                d["ED"] = [0,0] 
+            if(prevInsList[-2][4] == this[3]): #rs2 same            
+                d["EDS"] = [1,3]
+                if(d["ED"][0] == 1):
+                    d["MD"] = d["ED"]
+                    d["ED"] = [0,0]   
         elif(prevInsList[-2][4] == this[3]): #rs2 same            
             d["EDS"] = [1,2]
             if(d["ED"][0] == 1):
@@ -132,5 +141,7 @@ def check_control_hazard(buffers, prevInsList, d):
     if(len(prevInsList) >= 2 and (prevInsList[-2][1] == "lw" or prevInsList[-2][1] == "lh" or prevInsList[-2][1] != "lb")):
         if(prevInsList[-2][4] == this[2]): #rs1 same
             d["MDSS"] = [2,1]
+            if(prevInsList[-2][4] == this[3]):
+                d["MDSS"] = [2,3]
         elif(prevInsList[-2][4] == this[3]):
             d["MDSS"] = [2,2]
