@@ -18,7 +18,7 @@ class PipeLine():
     def __init__(self):
         self.pipeline = [["F"]]
         self.cycle = 0
-        self.forw_d = {"EE": [0,None], "ME": [0,None], "MM": [0,None], "MES": [0,None], "ED": [0,None], "MD": [0,None], "EDS": [0,None], "MDS": [0,None]}
+        self.forw_d = {"EE": [0,None], "ME": [0,None], "MM": [0,None], "MES": [0,None], "ED": [0,None], "MD": [0,None], "EDS": [0,None], "MDS": [0,None], "MDSS": [0,None]}
         self.prevInsList = []
         self.master_store = [-1 for i in range(32)]
         self.to_stall = 0
