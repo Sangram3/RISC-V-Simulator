@@ -10,8 +10,20 @@ def bin_to_dec(s): # input in two's compliment form
         return -1 * (int(''.join('1' if x == '0' else '0' for x in s), 2) + 1)
     else:
         return int(s, 2)    
-                                      
-def execute(registers, pipeline_obj,buffers,index ):
+
+def create_basic_code(fmt,mne,rs1,rs2,imm,rd)                            :
+    if fmt == 1:
+        return "{} {} {} {}".format(mne,rd,rs1,rs2)
+    if fmt == 2 or fmt == 3:
+        return "{} {} {} {}".format(mne,rd,rs1,imm)
+    if fmt == 4:
+        return "{} {} {} {}".format(mne,rs1,rs2,imm)
+    if fmt == 5:
+        return "{} {} {}".format(mne,rd,imm)
+    if fmt == 6:
+        return "{} {} {}".format(mne,rd,imm)
+
+def execute(registers, pipeline_obj,buffers,index, gui_util_obj):
     # print("execute calling",index)
     buffers[2].RA = buffers[2].RZ
     l=[]
@@ -33,6 +45,7 @@ def execute(registers, pipeline_obj,buffers,index ):
         rs2 = buffers[1].operand2
         rd =  buffers[1].rd
         imm = buffers[1].imm
+        gui_util_obj.basic_codes.append(create_basic_code(fmt, inst, rs1, rs2, imm, rd))    
         
     except:
         pass
