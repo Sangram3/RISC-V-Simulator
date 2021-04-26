@@ -155,13 +155,13 @@ def execute_cycle():
 
     for index in range(len(pipeline_obj.pipeline[pipeline_obj.cycle])):
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'D':
-            decode(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb)
+            decode(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb, gui_util_obj)
                 
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'F':
             fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'E':
-            execute(reg_mod, pipeline_obj, buffers,index )
+            execute(reg_mod, pipeline_obj, buffers,index, gui_util_obj )
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
             mem(mem_mod, reg_mod, buffers, index, pipeline_obj)
