@@ -51,7 +51,7 @@ def basic_code(dec_out, reg, mem):
         code = "Wrong Instruction"
     return code
 
-mc_file = "temp.mc"
+mc_file = "test.mc"
 mem_mod = memory(mc_file)
 reg_mod = registers_p()
 
