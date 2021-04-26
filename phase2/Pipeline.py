@@ -15,12 +15,12 @@ if not sys.warnoptions:
     
 class gui_util():
     def __init__():
-        self.data_hazards = {} # sangram
-        self.matrix = [] # sangram
-        self.left_pane = [] # sangram
-        self.buffers_pane = [] # antara
-        self.data_path_taken = [] # nupur
-        self.static_prediction = [] # antara
+        self.data_hazards = {} # sangram [index,cycle] 
+        self.matrix = [] # sangram  done
+        self.left_pane = [] # sangram [ basic_codes ]
+        self.buffers_pane = [] # antara done
+        self.data_path_taken = [] # nupur [ cycle,[paths]]
+        self.static_prediction = [] # antara done
         
         
         
@@ -146,7 +146,7 @@ def execute_cycle_util():
     while (pipeline_obj.pipeline[pipeline_obj.cycle] != [] and pipeline_obj.cycle!=60 ):
         execute_cycle()
         gui_util_obj.buffers_pane.append(buffers[:])
-        
+    gui_util.matrix = pipeline_obj.pipeline
 def execute_cycle():
     global pipeline_obj
 
