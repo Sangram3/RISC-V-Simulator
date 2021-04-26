@@ -222,7 +222,7 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
                     # print("              shayad",PC,buffers[1].operand1,buffers[1].operand2,buffers[1].rs1,buffers[1].rs2)
                     # registers.add_PC(imm-4) # update PC here don't do it in execute
                     if btb.ifPresent(PC) == False: 
-                        registers_p.add_PC(imm-4) # update PC here don't do it in execute
+                        registers.add_PC(imm-4) # update PC here don't do it in execute
          # btb does not contain this instruction it means
          # guaranteed wrong instructions are fetched-> we need to flush
             
@@ -233,13 +233,13 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
                     # again this PC was present but
                     # prediction made by BTB was wrong so need to flush
                             pipeline_obj.flush()
-                            registers_p.update_PC(btb.getTarget(PC))
+                            registers.update_PC(btb.getTarget(PC))
                     
                     
                 elif taken == 0: # not taken
                      if btb.ifPresent(PC) == False: 
                         # btb does not contain this instruction so need to update BTB
-                        btb.newKey(PC,registers_p.get_PC()+imm - 4,0)
+                        btb.newKey(PC,registers.get_PC()+imm - 4,0)
                      else:
                          if btb.prediction(PC) == True:
                          # again this PC was present but prediction made by BTB was wrong so need to flush
@@ -249,9 +249,9 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
             elif ins == 'jal' :# jal
                 imm = bin_to_dec(imm)
                 imm=imm*2   #omit imm[0]
-                registers_p.add_PC(imm-4)
+                registers.add_PC(imm-4)
                 if btb.ifPresent(PC) == False:
-                    btb.newKey(PC,registers_p.get_PC(),1)
+                    btb.newKey(PC,registers.get_PC(),1)
                     # as always wrong PC is fetched in the subsequent cycles need to flush
                     pipeline_obj.flush()  
                 else:
@@ -264,10 +264,10 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
                 imm = bin_to_dec(imm)
                 # ry = registers.get_PC()
                 rs1 = buffers[1].operand1
-                registers_p.add_PC(rs1+imm-registers_p.get_PC())
+                registers.add_PC(rs1+imm-registers.get_PC())
                 
                 if btb.ifPresent(PC) == False:
-                    btb.newKey(PC, registers_p.get_PC() ,1)
+                    btb.newKey(PC, registers.get_PC() ,1)
                     pipeline_obj.flush()
                     
                 else:
@@ -287,14 +287,14 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
 
         if(fmt == 4 or mneumonic == 'jalr'):
             if rs1 != -1:
-                buffers[0].operand1 = registers_p.load_reg(rs1) # setting value of rs1 in buffer
+                buffers[0].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
             if rs2 != -2:
-                buffers[0].operand2 = registers_p.load_reg(rs2) # setting value of rs2 in buffer
+                buffers[0].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
         else:
             if rs1 != -1:
-                buffers[1].operand1 = registers_p.load_reg(rs1) # setting value of rs1 in buffer
+                buffers[1].operand1 = registers.load_reg(rs1) # setting value of rs1 in buffer
             if rs2 != -2:
-                buffers[1].operand2 = registers_p.load_reg(rs2) # setting value of rs2 in buffer
+                buffers[1].operand2 = registers.load_reg(rs2) # setting value of rs2 in buffer
 
         if imm:
             buffers[1].imm = imm # setting immediate in buffer
@@ -423,13 +423,13 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
                     # prediction made by BTB was wrong so need to flush
                             pipeline_obj.npred = pipeline_obj.npred+1
                             pipeline_obj.flush()
-                            registers_p.update_PC(btb.getTarget(PC))
+                            registers.update_PC(btb.getTarget(PC))
                     
                     
                 elif taken == 0: # not taken
                      if btb.ifPresent(PC) == False: 
                         # btb does not contain this instruction so need to update BTB
-                        btb.newKey(PC,registers_p.get_PC()+imm - 4,0)
+                        btb.newKey(PC,registers.get_PC()+imm - 4,0)
                      else:
                          if btb.prediction(PC) == True:
                          # again this PC was present but prediction made by BTB was wrong so need to flush
@@ -440,9 +440,9 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
         elif ins == 'jal' :# jal
             imm = bin_to_dec(imm)
             imm=imm*2   #omit imm[0]
-            registers_p.add_PC(imm-4)
+            registers.add_PC(imm-4)
             if btb.ifPresent(PC) == False:
-                btb.newKey(PC,registers_p.get_PC(),1)
+                btb.newKey(PC,registers.get_PC(),1)
                 # as always wrong PC is fetched in the subsequent cycles need to flush
                 pipeline_obj.npred = pipeline_obj.npred+1
                 pipeline_obj.flush()  
@@ -456,10 +456,10 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
             imm = bin_to_dec(imm)
             # ry = registers.get_PC()
             rs1 = buffers[0].operand1
-            registers_p.add_PC(rs1+imm-registers_p.get_PC())
+            registers_p.add_PC(rs1+imm-registers.get_PC())
             
             if btb.ifPresent(PC) == False:
-                btb.newKey(PC, registers_p.get_PC() ,1)
+                btb.newKey(PC, registers.get_PC() ,1)
                 pipeline_obj.npred = pipeline_obj.npred+1
                 pipeline_obj.flush()
                 
