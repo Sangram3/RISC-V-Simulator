@@ -1,4 +1,4 @@
-def write_back(reg_obj, buffers, pipeline_obj):      # data is in hex (with 0x)
+def write_back_p(reg_obj, buffers, pipeline_obj):      # data is in hex (with 0x)
 
     if((buffers[3].fmt == 1 or buffers[3].fmt == 2 or buffers[3].fmt == 5)  and buffers[3].mne != 'lw' and buffers[3].mne != 'lh' and buffers[3].mne != 'lb'):
         pipeline_obj.n_alu_ins = pipeline_obj.n_alu_ins+1
