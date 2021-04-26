@@ -5,6 +5,7 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
     
     PC = reg_mod.get_PC()
     inst = mem_mod.lw(PC)
+    pipeline_obj.n_inst = pipeline_obj.n_inst + 1
     print()
     print(PC,inst)
     print()
