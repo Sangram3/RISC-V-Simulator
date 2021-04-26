@@ -14,7 +14,7 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
     
 class gui_util():
-    def __init__():
+    def __init__(self):
         self.data_hazards = {} # sangram [index,cycle] 
         self.matrix = [] # sangram  done
         self.left_pane = [] # sangram [ basic_codes ]
