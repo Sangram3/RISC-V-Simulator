@@ -134,7 +134,7 @@ mem_mod = memory(mc_file)
 reg_mod = registers()
 buffers = [InterStateBuffer() for i in range(4)]
 btb = BTB()
-global_buffers = []
+#global_buffers = []
 
 gui_util_obj = gui_util()
 
@@ -145,8 +145,8 @@ def execute_cycle_util():
     
     while (pipeline_obj.pipeline[pipeline_obj.cycle] != [] and pipeline_obj.cycle!=60 ):
         execute_cycle()
-        global_buffers.append(buffers[:])
-
+        gui_util_obj.buffers_pane.append(buffers[:])
+        
 def execute_cycle():
     global pipeline_obj
 
