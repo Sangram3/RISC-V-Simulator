@@ -345,12 +345,14 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
             HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d, pipeline_obj)
             #print(pipeline_obj.forw_d)
             temp = []
-            temp.append(pipeline_obj.cycle)
             for k,v in pipeline_obj.forw_d.items():
                 if v[0] == 1:
                     temp.append(k)
-            gui_util_obj.data_path_taken.append(temp)
-            if(len(temp) > 1):
+            if(len(temp) > 0):
+                gui_util_obj.data_path_taken[pipeline_obj.n_inst-1] = temp
+            else:
+                gui_util_obj.data_path_taken[pipeline_obj.n_inst-1] = -1
+            if(len(temp) > 0):
                 gui_util.data_hazard.update({[index,pipeline_obj.cycle] :1  })
                                                 
             if (pipeline_obj.forw_d["ME"][0] == 1):
