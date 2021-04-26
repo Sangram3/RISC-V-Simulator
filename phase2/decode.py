@@ -300,7 +300,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
         buffers[1].fmt = fmt
 
         if(pipeline_obj.forw_d["MDSS"][0] == 2):
-            pipeline_obj.forw_d["MDSS"][0] == 1
+            pipeline_obj.forw_d["MDSS"][0] = 1
             pipeline_obj.call_stalling(index)
             return
         
