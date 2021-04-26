@@ -1,6 +1,7 @@
 from data_forw import *
 from HDU import *
 
+
 #decode function
 #all extractions and decode done in string format and at the end converted everything to decimal, example rs1 = '00110' then rs1 becomes 6 at the end.
 from collections import defaultdict
@@ -17,7 +18,7 @@ def bin_to_dec(s): # input in two's compliment form
 
 
                           # extra arguments
-def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
+def decode(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj):
     d = defaultdict(lambda: None)
     d = {'0110011': 1, '0010011': 2, '0000011': 2, '1100111': 2, '0100011': 3, '1100011': 4, '0010111': 5, '0110111': 5, '1101111': 6}
 
@@ -349,11 +350,11 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
                 if v[0] == 1:
                     temp.append(k)
             if(len(temp) > 0):
-                gui_util_obj.data_path_taken[pipeline_obj.n_inst] = temp
+                gui_util_obj.data_path_taken[pipeline_obj.n_inst-1] = temp
             else:
-                gui_util_obj.data_path_taken[pipeline_obj.n_inst] = -1
+                gui_util_obj.data_path_taken[pipeline_obj.n_inst-1] = -1
             if(len(temp) > 0):
-                gui_util_obj.data_hazard.update({[index,pipeline_obj.cycle] :1  })
+                gui_util_obj.data_hazards.update({index :pipeline_obj.cycle  })
                                                 
             if (pipeline_obj.forw_d["ME"][0] == 1):
                 data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
