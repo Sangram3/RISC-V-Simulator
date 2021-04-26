@@ -13,7 +13,17 @@ if not sys.warnoptions:
     import warnings
     warnings.simplefilter("ignore")
     
-    
+class gui_util():
+    def __init__():
+        self.data_hazards = {} # sangram
+        self.matrix = [] # sangram
+        self.left_pane = [] # sangram
+        self.buffers_pane = [] # antara
+        self.data_path_taken = [] # nupur
+        self.static_prediction = [] # antara
+        
+        
+        
 class PipeLine():
     
     def __init__(self):
@@ -125,6 +135,8 @@ reg_mod = registers()
 buffers = [InterStateBuffer() for i in range(4)]
 btb = BTB()
 global_buffers = []
+
+gui_util_obj = gui_util()
 
 
 #pipe = [  [ "Fetch"] ["Fetch" , "Decode" ] [ "Fetch", "Decode" , "Execute"]       ]
