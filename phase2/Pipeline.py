@@ -23,7 +23,7 @@ class PipeLine():
         self.prevInsList = []
         self.master_store = [-1 for i in range(32)]
         self.to_stall = 0
-        self.data_forwarding_knob = 0
+        self.data_forwarding_knob = 1
         self.disable_PC = 0
         self.finish = 0
 
@@ -49,6 +49,7 @@ class PipeLine():
         for i in range(len(self.pipeline[self.cycle])):
             if self.pipeline[self.cycle][i] == 'F':
                 self.pipeline[self.cycle][i] ='NOP'
+                self.prevInsList.append(['NOP'])
                 
     
         
@@ -107,4 +108,4 @@ def execute_cycle():
 execute_cycle_util()
 print(reg_mod.get_regs())
 print(mem_mod.print_mem())
-print(btb.table)
+print(btb.btb)
