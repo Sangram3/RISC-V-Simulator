@@ -1,4 +1,4 @@
-class registers:
+class registers_p:
     def __init__(self):
             
         self.__regs=[0 for i in range(32)]
