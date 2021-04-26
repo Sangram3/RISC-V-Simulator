@@ -27,6 +27,60 @@ class PipeLine():
         self.disable_PC = 0
         self.finish = 0
 
+        self.n_inst = -1 # to avoid swi instr counting
+        self.cpi = 0
+        self.n_datatrans = 0
+        self.n_alu_ins = 0
+        self.n_cont_ins = 0
+        self.nstalls = 0
+        self.n_datastalls = 0
+        self.n_contstalls = 0
+        self.ndhz = 0
+        self.nchz = 0
+        self.npred = 0 
+
+    def code_ends(self):
+        text = ""
+        text += "Total number of cycles"
+        text += str(self.cycle)
+        text+="\n"
+        text += "Total instructions executed"
+        text += str(self.n_inst)
+        text+="\n"
+        text += "CPI"
+        text += str(self.CPI())
+        text+="\n"
+        text += "Number of Data-transfer (load and store) instructions executed"
+        text += str(self.n_datatrans)
+        text+="\n"
+        text += "Number of ALU instructions executed"
+        text += str(self.n_alu_ins)
+        text+="\n"
+        text += "Number of Control instructions executed"
+        text += str(self.n_cont_ins)
+        text+="\n"
+        text += "Number of stalls/bubbles in the pipeline"
+        text += str(self.nstalls)
+        text+="\n"
+        text += "Number of data hazards"
+        text += str(self.ndhz)
+        text+="\n"
+        text += "Number of control hazards"
+        text += str(self.nchz)
+        text+="\n"
+        text += "Number of branch mispredictions"
+        text += str(self.npred)
+        text+="\n"
+        text += "Number of stalls due to data hazards"
+        text += str(self.n_datastalls)
+        text+="\n"
+        text += "Number of stalls due to control hazards"
+        text += str(self.n_contstalls)
+        text+="\n"
+        return text
+
+    def CPI(self):
+        return self.cycle/self.n_inst
 
     def clear_pipeline(self):
         self.__init__()
@@ -38,6 +92,7 @@ class PipeLine():
         pass
     
     def call_stalling(self,index): # stall the pipeline by one cycle
+        self.nstalls = self.nstalls+1
         self.disable_PC = 1 # PC update stopped
         self.pipeline[self.cycle+1].insert(index,self.pipeline[self.cycle][index]) # inserting the same instruction in the next cycle too
         
@@ -98,7 +153,7 @@ def execute_cycle():
             mem(mem_mod, reg_mod, buffers, index, pipeline_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
-            write_back(reg_mod, buffers)
+            write_back(reg_mod, buffers, pipeline_obj)
                 
     if pipeline_obj.to_stall == 0 and pipeline_obj.finish == 0 and pipeline_obj.disable_PC == 0:
         pipeline_obj.pipeline[pipeline_obj.cycle+1].append("F")
@@ -109,3 +164,4 @@ execute_cycle_util()
 print(reg_mod.get_regs())
 print(mem_mod.print_mem())
 print(btb.btb)
+print(pipeline_obj.code_ends())
