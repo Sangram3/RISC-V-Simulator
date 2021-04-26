@@ -1,7 +1,7 @@
 from data_forw import *
 from HDU import *
 
-def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
+def fetch_p(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
     
     PC = reg_mod.get_PC()
     inst = mem_mod.lw(PC)
