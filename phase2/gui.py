@@ -8,14 +8,14 @@ from PyQt5.QtCore import QFile, QTextStream
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore
 
-from memory import *
-from registers import *
-from fetch import *
-from decode import *
-from execute import *
-from mem import *
-from write_back import *
-from RISCV_Sim import *
+from memory_p import *
+from registers_p import *
+from fetch_p import *
+from decode_p import *
+from execute_p import *
+from mem_p import *
+from write_back_p import *
+from RISCV_Sim_p import *
 from Pipeline import *
 
 class TabBar(QtWidgets.QTabBar):
