@@ -336,8 +336,6 @@ class Window(QtWidgets.QTabWidget):
                   self.cb_layout.itemAt(i).layout().deleteLater()
                
 
-
-
    def forwarding_ed(self, state):
       if state == Qt.Checked:
          self.forwarding = 1
@@ -358,7 +356,7 @@ class Window(QtWidgets.QTabWidget):
          ec.toggled.connect(self.onClicked)
          
          y=QHBoxLayout()
-         ci = QRadioButton("Certain Instruction's")
+         ci = QRadioButton("Certain Cycle's")
          ci.but = 1
          ci.toggled.connect(self.onClicked)
          inst_no = QLineEdit()
@@ -412,7 +410,7 @@ class Window(QtWidgets.QTabWidget):
                if(self.out_msg[i][0][0]=="W"):
                      self.vb.addRow(QLabel(" "))    
             self.gB.setLayout(self.vb)
-            self.refresh_table()         
+       
          return 
 
        elif(self.pipelined == 1):  
@@ -425,9 +423,8 @@ class Window(QtWidgets.QTabWidget):
             self.register = reg_mod.get_regs()
             self.reg_pane_update()
 
-            for i in range(self.formLayout.rowCount()):
-               for j in range(self.formLayout.columnCount()):
-                  self.formLayout.itemAt(i*self.formLayout.rowCount()+j).widget().deleteLater()
+            for i in range(self.formLayout.count()):
+               self.formLayout.itemAt(i).widget().deleteLater()
             
             row=0
             if(self.all_pip_regs == 1):
@@ -453,7 +450,7 @@ class Window(QtWidgets.QTabWidget):
                         
             elif(self.inst_pip_regs == 1):
                buf_type = ["FD",'DE', 'EM', 'MW']
-               i = self.inst_num - 1
+               i = int(self.inst_num) - 1
                x = QLabel("Cycle: "+ str(i+1))
                x.setStyleSheet("background-color: blue")
                self.formLayout.addWidget(x)
@@ -471,14 +468,7 @@ class Window(QtWidgets.QTabWidget):
                   self.formLayout.addWidget(QLabel("rd: "+str(gui_util_obj.buffers_pane[i][j].rd)))
                   row+=1
                   self.formLayout.addWidget(QLabel())
-         
-            
-
-
-
-
-
-
+            self.refresh_table()  
          return 
 
 
@@ -486,7 +476,6 @@ class Window(QtWidgets.QTabWidget):
       ui = QWidget()
       win = QVBoxLayout()
      
-      
       self.form_B = QGroupBox()
       self.horiz_b= QHBoxLayout()
       
@@ -507,11 +496,14 @@ class Window(QtWidgets.QTabWidget):
       return ui
 
    def refresh_table(self):
+      print(pipeline_obj.pipeline)
+      print(gui_util_obj.matrix)
+      print(gui_util_obj.left_pane)
       count_i = 0
-      self.table.setColumnCount(len(self.flowchartarr)+1)
-      self.table.setRowCount(len(self.first_frame))
-      for i in self.first_frame:
-         self.table.setItem(count_i,0, QTableWidgetItem(str(self.first_frame[i][3])))
+      self.table.setColumnCount(len(pipeline_obj.pipeline)+1)
+      self.table.setRowCount(len(gui_util_obj.left_pane))
+      for i in gui_util_obj.left_pane:
+         self.table.setItem(count_i,0, QTableWidgetItem(str(i)))
          count_i+=1
       
       
@@ -519,19 +511,18 @@ class Window(QtWidgets.QTabWidget):
       self.table.verticalHeader().setVisible(False)
 
       inst = 0
-      for i in range(len(self.flowchartarr)):
-         for j in range(len(self.flowchartarr[i])):
-            x =  QTableWidgetItem(str(self.flowchartarr[i][j]))
-            self.table.setItem(j+inst,i+1, x)
-            if(i==3 and j ==2):
-               x.setBackground(QtGui.QColor("red"))
-         if(self.flowchartarr[i][0] == 'W'):
-            inst+=1   
-
-      print(self.table.itemAt(4, 4).text())
-      self.table.itemAt(4, 4).setBackground(QtGui.QColor("red"))
-      #self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
+      for i in range(len(pipeline_obj.pipeline)):
+         if(len(pipeline_obj.pipeline[i])!=0):
+            for j in range(len(pipeline_obj.pipeline[i])):
+               x =  QTableWidgetItem(str(pipeline_obj.pipeline[i][j]))
+               self.table.setItem(j+inst,i+1, x)
+               if(self.forwarding ==1 and j in gui_util_obj.data_hazards and gui_util_obj.data_hazards[j] == i):
+                  x.setBackground(QtGui.QColor("red"))
+            if( pipeline_obj.pipeline[i][0] == 'W'):
+               inst+=1   
+      
+      self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+      
    def step_code(self):
        if self.code_ended == 0:
            try:
