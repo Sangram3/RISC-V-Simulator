@@ -7,6 +7,7 @@ from mem import *
 from control import *
 from write_back import *
 from buffers import *
+from branch_table_buffer import *
 from Pipeline import *
 
 class Model_Unit:
