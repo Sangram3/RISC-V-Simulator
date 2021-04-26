@@ -57,10 +57,7 @@ class BTB():
     def ifPresent(self,PC):
         if str(PC) in self.table:
             return True
-        return False
-        # if(str(PC) in self.table.keys()):
-            # return True
-        # return False        
+        return False      
 
 # dic = BTB()
 # print(dic)
