@@ -21,7 +21,7 @@ class gui_util():
         self.buffers_pane = [] # antara done
         self.data_path_taken = [] # nupur{inst number:[EM,ME,ED]} 
         self.static_prediction = [] # antara done
-        
+        self.regs = []
         
         
 class PipeLine():
