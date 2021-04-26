@@ -1,7 +1,7 @@
 def Twos_to_dec(hex):
     return -(2**((len(hex)-2)*4) - int(hex, 16))
 
-def mem(mem_obj, reg_obj, buffers, index, pipeline_obj):   #data in hex with 0x 
+def mem_p(mem_obj, reg_obj, buffers, index, pipeline_obj):   #data in hex with 0x 
 
     buffers[3].RB = buffers[3].RY
 
