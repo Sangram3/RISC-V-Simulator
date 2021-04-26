@@ -14,9 +14,9 @@ from fetch import *
 from decode import *
 from execute import *
 from mem import *
-from control import *
 from write_back import *
 from RISCV_Sim import *
+from Pipeline import *
 
 class TabBar(QtWidgets.QTabBar):
     def __init__(self, colors, parent=None):
@@ -54,6 +54,13 @@ class Window(QtWidgets.QTabWidget):
       self.file_mc=""
       self.pipelined = 0
       self.forwarding = 0
+
+      self.all_pip_regs = 0
+      self.inst_pip_regs = 0
+      self.inst_num = 0
+
+      self.flowchartarr = [['F'], ['D','F'], ['E', 'D', 'F'], ['M', 'D', 'D'], ['W', 'D', 'D'], ['D', 'D'], ['E', 'E', 'F'], ['M', 'M', 'D', 'F'], ['W', 'W', 'E'], ['M'], ['W']]
+
       # set reset step dump ##################################################
       self.first_frame = {}
       self.run_btn = QPushButton('Run')
@@ -141,18 +148,29 @@ class Window(QtWidgets.QTabWidget):
                              )
       filebox.addWidget(btn)
       
-      self.cb_layout = QHBoxLayout()
+      knobs = QGroupBox("Knobs")
+      knobs.setStyleSheet("background-color: white; font-size: 20px; font-family: Consolas; color: Black;")
+      self.cb_layout = QVBoxLayout()
       pipelining_cb = QCheckBox("Pipelining", self)
       pipelining_cb.setStyleSheet("QCheckBox"
                                  "{"
-                                 "color: Black; font-size: 20px; font-family: Consolas; background-color:white;"
+                                 "color: Black; font-size: 20px; font-family: Consolas;"
+                                 "}")
+                                 
+      '''
+                                 "QCheckBox::indicator"
+                                 "{"
+                                 "background-color:white;"
                                  "}"
                                  )
+      '''
       pipelining_cb.stateChanged.connect(self.pipelining_ed)
       self.cb_layout.addWidget(pipelining_cb)
       
       filebox.addSpacerItem(QSpacerItem(400,10,QSizePolicy.Expanding))
-      filebox.addLayout(self.cb_layout)
+      
+      knobs.setLayout(self.cb_layout)
+      filebox.addWidget(knobs)
 
       filebox.addStretch(2)
       btn.clicked.connect(self.getfile)
@@ -210,7 +228,7 @@ class Window(QtWidgets.QTabWidget):
       lef_s.addLayout(self.run)
       layout.addStretch()
 
-      self.formLayout =QFormLayout()
+      self.formLayout = self.pane_type()
       groupBox = QGroupBox("     clk                                 PC                                              Machine Code                                                 Basic Code")
      
       groupBox.setLayout(self.formLayout)
@@ -259,17 +277,47 @@ class Window(QtWidgets.QTabWidget):
       compilerTab.setLayout(layout)
       return compilerTab
 
+   def pane_type(self):
+      if(self.pipelined == 0):
+         return QFormLayout()
+      else:
+         return QGridLayout()
+
+
    def pipelining_ed(self, state):
       if state == Qt.Checked:
          self.run.stretch(4)
          forwarding_cb = QCheckBox("Forwarding", self)
          forwarding_cb.setStyleSheet("QCheckBox"
                                  "{"
-                                 "color: Black; font-size: 20px; font-family: Consolas; background-color:white;"
+                                 "color: Black; font-size: 20px; font-family: Consolas;"
                                  "}"
                                  )
+
          forwarding_cb.stateChanged.connect(self.forwarding_ed)
          self.cb_layout.addWidget(forwarding_cb)
+         
+         print_reg_cb = QCheckBox("Print Register Values at the End of Each Cycle", self)
+         print_reg_cb.setStyleSheet("QCheckBox"
+                                 "{"
+                                 "color: Black; font-size: 20px; font-family: Consolas;"
+                                 "}"
+                                 )
+                                 
+         print_reg_cb.stateChanged.connect(self.print_reg_ed)
+         self.cb_layout.addWidget(print_reg_cb)
+         
+         print_pip_cb = QCheckBox("Print Pipeline Register Values", self)
+         print_pip_cb.setStyleSheet("QCheckBox"
+                                 "{"
+                                 "color: Black; font-size: 20px; font-family: Consolas;"
+                                 "}"
+                                 )
+                                 
+         print_pip_cb.stateChanged.connect(self.print_pip_ed)
+         self.cb_layout.addWidget(print_pip_cb)
+         
+         
          self.pipelined = 1
          if(self.run.count()>6):
             self.run.itemAt(2).widget().setHidden(True)
@@ -280,7 +328,15 @@ class Window(QtWidgets.QTabWidget):
          self.run.itemAt(2).widget().setHidden(False)
 
          if (self.cb_layout.count() > 1):
-            self.cb_layout.itemAt(self.cb_layout.count()-1).widget().deleteLater()
+            for i in range(self.cb_layout.count()-1):
+               i = self.cb_layout.count()-1-i
+               try:
+                  self.cb_layout.itemAt(i).widget().deleteLater()
+               except:
+                  self.cb_layout.itemAt(i).layout().deleteLater()
+               
+
+
 
    def forwarding_ed(self, state):
       if state == Qt.Checked:
@@ -288,6 +344,49 @@ class Window(QtWidgets.QTabWidget):
       else:
          self.forwarding = 0
 
+   def print_reg_ed(self, state):
+      pass
+
+   def print_pip_ed(self, state):
+      if(state == Qt.Checked and self.cb_layout.count()<6):
+         self.all_pip_regs=1
+         x=QHBoxLayout()
+         ec = QRadioButton("At the end of each Cycle")
+         x.addSpacerItem(QSpacerItem(20,10))
+         x.addWidget(ec)
+         ec.but = 0
+         ec.toggled.connect(self.onClicked)
+         
+         y=QHBoxLayout()
+         ci = QRadioButton("Certain Instruction's")
+         ci.but = 1
+         ci.toggled.connect(self.onClicked)
+         inst_no = QLineEdit()
+         inst_no.textChanged.connect(self.inst_num_changed)
+         y.addSpacerItem(QSpacerItem(20,10))
+         y.addWidget(ci)
+         y.addWidget(inst_no)
+
+         self.cb_layout.addLayout(x)
+         self.cb_layout.addLayout(y)
+         
+      else:
+         self.all_pip_regs = 0
+         self.cb_layout.itemAt(5).deleteLater()
+         self.cb_layout.itemAt(4).deleteLater()
+
+   def inst_num_changed(self, inst):
+      self.inst_num = inst
+      
+   def onClicked(self):
+        radioButton = self.sender()
+        if radioButton.isChecked():
+            if(radioButton.but == 0):
+               self.all_pip_regs = 1
+               self.inst_pip_regs = 0
+            else:
+               self.all_pip_regs = 0
+               self.inst_pip_regs = 1  
 
    def run_code(self):
        if(self.pipelined == 1 and self.tabs.count()==2):
@@ -295,27 +394,94 @@ class Window(QtWidgets.QTabWidget):
        elif(self.pipelined == 0 and self.tabs.count()==3):
            self.tabs.removeTab(self.tabs.count()-1)
            
+       if(self.pipelined == 0):  
+         if self.code_ended == 0:
+            self.code_ended = 1
+            self.is_step_first_time = 0
+            self.first_frame ,self.out_msg= run(self.out_msg)
+            #print(self.out_msg)
+            for key in self.first_frame:
+               self.merged.append(QLabel("{}                {}                         {}                         {}".format(self.first_frame[key][0],self.first_frame[key][1],self.first_frame[key][2],self.first_frame[key][3])))
+               self.formLayout.addRow(self.merged[-1])
+            self.memory = mem_mod.get_mem()
+            self.mem_pane_update()
+            self.register = reg_mod.get_regs()
+            self.reg_pane_update()
+            for i in range(len(self.out_msg)):
+               self.vb.addRow(QLabel(self.out_msg[i]))
+               if(self.out_msg[i][0][0]=="W"):
+                     self.vb.addRow(QLabel(" "))    
+            self.gB.setLayout(self.vb)
+            self.refresh_table()         
+         return 
+
+       elif(self.pipelined == 1):  
+         if self.code_ended == 0:
+            self.code_ended = 1
+            execute_cycle_util()
+            
+            self.memory = mem_mod.get_mem()
+            self.mem_pane_update()
+            self.register = reg_mod.get_regs()
+            self.reg_pane_update()
+
+            for i in range(self.formLayout.rowCount()):
+               for j in range(self.formLayout.columnCount()):
+                  self.formLayout.itemAt(i*self.formLayout.rowCount()+j).widget().deleteLater()
+            
+            row=0
+            if(self.all_pip_regs == 1):
+               buf_type = ["FD",'DE', 'EM', 'MW']
+               for i in range(len(gui_util_obj.buffers_pane)):
+                  x = QLabel("Cycle: "+ str(i+1))
+                  x.setStyleSheet("background-color: blue")
+                  print(self.formLayout)
+                  self.formLayout.addWidget(x)
+                  row+=1
+                  for j in range(len(gui_util_obj.buffers_pane[i])):
+                     y = QLabel(buf_type[j] +" Interstate Buffer")
+                     y.setStyleSheet("background-color: green")
+                     self.formLayout.addWidget(y)
+                     self.formLayout.addWidget(QLabel("Mneumonic: "+ str(gui_util_obj.buffers_pane[i][j].mne)))
+                     row+=1
+                     self.formLayout.addWidget(QLabel("rs1: "+ str(gui_util_obj.buffers_pane[i][j].rs1)))
+                     row+=1
+                     self.formLayout.addWidget(QLabel("rs2: "+ str(gui_util_obj.buffers_pane[i][j].rs2)))
+                     row+=1
+                     self.formLayout.addWidget(QLabel("rd: "+ str(gui_util_obj.buffers_pane[i][j].rd)))
+                     row+=1
+                        
+            elif(self.inst_pip_regs == 1):
+               buf_type = ["FD",'DE', 'EM', 'MW']
+               i = self.inst_num - 1
+               x = QLabel("Cycle: "+ str(i+1))
+               x.setStyleSheet("background-color: blue")
+               self.formLayout.addWidget(x)
+               row+=1
+               for j in range(len(gui_util_obj.buffers_pane[i])):
+                  y = QLabel(buf_type[j] +" Interstate Buffer")
+                  y.setStyleSheet("background-color: green")
+                  self.formLayout.addWidget(y)
+                  self.formLayout.addWidget(QLabel("Mneumonic: "+ str(gui_util_obj.buffers_pane[i][j].mne)))
+                  row+=1
+                  self.formLayout.addWidget(QLabel("rs1: "+str(gui_util_obj.buffers_pane[i][j].rs1)))
+                  row+=1
+                  self.formLayout.addWidget(QLabel("rs2: "+str(gui_util_obj.buffers_pane[i][j].rs2)))
+                  row+=1
+                  self.formLayout.addWidget(QLabel("rd: "+str(gui_util_obj.buffers_pane[i][j].rd)))
+                  row+=1
+                  self.formLayout.addWidget(QLabel())
          
-       if self.code_ended == 0:
-           self.code_ended = 1
-           self.is_step_first_time = 0
-           self.first_frame ,self.out_msg= run(self.out_msg)
-           #print(self.out_msg)
-           for key in self.first_frame:
-              self.merged.append(QLabel("{}                {}                         {}                         {}".format(self.first_frame[key][0],self.first_frame[key][1],self.first_frame[key][2],self.first_frame[key][3])))
-              self.formLayout.addRow(self.merged[-1])
-           self.memory = mem_mod.get_mem()
-           self.mem_pane_update()
-           self.register = reg_mod.get_regs()
-           self.reg_pane_update()
-           for i in range(len(self.out_msg)):
-              self.vb.addRow(QLabel(self.out_msg[i]))
-              if(self.out_msg[i][0][0]=="W"):
-                  self.vb.addRow(QLabel(" "))    
-           self.gB.setLayout(self.vb)
-           self.refresh_table()         
-       return 
-       
+            
+
+
+
+
+
+
+         return 
+
+
    def FlowChartTabUI(self):
       ui = QWidget()
       win = QVBoxLayout()
@@ -341,16 +507,29 @@ class Window(QtWidgets.QTabWidget):
       return ui
 
    def refresh_table(self):
-      print(len(self.first_frame))
       count_i = 0
-      self.table.setColumnCount(5)
+      self.table.setColumnCount(len(self.flowchartarr)+1)
       self.table.setRowCount(len(self.first_frame))
       for i in self.first_frame:
          self.table.setItem(count_i,0, QTableWidgetItem(str(self.first_frame[i][3])))
          count_i+=1
       
+      
       self.table.horizontalHeader().setVisible(False)
       self.table.verticalHeader().setVisible(False)
+
+      inst = 0
+      for i in range(len(self.flowchartarr)):
+         for j in range(len(self.flowchartarr[i])):
+            x =  QTableWidgetItem(str(self.flowchartarr[i][j]))
+            self.table.setItem(j+inst,i+1, x)
+            if(i==3 and j ==2):
+               x.setBackground(QtGui.QColor("red"))
+         if(self.flowchartarr[i][0] == 'W'):
+            inst+=1   
+
+      print(self.table.itemAt(4, 4).text())
+      self.table.itemAt(4, 4).setBackground(QtGui.QColor("red"))
       #self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
    def step_code(self):
@@ -403,6 +582,7 @@ class Window(QtWidgets.QTabWidget):
        for i in range(self.formLayout.count()):
             self.formLayout.itemAt(0).widget().close()
             self.formLayout.takeAt(0)
+
    def dump_code(self):
        path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
 							"MC documents (*.mc)")
