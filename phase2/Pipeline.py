@@ -19,7 +19,7 @@ class gui_util():
         self.matrix = [] # sangram  done
         self.left_pane = [] # sangram [ basic_codes ]
         self.buffers_pane = [] # antara done
-        self.data_path_taken = [] # nupur [ cycle,[paths]]
+        self.data_path_taken = [] # nupur[ [ cycle,EM,ME,DE ] []  []  []  ] 
         self.static_prediction = [] # antara done
         
         
