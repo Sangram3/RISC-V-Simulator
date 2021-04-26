@@ -144,7 +144,7 @@ def execute_p(registers, pipeline_obj,buffers,index, gui_util_obj):
         
         
         if inst == 'jalr': # jalr
-            ry = registers_p.get_PC()
+            ry = registers.get_PC()
             l.append("EXECUTE: ADD " + str(rs1) + " and " + str(imm)  + " to calculate the effective PC.")
 
         if ( ry != None and (ry>2147483647 or ry<-2147483648)):
@@ -154,8 +154,8 @@ def execute_p(registers, pipeline_obj,buffers,index, gui_util_obj):
     
     elif fmt == 3: # S : sb, sw, sh
         imm = bin_to_dec(imm)
-        l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers_p.get_rs1()) + ", destination register x" + str(registers_p.get_rd()) + ", immediate value is " + str(imm)) 
-        l.append("DECODE: Read registers x" + str(registers_p.get_rs1()) + " = " + str(rs1) + " x" + str(registers_p.get_rd()) + " = " + str(rd))
+        l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers.get_rs1()) + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm)) 
+        l.append("DECODE: Read registers x" + str(registers.get_rs1()) + " = " + str(rs1) + " x" + str(registers.get_rd()) + " = " + str(rd))
 
         if imm<0:
             imm//=2
@@ -168,8 +168,8 @@ def execute_p(registers, pipeline_obj,buffers,index, gui_util_obj):
 
     elif fmt == 4: # SB : beq, bne, bge, blt 
         imm = bin_to_dec(imm)*2
-        l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers_p.get_rs1()) + ", second operand x" + str(registers_p.get_rs2()) + ", immediate value is " + str(imm)) 
-        l.append("DECODE: Read registers x" + str(registers_p.get_rs1()) + " = " + str(rs1) + " x" + str(registers_p.get_rs2()) + " = " + str(rs2))
+        l.append("DECODE: Operation is " + inst.upper() + ", first operand x" + str(registers.get_rs1()) + ", second operand x" + str(registers.get_rs2()) + ", immediate value is " + str(imm)) 
+        l.append("DECODE: Read registers x" + str(registers.get_rs1()) + " = " + str(rs1) + " x" + str(registers.get_rs2()) + " = " + str(rs2))
         
         if imm<0:
             imm//=2
@@ -195,7 +195,7 @@ def execute_p(registers, pipeline_obj,buffers,index, gui_util_obj):
                 
     elif fmt == 5: # U : auipc, lui
         imm = bin_to_dec(imm)
-        l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + str(registers_p.get_rd()) + ", immediate value is " + str(imm))
+        l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm))
         if imm<-524288  or imm>524287: 
             raise ValueError("Immidiate {} out of range immidiate should be between -524288-524287".format(imm))
             return
@@ -205,12 +205,12 @@ def execute_p(registers, pipeline_obj,buffers,index, gui_util_obj):
         if(inst == 'auipc'):
             ry = imm*4096
             ry = buffers[1].PC+ry
-            l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits and add with PC = " + str(hex(registers_p.get_PC())))
+            l.append("EXECUTE: Shift left " + str(imm) + " by 12 bits and add with PC = " + str(hex(registers.get_PC())))
         # print(ry)
     elif fmt == 6: #UJ : jal
         imm = bin_to_dec(imm)
         imm=imm*2   #omit imm[0]
-        l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + str(registers_p.get_rd()) + ", immediate value is " + str(imm))
+        l.append("DECODE: Operation is " + inst.upper() + ", destination register x" + str(registers.get_rd()) + ", immediate value is " + str(imm))
         if imm<-1048576  or imm>1048574: 
             raise ValueError("Immidiate {} out of range immidiate should be between -1048576-1048574".format(imm))
             return
