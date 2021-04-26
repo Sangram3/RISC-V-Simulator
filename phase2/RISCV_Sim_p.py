@@ -1,10 +1,10 @@
-from memory import *
-from registers import *
-from fetch import *
-from decode import *
-from execute import *
-from mem import *
-from write_back import *
+from memory_p import *
+from registers_p import *
+from fetch_p import *
+from decode_p import *
+from execute_p import *
+from mem_p import *
+from write_back_p import *
 from buffers import *
 from branch_table_buffer import *
 from Pipeline import *
@@ -52,8 +52,8 @@ def basic_code(dec_out, reg, mem):
     return code
 
 mc_file = "temp.mc"
-mem_mod = memory(mc_file)
-reg_mod = registers()
+mem_mod = memory_p(mc_file)
+reg_mod = registers_p()
 
 
 def run(li):  
@@ -61,7 +61,7 @@ def run(li):
     global l 
     l=[]
     while(1):
-        fetch(mem_mod,  reg_mod, l)
+        fetch_p(mem_mod,  reg_mod, l)
         if(reg_mod.get_IR() == '0xEF000011'):
             # mem_mod.code_ends('output.mc')
             break
@@ -70,7 +70,7 @@ def run(li):
         control_bits = control(return_of_decode)
         return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod, l)
         if(control_bits[1] != 0):
-            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
+            return_of_mem = mem_p(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
         elif(control_bits[1]==0):
             l.append("MEMORY : No memory operation ")
 
@@ -78,7 +78,7 @@ def run(li):
             write_back(control_bits[0],  reg_mod, return_of_mem, l)
         
         else:
-            write_back(control_bits[0],  reg_mod, return_of_execute, l)
+            write_back_p(control_bits[0],  reg_mod, return_of_execute, l)
         reg_mod.add_clock()
         d[reg_mod.get_clock()] = [hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)]
     li=l
@@ -87,25 +87,25 @@ def run(li):
 def step(ll):  
     
     l = []
-    fetch(mem_mod,  reg_mod, l)
+    fetch_p(mem_mod,  reg_mod, l)
     if(reg_mod.get_IR() == '0xEF000011'):
         # mem_mod.code_ends('output.mc')
         return
     else:
         ins = reg_mod.get_IR()
-        return_of_decode = list(decode(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
+        return_of_decode = list(decode_p(bin32(int( reg_mod.get_IR(),16)) ,  mem_mod,  reg_mod))
         control_bits = control(return_of_decode)
-        return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod,l)
+        return_of_execute = execute_p(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod,l)
         if(control_bits[1] != 0):
-            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
+            return_of_mem = mem_p(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l)
         elif(control_bits[1] == 0):
             l.append("MEMORY: No memory operation")
 
         if(return_of_decode[1] == 'lw' or return_of_decode[1] == 'lh' or return_of_decode[1] == 'lb'):
-            write_back(control_bits[0],  reg_mod, return_of_mem,l)
+            write_back_p(control_bits[0],  reg_mod, return_of_mem,l)
         
         else:
-            write_back(control_bits[0],  reg_mod, return_of_execute,l)
+            write_back_p(control_bits[0],  reg_mod, return_of_execute,l)
         reg_mod.add_clock()
         #print(l)
         ll=l
