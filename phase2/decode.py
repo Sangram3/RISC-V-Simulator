@@ -129,6 +129,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
         if(func3 == '110' and func7 == '0000001'):
             mneumonic = 'rem'
 
+    
     ins = mneumonic
     
     op = int(op, base=2)
@@ -340,7 +341,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
         # here code to check for data_hazard using HDU unit
         # if there is data hazard then:
         if(xvar == 0):
-            HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d)
+            HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d, pipeline_obj)
             #print(pipeline_obj.forw_d)
             if (pipeline_obj.forw_d["ME"][0] == 1):
                 data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
@@ -401,11 +402,13 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
          # guaranteed wrong instructions are fetched-> we need to flush
             
                         btb.newKey(PC,registers.get_PC(),0)
+                        pipeline_obj.npred = pipeline_obj.npred+1
                         pipeline_obj.flush()
                     else:
                         if btb.prediction(PC) == False:
                     # again this PC was present but
                     # prediction made by BTB was wrong so need to flush
+                            pipeline_obj.npred = pipeline_obj.npred+1
                             pipeline_obj.flush()
                             registers.update_PC(btb.getTarget(PC))
                     
@@ -417,6 +420,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
                      else:
                          if btb.prediction(PC) == True:
                          # again this PC was present but prediction made by BTB was wrong so need to flush
+                             pipeline_obj.npred = pipeline_obj.npred+1
                              pipeline_obj.flush()
                         
                         
@@ -427,6 +431,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
             if btb.ifPresent(PC) == False:
                 btb.newKey(PC,registers.get_PC(),1)
                 # as always wrong PC is fetched in the subsequent cycles need to flush
+                pipeline_obj.npred = pipeline_obj.npred+1
                 pipeline_obj.flush()  
             else:
                 # if it is already present in the BTB accurate
@@ -442,6 +447,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
             
             if btb.ifPresent(PC) == False:
                 btb.newKey(PC, registers.get_PC() ,1)
+                pipeline_obj.npred = pipeline_obj.npred+1
                 pipeline_obj.flush()
                 
             else:
