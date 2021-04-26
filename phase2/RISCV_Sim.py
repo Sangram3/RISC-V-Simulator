@@ -4,7 +4,6 @@ from fetch import *
 from decode import *
 from execute import *
 from mem import *
-from control import *
 from write_back import *
 from buffers import *
 from branch_table_buffer import *
