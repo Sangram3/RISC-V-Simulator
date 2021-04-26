@@ -344,6 +344,13 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
         if(xvar == 0):
             HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d, pipeline_obj)
             #print(pipeline_obj.forw_d)
+            temp = []
+            temp.append(pipeline_obj.cycle)
+            for k,v in pipeline_obj.forw_d.items():
+                if v[0] == 1:
+                    temp.append(k)
+            gui_util_obj.data_path_taken.append(temp)
+                                                
             if (pipeline_obj.forw_d["ME"][0] == 1):
                 data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
                 pipeline_obj.forw_d["ME"][0] = 0
