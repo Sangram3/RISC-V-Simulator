@@ -165,6 +165,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
         dh = pipeline_obj.check_data_hazard(rs1,rs2)
         # print(rs1,rs2," rs1 rs2")
         if dh == 1:
+            gui_util.data_hazard.update({[index,pipeline_obj.cycle] :1  })
             # print(pipeline_obj.master_store)
             pipeline_obj.call_stalling(index) # index is the at what index this instruction is present in the cycle
                                               # like ["E" ,"D" ] index of decode in this case is 1
