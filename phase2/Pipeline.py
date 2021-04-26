@@ -130,7 +130,7 @@ class PipeLine():
 pipeline_obj = PipeLine()
 # pipeline_obj.data_forwarding_knob = 0
 mc_file = "test.mc"
-mem_mod = memory_p(mc_file)
+mem_mod = memory(mc_file)
 reg_mod = registers_p()
 buffers = [InterStateBuffer() for i in range(4)]
 btb = BTB()
