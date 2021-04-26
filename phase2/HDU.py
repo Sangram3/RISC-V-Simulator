@@ -112,8 +112,8 @@ def check_control_hazard(buffers, prevInsList, d):
                 d["MD"] = [0,0]
             if(this[3] != 0 and prevInsList[-3][4] == this[3]): #rs2 same            
                 d["MDS"] = [1,3]
-                if(d["MD"][0] ==1): #bec this would have already been written back
-                    d["MD"] = [0,0]
+                # // if(d["MD"][0] ==1): #bec this would have already been written back
+                # //     d["MD"] = [0,0]
         elif(this[3] != 0 and prevInsList[-3][4] == this[3]): #rs2 same            
             d["MDS"] = [1,2]
             if(d["MD"][0] ==1): #bec this would have already been written back
@@ -124,24 +124,21 @@ def check_control_hazard(buffers, prevInsList, d):
         if(this[2] != 0 and prevInsList[-2][4] == this[2]): #rs1 same
             d["EDS"] = [1,1]
             if(d["MD"][0] == 1):
-                d["MD"][0] = 0
-                d["MD"][1] = None
+                d["MD"] = [0,0]
             if(d["ED"][0] == 1):
                 d["MD"] = d["ED"]
                 d["ED"] = [0,0] 
             if(this[3] != 0 and prevInsList[-2][4] == this[3]): #rs2 same            
                 d["EDS"] = [1,3]
-                if(d["MD"][0] == 1):
-                    d["MD"][0] = 0
-                    d["MD"][1] = None
-                if(d["ED"][0] == 1):
-                    d["MD"] = d["ED"]
-                    d["ED"] = [0,0]   
+                # // if(d["MD"][0] == 1):
+                # //     d["MD"] = [0,0]
+                # // if(d["ED"][0] == 1):
+                # //     d["MD"] = d["ED"]
+                # //     d["ED"] = [0,0]   
         elif(this[3] != 0 and prevInsList[-2][4] == this[3]): #rs2 same            
             d["EDS"] = [1,2]
             if(d["MD"][0] == 1):
-                d["MD"][0] = 0
-                d["MD"][1] = None
+                d["MD"] = [0,0]
             if(d["ED"][0] == 1):
                 d["MD"] = d["ED"]
                 d["ED"] = [0,0] 
