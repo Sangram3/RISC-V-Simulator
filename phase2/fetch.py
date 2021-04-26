@@ -15,11 +15,11 @@ def fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj):
         else:
             if btb.prediction(PC) == True:
                 # print(PC,"friends")
-		gui_util_obj.static_prediction.append( [pipeline_obj.cycle,PC,"True"])
+                gui_util_obj.static_prediction.append( [pipeline_obj.cycle,PC,"True"])
                 reg_mod.update_PC(btb.getTarget(PC) )
                 # print(reg_mod.get_PC())
             else:
-		gui_util_obj.static_prediction.append( [pipeline_obj.cycle,PC,"False"])
+                gui_util_obj.static_prediction.append( [pipeline_obj.cycle,PC,"False"])
                 reg_mod.add_PC(4)
                 
     else:
