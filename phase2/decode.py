@@ -308,12 +308,14 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
             data_forw(5, pipeline_obj.forw_d["MDSS"][1], buffers)
             pipeline_obj.forw_d["MDSS"][0] = 0
             pipeline_obj.forw_d["MDSS"][1] = None
+            pipeline_obj.disable_PC = 0
             xvar = 1
 
         if(pipeline_obj.forw_d["MDS"][0] == 1 ):
             data_forw(5, pipeline_obj.forw_d["MDS"][1], buffers)
             pipeline_obj.forw_d["MDS"][0] = 0
             pipeline_obj.forw_d["MDS"][1] = None
+            pipeline_obj.disable_PC = 0
             xvar = 1
 
         if(pipeline_obj.forw_d["EDS"][0] == 1):
@@ -324,12 +326,14 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
             data_forw(4, pipeline_obj.forw_d["EDS"][1], buffers)
             pipeline_obj.forw_d["EDS"][0] = 0
             pipeline_obj.forw_d["EDS"][1] = None
+            pipeline_obj.disable_PC = 0
             xvar = 1
 
         if(pipeline_obj.forw_d["MES"][0] == 1):
             data_forw(2, pipeline_obj.forw_d["MES"][1], buffers)
             pipeline_obj.forw_d["MES"][0] = 0
             pipeline_obj.forw_d["MES"][1] = None
+            pipeline_obj.disable_PC = 0
             pipeline_obj.pipeline[pipeline_obj.cycle+1].insert(index,"E")
             return
         
@@ -337,6 +341,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
         # if there is data hazard then:
         if(xvar == 0):
             HDU(buffers, 1, pipeline_obj.prevInsList, pipeline_obj.forw_d)
+            #print(pipeline_obj.forw_d)
             if (pipeline_obj.forw_d["ME"][0] == 1):
                 data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
                 pipeline_obj.forw_d["ME"][0] = 0
