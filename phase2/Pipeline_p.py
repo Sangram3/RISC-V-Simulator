@@ -1,10 +1,10 @@
-from memory import *
-from registers import *
-from fetch import *
-from decode import *
-from execute import *
-from mem import *
-from write_back import *
+from memory_p import *
+from registers_p import *
+from fetch_p import *
+from decode_p import *
+from execute_p import *
+from mem_p import *
+from write_back_p import *
 from buffers import *
 from branch_table_buffer import *
 import sys
@@ -130,8 +130,8 @@ class PipeLine():
 pipeline_obj = PipeLine()
 # pipeline_obj.data_forwarding_knob = 0
 mc_file = "test.mc"
-mem_mod = memory(mc_file)
-reg_mod = registers()
+mem_mod = memory_p(mc_file)
+reg_mod = registers_p()
 buffers = [InterStateBuffer() for i in range(4)]
 btb = BTB()
 #global_buffers = []
@@ -155,19 +155,19 @@ def execute_cycle():
 
     for index in range(len(pipeline_obj.pipeline[pipeline_obj.cycle])):
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'D':
-            decode(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb, gui_util_obj)
+            decode_p(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb, gui_util_obj)
                 
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'F':
-            fetch(reg_mod, mem_mod, btb, buffers, index, pipeline_obj)
+            fetch_p(reg_mod, mem_mod, btb, buffers, index, pipeline_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'E':
-            execute(reg_mod, pipeline_obj, buffers,index, gui_util_obj )
+            execute_p(reg_mod, pipeline_obj, buffers,index, gui_util_obj )
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
-            mem(mem_mod, reg_mod, buffers, index, pipeline_obj)
+            mem_p(mem_mod, reg_mod, buffers, index, pipeline_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
-            write_back(reg_mod, buffers, pipeline_obj)
+            write_back_p(reg_mod, buffers, pipeline_obj)
                 
     if pipeline_obj.to_stall == 0 and pipeline_obj.finish == 0 and pipeline_obj.disable_PC == 0:
         pipeline_obj.pipeline[pipeline_obj.cycle+1].append("F")
