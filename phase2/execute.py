@@ -45,7 +45,7 @@ def execute(registers, pipeline_obj,buffers,index, gui_util_obj):
         rs2 = buffers[1].operand2
         rd =  buffers[1].rd
         imm = buffers[1].imm
-        gui_util_obj.basic_codes.append(create_basic_code(fmt, inst, rs1, rs2, imm, rd))    
+        gui_util_obj.left_pane.append(create_basic_code(fmt, inst, rs1, rs2, imm, rd))    
         
     except:
         pass
