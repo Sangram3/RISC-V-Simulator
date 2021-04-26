@@ -52,7 +52,7 @@ def basic_code(dec_out, reg, mem):
     return code
 
 mc_file = "temp.mc"
-mem_mod = memory_p(mc_file)
+mem_mod = memory(mc_file)
 reg_mod = registers_p()
 
 
