@@ -175,6 +175,7 @@ def execute_cycle():
 
 
 execute_cycle_util()
+gui_util_obj.regs = reg_mod.get_regs()
 print(reg_mod.get_regs())
 print(mem_mod.print_mem())
 print(btb.btb)
