@@ -353,7 +353,7 @@ def decode(memory, registers ,pipeline_obj ,buffers , index, btb):
             else:
                 gui_util_obj.data_path_taken[pipeline_obj.n_inst-1] = -1
             if(len(temp) > 0):
-                gui_util.data_hazard.update({[index,pipeline_obj.cycle] :1  })
+                gui_util_obj.data_hazard.update({[index,pipeline_obj.cycle] :1  })
                                                 
             if (pipeline_obj.forw_d["ME"][0] == 1):
                 data_forw(2, pipeline_obj.forw_d["ME"][1], buffers)
