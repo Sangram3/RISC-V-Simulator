@@ -6,6 +6,7 @@ from execute import *
 from mem import *
 from write_back import *
 from buffers import *
+from branch_table_buffer import *
 import sys
 
 if not sys.warnoptions:
