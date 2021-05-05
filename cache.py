@@ -41,7 +41,7 @@ class cache:
     def read(self, address, mem_mod):
         self.accesses+=1
         tag, index, bo = self.decode_address(address)
-        print(tag, index, bo)
+        # print(tag, index, bo)
         hit, way_no = self.hit_miss(tag, index)
         if(hit):
             self.hit+=1
@@ -51,7 +51,7 @@ class cache:
             self.miss+=1
             data = []
             for i in range(self.words_per_block):
-                print("address ", int(address,16))
+                # print("address ", int(address,16))
                 temp = mem_mod.lw(int(address,16)+4*i)
                 data.append(temp)
             # data = mem_mod.lw(int(address,16))
@@ -65,7 +65,7 @@ class cache:
                 return True, i
             
         return False, 0
-
+    #this is for block replacement policy that is write from the memory to the cache
     def write(self, address, data, mem_mod):
         self.accesses+=1
         tag, index, bo = self.decode_address(address)
@@ -75,8 +75,9 @@ class cache:
                 self.cache_array[index][_way][1] = 1
                 self.cache_array[index][_way][2] = data
                 self.set_pref(index, _way)
-                for i in range(self.words_per_block):
-                    mem_mod.sw(int(address,16)+4*i, data[i])
+                # print("data: ", data)
+                # for i in range(self.words_per_block):
+                #     mem_mod.sw(int(address,16)+4*i, data[i])
                 # mem_mod.sw(int(address,16), data)
                 return
 
@@ -85,8 +86,9 @@ class cache:
         self.cache_array[index][_way][1] = 1
         self.cache_array[index][_way][2] = data
         self.set_pref(index, _way)
-        for i in range(self.words_per_block):
-            mem_mod.sw(int(address,16)+4*i, data[i])
+        # print("data: ", data)
+        # for i in range(self.words_per_block):
+        #     mem_mod.sw(int(address,16)+4*i, data[i])
         return
 
     def set_pref(self, index, way_no):
@@ -100,6 +102,21 @@ class cache:
     def print_cache(self):
         for i in range(self.set_count):
             print(self.cache_array[i])
+
+    #Storedata is used in the write through policy to write in the cache if the block containing that data is present 
+
+    def storedata(self, address, data): #data is a word
+        tag, index, bo = self.decode_address(address)
+        h, ind = self.hit_miss(tag, index)
+        if(h == True):
+            # for i in range(len(self.cache_array[index])):
+            for _way in range(len(self.cache_array[index])):
+                if(self.cache_array[index][_way][0] == tag):
+                    if(len(data) != 10):
+                        data = "0x"+ ('0'*(10-len(data))) + data[2:]
+                    self.cache_array[index][_way][2][int(bo/4)] = data
+                    return
+        return
     
 
 
