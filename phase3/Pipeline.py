@@ -129,14 +129,19 @@ class PipeLine():
         return 0 # no data hazard case
 
 pipeline_obj = PipeLine()
-cache_size = 1024*int(input("Enter cache size in kilobytes: "))
+dcache_size = 1024*int(input("Enter cache size for data cache in kilobytes: "))
 #cache_size = int(input("Enter cache size in kilobytes: "))
-block_size = int(input("Enter block size in bytes: "))
-ways = int(input("Enter number of ways for SA: "))
+dblock_size = int(input("Enter block size for data cache in bytes: "))
+dways = int(input("Enter number of ways for SA for data cache: "))
+icache_size = 1024*int(input("Enter cache size for instruction cache in kilobytes: "))
+#cache_size = int(input("Enter cache size in kilobytes: "))
+iblock_size = int(input("Enter block size for instruction cache in bytes: "))
+iways = int(input("Enter number of ways for SA for instruction cache: "))
 # pipeline_obj.data_forwarding_knob = 0
 mc_file = "test.mc"
 mem_mod = memory(mc_file)
-cache_ob = cache(cache_size, block_size, ways)
+dcache_ob = cache(dcache_size, dblock_size, dways)
+icache_ob = cache(icache_size, iblock_size, iways)
 reg_mod = registers_p()
 buffers = [InterStateBuffer() for i in range(4)]
 btb = BTB()
@@ -164,14 +169,14 @@ def execute_cycle():
             decode_p(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb, gui_util_obj)
                 
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'F':
-            fetch_p(reg_mod, mem_mod, btb, buffers, index, pipeline_obj, cache_ob, gui_util_obj)
-            #cache_ob.print_cache()
+            fetch_p(reg_mod, mem_mod, btb, buffers, index, pipeline_obj, icache_ob, gui_util_obj)
+        
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'E':
             execute_p(reg_mod, pipeline_obj, buffers,index, gui_util_obj )
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
-            mem_p(mem_mod, reg_mod, buffers, index, pipeline_obj, cache_ob)
+            mem_p(mem_mod, reg_mod, buffers, index, pipeline_obj, dcache_ob)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
             write_back_p(reg_mod, buffers, pipeline_obj)
@@ -183,6 +188,8 @@ def execute_cycle():
 
 execute_cycle_util()
 gui_util_obj.regs = reg_mod.get_regs()
+dcache_ob.print_cache()
+icache_ob.print_cache()
 print(reg_mod.get_regs())
 print(mem_mod.print_mem())
 print(btb.btb)
