@@ -96,6 +96,7 @@ def run(li):
         reg_mod.add_clock()
         d[reg_mod.get_clock()] = [hex(reg_mod.get_clock()-1), hex(reg_mod.get_PC()-4) ,ins ,basic_code(return_of_decode, reg_mod, mem_mod)]
     li=l
+    gui_util_obj_new.task4 = [dcache_ob.memory_accesses+icache_ob.memory_accesses, dcache_ob.cache_accesses+icache_ob.cache_accesses, dcache_ob.cache_hit+icache_ob.cache_hit, dcache_ob.cache_miss+icache_ob.cache_miss]
     return [d,li]
 
 def step(ll):  
@@ -104,6 +105,7 @@ def step(ll):
     fetch(mem_mod,  reg_mod, l, icache_ob, gui_util_obj_new)
     if(reg_mod.get_IR() == '0xEF000011'):
         # mem_mod.code_ends('output.mc')
+        gui_util_obj_new.task4 = [dcache_ob.memory_accesses+icache_ob.memory_accesses, dcache_ob.cache_accesses+icache_ob.cache_accesses, dcache_ob.cache_hit+icache_ob.cache_hit, dcache_ob.cache_miss+icache_ob.cache_miss]
         return
     else:
         ins = reg_mod.get_IR()
