@@ -303,7 +303,7 @@ class Window(QtWidgets.QTabWidget):
              # "Task1": QtGui.QColor("brown"),
              "SET": QtGui.QColor("brown"),
              "VB": QtGui.QColor("brown"),
-             # "Task4": QtGui.QColor("brown"),
+             "Task4": QtGui.QColor("brown"),
          }
       Tabs.setTabBar(TabBar(D))
       Tabs.addTab(self.MemoryTabUI(), "Memory")
