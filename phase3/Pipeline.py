@@ -8,6 +8,7 @@ from write_back_p import *
 from buffers import *
 from branch_table_buffer import *
 from cache import *
+from inputt import *
 import sys
 
 if not sys.warnoptions:
@@ -130,30 +131,16 @@ class PipeLine():
               if self.master_store[name_rs2] >= self.cycle:
                   return 1
         return 0 # no data hazard case
-
+    
 pipeline_obj = PipeLine()
-dcache_size = 1024*int(input("Enter cache size for data cache in kilobytes: "))
-#cache_size = int(input("Enter cache size in kilobytes: "))
-dblock_size = int(input("Enter block size for data cache in bytes: "))
-dways = int(input("Enter number of ways for SA for data cache: "))
-icache_size = 1024*int(input("Enter cache size for instruction cache in kilobytes: "))
-#cache_size = int(input("Enter cache size in kilobytes: "))
-iblock_size = int(input("Enter block size for instruction cache in bytes: "))
-iways = int(input("Enter number of ways for SA for instruction cache: "))
-# pipeline_obj.data_forwarding_knob = 0
-mc_file = "test.mc"
-mem_mod = memory(mc_file)
-dcache_ob = cache(dcache_size, dblock_size, dways)
-icache_ob = cache(icache_size, iblock_size, iways)
-reg_mod = registers_p()
+
+reg_mod_p = registers_p()
+
 buffers = [InterStateBuffer() for i in range(4)]
+
 btb = BTB()
-#global_buffers = []
 
 gui_util_obj = gui_util()
-
-
-#pipe = [  [ "Fetch"] ["Fetch" , "Decode" ] [ "Fetch", "Decode" , "Execute"]       ]
 
 def execute_cycle_util():
     
@@ -161,7 +148,7 @@ def execute_cycle_util():
         execute_cycle()
         gui_util_obj.buffers_pane.append(buffers[:])
     gui_util_obj.matrix = pipeline_obj.pipeline
-
+    gui_util_obj.regs = reg_mod_p.get_regs()
     gui_util_obj.task4 = [dcache_ob.memory_accesses+icache_ob.memory_accesses, dcache_ob.cache_accesses+icache_ob.cache_accesses, dcache_ob.cache_hit+icache_ob.cache_hit, dcache_ob.cache_miss+icache_ob.cache_miss]
 
 def execute_cycle():
@@ -172,34 +159,33 @@ def execute_cycle():
 
     for index in range(len(pipeline_obj.pipeline[pipeline_obj.cycle])):
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'D':
-            decode_p(mem_mod, reg_mod ,pipeline_obj ,buffers , index, btb, gui_util_obj)
+            decode_p(mem_mod, reg_mod_p ,pipeline_obj ,buffers , index, btb, gui_util_obj)
                 
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'F':
-            fetch_p(reg_mod, mem_mod, btb, buffers, index, pipeline_obj, icache_ob, gui_util_obj)
+            fetch_p(reg_mod_p, mem_mod, btb, buffers, index, pipeline_obj, icache_ob, gui_util_obj)
         
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'E':
-            execute_p(reg_mod, pipeline_obj, buffers,index, gui_util_obj )
+            execute_p(reg_mod_p, pipeline_obj, buffers,index, gui_util_obj )
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
-            mem_p(mem_mod, reg_mod, buffers, index, pipeline_obj, dcache_ob, gui_util_obj)
+            mem_p(mem_mod, reg_mod_p, buffers, index, pipeline_obj, dcache_ob, gui_util_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
-            write_back_p(reg_mod, buffers, pipeline_obj)
+            write_back_p(reg_mod_p, buffers, pipeline_obj)
                 
     if pipeline_obj.to_stall == 0 and pipeline_obj.finish == 0 and pipeline_obj.disable_PC == 0:
         pipeline_obj.pipeline[pipeline_obj.cycle+1].append("F")
     pipeline_obj.cycle+=1
 
 
-execute_cycle_util()
-gui_util_obj.regs = reg_mod.get_regs()
+# execute_cycle_util()
 # dcache_ob.print_cache()
 # icache_ob.print_cache()
-print(reg_mod.get_regs())
-print(mem_mod.print_mem())
-print(btb.btb)
-print(pipeline_obj.code_ends())
-print("task2: ",gui_util_obj.task2)
-print("task3: ",gui_util_obj.task3)
-print("task4: ",gui_util_obj.task4)
+# print(reg_mod_p.get_regs())
+# print(mem_mod.print_mem())
+# print(btb.btb)
+# print(pipeline_obj.code_ends())
+# print("task2: ",gui_util_obj.task2)
+# print("task3: ",gui_util_obj.task3)
+# print("task4: ",gui_util_obj.task4)
