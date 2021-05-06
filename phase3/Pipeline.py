@@ -16,13 +16,16 @@ if not sys.warnoptions:
     
 class gui_util():
     def __init__(self):
-        self.data_hazards = {} # sangram [index,cycle] 
-        self.matrix = [] # sangram  done
-        self.left_pane = [] # sangram [ basic_codes ]
-        self.buffers_pane = [] # antara done
-        self.data_path_taken = {} # nupur{inst number:[EM,ME,ED]} 
-        self.static_prediction = [] # antara done
+        self.data_hazards = {}
+        self.matrix = []
+        self.left_pane = []
+        self.buffers_pane = []
+        self.data_path_taken = {}
+        self.static_prediction = []
         self.regs = []
+        self.task2 = []
+        self.task3 = []
+        self.task4 = []
         
         
 class PipeLine():
@@ -157,7 +160,10 @@ def execute_cycle_util():
     while (pipeline_obj.pipeline[pipeline_obj.cycle] != []):
         execute_cycle()
         gui_util_obj.buffers_pane.append(buffers[:])
-    gui_util.matrix = pipeline_obj.pipeline
+    gui_util_obj.matrix = pipeline_obj.pipeline
+
+    gui_util_obj.task4 = [dcache_ob.memory_accesses+icache_ob.memory_accesses, dcache_ob.cache_accesses+icache_ob.cache_accesses, dcache_ob.cache_hit+icache_ob.cache_hit, dcache_ob.cache_miss+icache_ob.cache_miss]
+
 def execute_cycle():
     global pipeline_obj
 
@@ -176,7 +182,7 @@ def execute_cycle():
             execute_p(reg_mod, pipeline_obj, buffers,index, gui_util_obj )
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'M':
-            mem_p(mem_mod, reg_mod, buffers, index, pipeline_obj, dcache_ob)
+            mem_p(mem_mod, reg_mod, buffers, index, pipeline_obj, dcache_ob, gui_util_obj)
             
         if pipeline_obj.pipeline[pipeline_obj.cycle][index] == 'W':
             write_back_p(reg_mod, buffers, pipeline_obj)
@@ -188,9 +194,12 @@ def execute_cycle():
 
 execute_cycle_util()
 gui_util_obj.regs = reg_mod.get_regs()
-dcache_ob.print_cache()
-icache_ob.print_cache()
+# dcache_ob.print_cache()
+# icache_ob.print_cache()
 print(reg_mod.get_regs())
 print(mem_mod.print_mem())
 print(btb.btb)
 print(pipeline_obj.code_ends())
+print("task2: ",gui_util_obj.task2)
+print("task3: ",gui_util_obj.task3)
+print("task4: ",gui_util_obj.task4)
