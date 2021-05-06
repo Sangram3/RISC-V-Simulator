@@ -8,9 +8,10 @@ class cache:
     set_count = 0
     words_per_block = 0
 
-    accesses = 0
-    hit = 0
-    miss = 0
+    cache_accesses = 0
+    cache_hit = 0
+    cache_miss = 0
+    memory_accesses = 0
 
     bo_len = 0
     index_len = 0
@@ -30,6 +31,10 @@ class cache:
 
         self.cache_array = [[["tag", 0, ["data" for x in range(self.words_per_block)]] for _ways in range(ways)] for _set in range(self.set_count)]
         self.pref_array = [[0 for _ways in range(ways) ]  for _set in range(self.set_count)]
+
+    def reset_cache(self):
+        self.cache_array = [[["tag", 0, ["data" for x in range(self.words_per_block)]] for _ways in range(ways)] for _set in range(self.set_count)]
+        self.pref_array = [[0 for _ways in range(ways) ]  for _set in range(self.set_count)]
         
     
     def decode_address(self, address):
@@ -38,24 +43,24 @@ class cache:
         tag = (int(address, 16) - int(address, 16)%(2**(self.index_len+self.bo_len))) >> (self.index_len+self.bo_len)
         return tag, index, bo
 
-    def read(self, address, mem_mod):
-        self.accesses+=1
+    def read(self, address, mem_mod, k, gui_util_obj):
+        self.cache_accesses+=1
         tag, index, bo = self.decode_address(address)
         # print(tag, index, bo)
         hit, way_no = self.hit_miss(tag, index)
         if(hit):
-            self.hit+=1
+            self.cache_hit+=1
             return self.cache_array[index][way_no][2][int(bo/4)]    #BO would be used here
 
         else:
-            self.miss+=1
+            self.cache_miss+=1
             data = []
             for i in range(self.words_per_block):
                 # print("address ", int(address,16))
                 temp = mem_mod.lw(int(address,16)+4*i)
                 data.append(temp)
             # data = mem_mod.lw(int(address,16))
-            self.write(address, data, mem_mod) #data is an array of words
+            self.write(address, data, mem_mod, k, gui_util_obj) #data is an array of words
             return data[int(bo/4)]
 
     def hit_miss(self, tag, index):
@@ -66,29 +71,32 @@ class cache:
             
         return False, 0
     #this is for block replacement policy that is write from the memory to the cache
-    def write(self, address, data, mem_mod):
-        self.accesses+=1
+    def write(self, address, data, mem_mod, k, gui_util_obj):
+        self.memory_accesses+=1
         tag, index, bo = self.decode_address(address)
-        for _way in range(len(self.cache_array[index])):
+        #if empty block present then write there
+        for _way in range(len(self.cache_array[index])): 
             if(self.cache_array[index][_way][1] == 0):
                 self.cache_array[index][_way][0] = tag
                 self.cache_array[index][_way][1] = 1
                 self.cache_array[index][_way][2] = data
                 self.set_pref(index, _way)
-                # print("data: ", data)
-                # for i in range(self.words_per_block):
-                #     mem_mod.sw(int(address,16)+4*i, data[i])
-                # mem_mod.sw(int(address,16), data)
                 return
 
+        #if all blocks are filled then use lru
         _way = self.pref_array[index].index(min(self.pref_array[index]))
+
+        victim_bl = self.cache_array[index][_way][:]
+
+        temp = [k, index, _way, address, victim_bl]
+        gui_util_obj.task3.append(temp)
+        temp = []
+        
+
         self.cache_array[index][_way][0] = tag
         self.cache_array[index][_way][1] = 1
         self.cache_array[index][_way][2] = data
         self.set_pref(index, _way)
-        # print("data: ", data)
-        # for i in range(self.words_per_block):
-        #     mem_mod.sw(int(address,16)+4*i, data[i])
         return
 
     def set_pref(self, index, way_no):
@@ -106,9 +114,12 @@ class cache:
     #Storedata is used in the write through policy to write in the cache if the block containing that data is present 
 
     def storedata(self, address, data): #data is a word
+        self.memory_accesses+=1 #for write through
+        self.cache_accesses+=1
         tag, index, bo = self.decode_address(address)
         h, ind = self.hit_miss(tag, index)
         if(h == True):
+            self.cache_hit+=1
             # for i in range(len(self.cache_array[index])):
             for _way in range(len(self.cache_array[index])):
                 if(self.cache_array[index][_way][0] == tag):
@@ -116,6 +127,7 @@ class cache:
                         data = "0x"+ ('0'*(10-len(data))) + data[2:]
                     self.cache_array[index][_way][2][int(bo/4)] = data
                     return
+        self.cache_miss+=1
         return
     
 
