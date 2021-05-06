@@ -312,7 +312,7 @@ class Window(QtWidgets.QTabWidget):
       # Tabs.addTab(self.Task1TabUI(), "Task1")
       Tabs.addTab(self.Task2TabUI(), "SET")
       Tabs.addTab(self.Task3TabUI(), "VB")
-      # Tabs.addTab(self.Task4TabUI(), "Task4")
+      Tabs.addTab(self.Task4UI(), "Task4")
       
       layout.addWidget(Tabs)
       layout.addStretch()
@@ -464,7 +464,41 @@ class Window(QtWidgets.QTabWidget):
            self.task3_formLayout.itemAt(0).widget().close()
            self.task3_formLayout.takeAt(0) 
        
-       
+   def Task4UI(self):
+      T1 = QWidget()
+      v= QVBoxLayout()
+      self.T4gb = QGroupBox()
+      self.T4layout = QFormLayout()
+      
+      self.T4gb.setLayout(self.T4layout)
+      scr = QScrollArea()
+      scr.setWidget(self.T4gb)
+      scr.setWidgetResizable(True)
+      scr.setFixedHeight(800)
+      scr.setFixedWidth(400)
+      v.addWidget(scr)
+      T1.setLayout(v)
+      return T1
+
+
+   def update_T4(self):
+          if self.pipelined == 0:
+            self.T4layout.addRow(QLabel("#main_mem_access : " + str(gui_util_obj_new.task4[0])))
+            self.T4layout.addRow(QLabel("#Cache access : "+str(gui_util_obj_new.task4[1])))
+            self.T4layout.addRow(QLabel("#Cache_hits : "+str(gui_util_obj_new.task4[2])))
+            self.T4layout.addRow(QLabel("#Cache misses : "+str(gui_util_obj_new.task4[3])))
+             
+          else:
+            self.T4layout.addRow(QLabel("#main_mem_access : " + str(gui_util_obj.task4[0])))
+            self.T4layout.addRow(QLabel("#Cache access : "+str(gui_util_obj.task4[1])))
+            self.T4layout.addRow(QLabel("#Cache_hits : "+str(gui_util_obj.task4[2])))
+            self.T4layout.addRow(QLabel("#Cache misses : "+str(gui_util_obj.task4[3])))
+		
+		
+   def reset_T4(self):
+      for i in reversed(range(self.T4layout.count())): 
+         self.T4layout.itemAt(i).widget().setParent(None)  
+		
    def pane_type(self):
       if(self.pipelined == 0):
          return QFormLayout()
@@ -597,12 +631,13 @@ class Window(QtWidgets.QTabWidget):
                if(self.out_msg[i][0][0]=="W"):
                      self.vb.addRow(QLabel(" "))    
             self.gB.setLayout(self.vb)
+	    self.update_T4()
             
        elif(self.pipelined == 1):  
          if self.code_ended == 0:
             self.code_ended = 1
             execute_cycle_util()
-            
+            self.update_T4()
             self.memory = mem_mod.get_mem()
             self.mem_pane_update()
             self.register = reg_mod.get_regs()
@@ -744,6 +779,7 @@ class Window(QtWidgets.QTabWidget):
            
    def reset_code(self):
        self.reset_task3()
+       self.reset_T4()
        for i in reversed(range(self.vb.count())): 
          self.vb.itemAt(i).widget().setParent(None)
        self.gB.setLayout(self.vb)
