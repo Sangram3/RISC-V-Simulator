@@ -249,10 +249,14 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
             elif ins == 'jal' :# jal
                 imm = bin_to_dec(imm)
                 imm=imm*2   #omit imm[0]
-                registers.add_PC(imm-4)
+                PC_var = registers.get_PC()+imm-4
+                # registers.add_PC(imm-4)
                 if btb.ifPresent(PC) == False:
-                    btb.newKey(PC,registers.get_PC(),1)
+                    # btb.newKey(PC,registers.get_PC(),1)
+                    btb.newKey(PC,PC_var,1)
+                    registers.update_PC(PC_var)
                     # as always wrong PC is fetched in the subsequent cycles need to flush
+                    pipeline_obj.npred = pipeline_obj.npred+1
                     pipeline_obj.flush()  
                 else:
                     # if it is already present in the BTB accurate
