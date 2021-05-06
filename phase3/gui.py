@@ -626,12 +626,13 @@ class Window(QtWidgets.QTabWidget):
             self.mem_pane_update()
             self.register = reg_mod.get_regs()
             self.reg_pane_update()
+	    self.update_T4()
             for i in range(len(self.out_msg)):
                self.vb.addRow(QLabel(self.out_msg[i]))
                if(self.out_msg[i][0][0]=="W"):
                      self.vb.addRow(QLabel(" "))    
             self.gB.setLayout(self.vb)
-	    self.update_T4()
+	    
             
        elif(self.pipelined == 1):  
          if self.code_ended == 0:
