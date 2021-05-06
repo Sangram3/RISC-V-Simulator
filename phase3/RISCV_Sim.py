@@ -1,3 +1,4 @@
+from cache import *
 from memory import *
 from registers import *
 from fetch import *
@@ -6,8 +7,9 @@ from execute import *
 from mem import *
 from control import *
 from write_back import *
+from inputt import *
 
-class gui_util():
+class gui_util_new():
     def __init__(self):
         self.task2 = []
         self.task3 = []
@@ -47,28 +49,33 @@ def basic_code(dec_out, reg, mem):
         code = "Wrong Instruction"
     return code
 
-mc_file = "temp.mc"
-mem_mod = memory(mc_file)
-reg_mod = registers()
-dcache_size = 1024*int(input("Enter cache size for data cache in kilobytes: "))
-#cache_size = int(input("Enter cache size in kilobytes: "))
-dblock_size = int(input("Enter block size for data cache in bytes: "))
-dways = int(input("Enter number of ways for SA for data cache: "))
-icache_size = 1024*int(input("Enter cache size for instruction cache in kilobytes: "))
-#cache_size = int(input("Enter cache size in kilobytes: "))
-iblock_size = int(input("Enter block size for instruction cache in bytes: "))
-iways = int(input("Enter number of ways for SA for instruction cache: "))
-dcache_ob = cache(dcache_size, dblock_size, dways)
-icache_ob = cache(icache_size, iblock_size, iways)
+# mc_file = "temp.mc"
+# mem_mod = memory(mc_file)
 
-gui_util_obj = gui_util()
+reg_mod = registers()
+
+# dcache_size = 1024*int(input("Enter cache size for data cache in kilobytes: "))
+# #cache_size = int(input("Enter cache size in kilobytes: "))
+# dblock_size = int(input("Enter block size for data cache in bytes: "))
+# dways = int(input("Enter number of ways for SA for data cache: "))
+# icache_size = 1024*int(input("Enter cache size for instruction cache in kilobytes: "))
+# #cache_size = int(input("Enter cache size in kilobytes: "))
+# iblock_size = int(input("Enter block size for instruction cache in bytes: "))
+# iways = int(input("Enter number of ways for SA for instruction cache: "))
+
+# dcache_ob = cache(dcache_size, dblock_size, dways)
+# icache_ob = cache(icache_size, iblock_size, iways)
+
+gui_util_obj_new = gui_util_new()
 
 def run(li):  
     d = {}
     global l 
     l=[]
+    
+    # print("RUNNING")
     while(1):
-        fetch(mem_mod,  reg_mod, l, icache_ob, gui_util_obj)
+        fetch(mem_mod,  reg_mod, l, icache_ob, gui_util_obj_new)
         if(reg_mod.get_IR() == '0xEF000011'):
             # mem_mod.code_ends('output.mc')
             break
@@ -77,7 +84,7 @@ def run(li):
         control_bits = control(return_of_decode)
         return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod, l)
         if(control_bits[1] != 0):
-            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l, dcache_ob, gui_util_obj)
+            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l, dcache_ob, gui_util_obj_new)
         elif(control_bits[1]==0):
             l.append("MEMORY : No memory operation ")
 
@@ -94,7 +101,7 @@ def run(li):
 def step(ll):  
     
     l = []
-    fetch(mem_mod,  reg_mod, l, icache_ob, gui_util_obj)
+    fetch(mem_mod,  reg_mod, l, icache_ob, gui_util_obj_new)
     if(reg_mod.get_IR() == '0xEF000011'):
         # mem_mod.code_ends('output.mc')
         return
@@ -104,7 +111,7 @@ def step(ll):
         control_bits = control(return_of_decode)
         return_of_execute = execute(return_of_decode[0], return_of_decode[1], return_of_decode[2], reg_mod,l)
         if(control_bits[1] != 0):
-            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l, dcache_ob, gui_util_obj)
+            return_of_mem = mem(control_bits[1],  mem_mod,  reg_mod, return_of_execute, l, dcache_ob, gui_util_obj_new)
         elif(control_bits[1] == 0):
             l.append("MEMORY: No memory operation")
 
@@ -127,4 +134,4 @@ def reset():
     mem_mod.__init__(mc_file)
     dcache_ob.reset()
     icache_ob.reset()
-    gui_util_obj.reset_gui_util()
+    gui_util_obj_new.reset_gui_util()
