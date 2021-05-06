@@ -459,10 +459,13 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
             imm = bin_to_dec(imm)
             # ry = registers.get_PC()
             rs1 = buffers[0].operand1
-            registers.add_PC(rs1+imm-registers.get_PC())
+            PC_var = rs1+imm
+            # registers.add_PC(rs1+imm-registers.get_PC())
             
             if btb.ifPresent(PC) == False:
-                btb.newKey(PC, registers.get_PC() ,1)
+                # btb.newKey(PC, registers.get_PC() ,1)
+                btb.newKey(PC, PC_var ,1)
+                registers.update_PC(PC_var)
                 pipeline_obj.npred = pipeline_obj.npred+1
                 pipeline_obj.flush()
                 
