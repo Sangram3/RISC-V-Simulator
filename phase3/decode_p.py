@@ -226,7 +226,7 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
          # btb does not contain this instruction it means
          # guaranteed wrong instructions are fetched-> we need to flush
             
-                        btb.newKey(PC,registers_p.get_PC(),0)
+                        btb.newKey(PC,registers.get_PC(),0)
                         pipeline_obj.flush()
                     else:
                         if btb.prediction(PC) == False:
@@ -459,7 +459,7 @@ def decode_p(memory, registers ,pipeline_obj ,buffers , index, btb, gui_util_obj
             imm = bin_to_dec(imm)
             # ry = registers.get_PC()
             rs1 = buffers[0].operand1
-            registers_p.add_PC(rs1+imm-registers.get_PC())
+            registers.add_PC(rs1+imm-registers.get_PC())
             
             if btb.ifPresent(PC) == False:
                 btb.newKey(PC, registers.get_PC() ,1)
