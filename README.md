@@ -80,13 +80,15 @@ UJ format - jal
 
 **Individual Contributions:**
 
-Sangram Jagadale : functionality of execute stage,functionality of stalling ,GUI designing ,testing .
+Sangram Jagadale     : functionality of execute stage,functionality of stalling ,GUI designing ,testing .
 
-Nupur Rathi      : functionality of decode stage,functionality of data-forwarding ,testing .
+Nupur Rathi          : functionality of decode stage,functionality of data-forwarding ,testing .
 
-Himanshi Nim     : GUI designing ,testing .
+Himanshi Nim         : GUI designing ,testing .
 
-Bharat Sharma    : GUI designing , functionality of cache .
+Bharat Sharma        : GUI designing , functionality of cache ,memory and write-back stage.
+
+Antara Arun Aggarwal : functinality of memory ,write-back stage ,testing and data forwarding
 
 
 
