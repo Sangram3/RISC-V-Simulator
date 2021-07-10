@@ -81,9 +81,13 @@ UJ format - jal
 **Individual Contributions:**
 
 Sangram Jagadale : functionality of execute stage,functionality of stalling ,GUI designing ,testing .
+
 Nupur Rathi      : functionality of decode stage,functionality of data-forwarding ,testing .
+
 Himanshi Nim     : GUI designing ,testing .
+
 Bharat Sharma    : GUI designing , functionality of cache .
+
 
 
 
