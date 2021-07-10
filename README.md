@@ -6,18 +6,18 @@
                                                                  |	|    \   |   _____|  |_____        \/     |
                                                                  |____________________________________________|
                                                                  
-Team Members:
+**Team Members:**
+Jagadale Sangram Rajendra - 2019CSB1091
 Antara Arun Agarwal - 2019CSB1076
 Bharat Sharma - 2019CSB1081
 Himanshi Nim - 2019CSB1090
-Jagadale Sangram Rajendra - 2019CSB1091
 Nupur Rathi - 2019CSB1104
 
-About:
+**About:**
 RISC-V Simulator is a python based program which is a simulation to run machine code
 
-Directories:
-RISCV_Simulator
+**Directories:**
+**RISCV_Simulator**
 	|
 	|--- Phase1
 	|	      |--- gui.py
@@ -44,16 +44,16 @@ RISCV_Simulator
   |	      |--- output.mc
   |
   |--- Simulator.bat
-
-Installation:
+**
+Installation:**
  1. Unzip the RISCV_Simulator
  2. Run the Simulator.bat in RISCV_Simulator or Run gui.py in Phase1 with Python.
 
-Requirements:
+**Requirements:**
   1. Python installed
   2. PyQt5 installed
 
-How to Run:
+**How to Run:**
  1. Run the Simulator.bat in RISCV_Simulator or Run gui.py in Phase1 with Python.
  2. A GUI will open.
  3. In the Editor tab of GUI, press Select file and browse and select the Input machine code file.
@@ -70,7 +70,7 @@ How to Run:
  14. It will display about what has been performed in the stages (fetch, decode, execute, memory access and write back) of one instruction.
 
 
-Instructions Supported:
+**Instructions Supported:**
 R format - add, and, or, sll, slt, sra, srl, sub, xor, mul, div, rem 
 I format - addi, andi, ori, lb, lh, lw, jalr 
 S format - sb, sw, sh 
@@ -78,9 +78,12 @@ SB format - beq, bne, bge, blt
 U format - auipc, lui 
 UJ format - jal
 
-Individual Contributions:
+**Individual Contributions:**
 
-
+Sangram Jagadale : functionality of execute stage,functionality of stalling ,GUI designing ,testing .
+Nupur Rathi      : functionality of decode stage,functionality of data-forwarding ,testing .
+Himanshi Nim     : GUI designing ,testing .
+Bharat Sharma    : GUI designing , functionality of cache .
 
 
 
