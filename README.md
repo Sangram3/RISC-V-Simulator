@@ -25,33 +25,7 @@ RISC-V Simulator is a python based program which is a simulation to run machine 
     <img src="tree.png" alt="Logo" >
 </p>
 <br/>
-	|
-	|--- Phase1
-	|	      |--- gui.py
-	|	      |--- RISCV_Sim.py
-	|	      |--- memory.py
-	|	      |--- registers.py
-	|	      |--- fetch.py
-	|	      |--- decode.py
-	|	      |--- execute.py
-	|	      |--- mem.py
-	|	      |--- write_back.py
-	|	      |--- temp.mc
-	|
-	|--- test
-	|	     |--- bubblesort_recursive.mc
-	|	     |--- bubblesort_iterative.mc
-	|	     |--- factorial_iterative.mc
-	|	     |--- factorial_recursive.mc
-	|	     |--- fibonacci_iterative.mc
-	|	     |--- fibonacci_recursive.mc
-	|	     |--- test.mc
-  |
-  |--- output 
-  |	      |--- output.mc
-  |
-  |--- Simulator.bat
-  
+	
 **Installation:**
  1. Unzip the RISCV_Simulator
  2. Run the Simulator.bat in RISCV_Simulator or Run gui.py in Phase1 with Python.
