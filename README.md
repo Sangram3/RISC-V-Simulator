@@ -5,7 +5,7 @@
   <h3 align="center">RISC-V Simulator</h3>
 
   <p align="center">
-    A python implementation of RISC-V Simulation.
+    Python implementation of RISC-V Simulator
     <br />    
   </p>
 </p>
