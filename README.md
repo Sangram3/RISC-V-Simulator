@@ -5,7 +5,11 @@
 							 |	|   \    |     	  |  |   	  \  /              |
 							 |	|    \   |   _____|  |_____        \/               |
 							 |__________________________________________________________|
-                                                                 
+               
+	       
+<p align="center">
+    <img src="logo.png" alt="Logo" width="580" height="200">
+</p>
 **Team Members:**
 Jagadale Sangram Rajendra - 2019CSB1091
 Antara Arun Agarwal - 2019CSB1076
