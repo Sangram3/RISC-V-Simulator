@@ -20,6 +20,11 @@ RISC-V Simulator is a python based program which is a simulation to run machine 
 
 **Directories:**
 **RISCV_Simulator**
+
+<p align="center">
+    <img src="tree.png" alt="Logo" width="580" height="200">
+</p>
+<br/>
 	|
 	|--- Phase1
 	|	      |--- gui.py
