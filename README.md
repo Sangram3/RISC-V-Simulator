@@ -1,13 +1,14 @@
+<br />
 <p align="center">
-	<img src="logo.png" alt="Logo" width="580" height="200">
-	<h3 align="center">RISC-V Simulator</h3>
+    <img src="logo.png" alt="Logo" width="580" height="200">
 
-	<p align="center">
-	Python implementation of RISC-V Simulator.
-	</p>
-	<br />
+  <h3 align="center">RISC-V Simulator</h3>
+
+  <p align="center">
+    A python implementation of RISC-V Simulation.
+    <br />    
+  </p>
 </p>
-<br/>
 
 **Team Members:**
 
