@@ -4,6 +4,7 @@
 
 	<p align="center">
 	Python implementation of RISC-V Simulator.
+	</p>
 	<br />
 </p>
 <br/>
