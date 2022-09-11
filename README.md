@@ -1,5 +1,10 @@
 <p align="center">
-    <img src="logo.png" alt="Logo" width="580" height="200">
+	<img src="logo.png" alt="Logo" width="580" height="200">
+	<h3 align="center">RISC-V Simulator</h3>
+
+	<p align="center">
+	Python implementation of RISC-V Simulator.
+	<br />
 </p>
 <br/>
 
