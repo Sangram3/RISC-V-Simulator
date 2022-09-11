@@ -75,10 +75,15 @@ Installation:**
 
 **Instructions Supported:**
 R format - add, and, or, sll, slt, sra, srl, sub, xor, mul, div, rem 
+
 I format - addi, andi, ori, lb, lh, lw, jalr 
+
 S format - sb, sw, sh 
+
 SB format - beq, bne, bge, blt 
+
 U format - auipc, lui 
+
 UJ format - jal
 
 **Individual Contributions:**
