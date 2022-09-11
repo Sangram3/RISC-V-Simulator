@@ -4,6 +4,7 @@
 <br/>
 
 **Team Members:**
+
 Jagadale Sangram Rajendra - 2019CSB1091
 
 Antara Arun Agarwal - 2019CSB1076
@@ -45,6 +46,7 @@ RISC-V Simulator is a python based program which is a simulation to run machine 
   |	      |--- output.mc
   |
   |--- Simulator.bat
+  
 **
 Installation:**
  1. Unzip the RISCV_Simulator
