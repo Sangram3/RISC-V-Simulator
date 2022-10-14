@@ -12,7 +12,7 @@
 
 **Team Members:**
 
-Jagadale Sangram Rajendra - 2019CSB1091
+Sangram Jagadale - 2019CSB1091
 
 Antara Arun Agarwal - 2019CSB1076
 
