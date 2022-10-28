@@ -1,9 +1,13 @@
 class BTB():
-
-    
+    """
+        Branch target buffer, stores the target address.
+    """
     btb = {}
     
     def newKey(self, PC, Target_add,is_jal_jalr):  #FNTBT satic predictor
+        """
+            If PC > target_address then always taken else always no taken ( for initial entries only)
+        """
         if is_jal_jalr == 1:
             self.btb[str(PC)] = [True,Target_add]
             return
@@ -13,12 +17,21 @@ class BTB():
             self.btb[str(PC)] = [True,Target_add]
 
     def prediction(self, PC):
+        """
+            Is prediction is to take the path of not to take the path.
+        """
         return self.btb[str(PC)][0]
 
     def getTarget(self, PC):
+        """
+            If entry is present take the target address.
+        """
         return self.btb[str(PC)][1]
 
     def ifPresent(self,PC):
+        """
+            Is entry present already or not.
+        """
         if str(PC) in self.btb:
             return True
         return False      
